@@ -99,6 +99,10 @@ android {
         exclude 'META-INF/rxjava'
         exclude 'META-INF/RXJAVA'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 
@@ -123,11 +127,20 @@ dependencies {
 //    compile 'com.zhy:mpermission-api:1.0.0'
 //    apt 'com.zhy:mpermission-compiler:1.0.0'
     implementation 'com.pnikosis:materialish-progress:1.0'
-    implementation'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support:multidex:1.0.3'
     //集成RecyclerView    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
     implementation 'com.google.code.gson:gson:2.6.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+
+    implementation "com.squareup.okhttp3:okhttp:3.10.0"
+    implementation "com.squareup.okhttp:okhttp-urlconnection:2.0.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.6.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.0"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
 //    //自动适配
 //    api 'me.jessyan:autosize:1.0.6'
 }

@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import com.google.gson.internal.$Gson$Types;
 import com.smtlibrary.SmtApplication;
+import com.smtlibrary.utils.JsonUtils;
 import com.smtlibrary.utils.LogUtils;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Callback;
@@ -23,6 +24,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.CookieManager;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -121,7 +123,16 @@ public class OkHttpUtils {
     public static void post(String url, List<Param> params, final ResultCallBack callback) {
         getmInstance().postRequest(url, params, callback);
     }
-
+    /**
+     * post请求
+     *
+     * @param url      请求url
+     * @param params   请求参数
+     * @param callback 请求回调
+     */
+    public static void post(String url, Map params, final ResultCallBack callback) {
+        getmInstance().postRequest(url, params, callback);
+    }
     /**
      * Post 请求
      *
@@ -175,6 +186,18 @@ public class OkHttpUtils {
         deliverResult(callBack, request);
     }
 
+
+    /**
+     * post 请求
+     *
+     * @param url
+     * @param params
+     * @param callBack
+     */
+    private void postRequest(String url, Map params, final ResultCallBack callBack) {
+        Request request = buildPostRequest(url, params);
+        deliverResult(callBack, request);
+    }
     /**
      * post 请求
      *
@@ -214,7 +237,7 @@ public class OkHttpUtils {
             public void onResponse(Response response) throws IOException {
                 try {
                     String res = response.body().string();
-                    LogUtils.sysout("返回数据",res);
+                    LogUtils.sysout("返回数据", res);
                     sendSuccessCallBack(callBack, res);
                 } catch (final Exception e) {
                     e.printStackTrace();
@@ -252,6 +275,28 @@ public class OkHttpUtils {
         });
     }
 
+    /**
+     * 创建Post request 参数对象
+     *
+     * @param url
+     * @param params
+     * @return
+     */
+    private Request buildPostRequest(String url, Map<String, Object> params) {
+        FormEncodingBuilder formEncodingBuilder = new FormEncodingBuilder();
+        for (Map.Entry<String, Object> p : params.entrySet()) {
+            formEncodingBuilder.add(p.getKey(), String.valueOf(p.getValue()));
+        }
+        //__tenant: 39f967cb-0049-d2cd-7099-3bacf49973f9
+        RequestBody body = formEncodingBuilder.build();
+        return new Request.Builder()
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("__tenant", tenant)
+                .addHeader("Authorization", "bearer ".concat(token))
+                .post(body).url(url).build();
+
+    }
+
 
     /**
      * 创建Post request 参数对象
@@ -282,10 +327,9 @@ public class OkHttpUtils {
      * @return
      */
     private Request buildPostRequest(String url, String body) {
-        MediaType JSON = MediaType.parse("application/x-www-form-urlencoded");
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(JSON, body);
         return new Request.Builder()
-                .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("__tenant", tenant)
                 .addHeader("Authorization", "bearer ".concat(token))
                 .post(requestBody).url(url).build();

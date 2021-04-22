@@ -7,8 +7,11 @@ import android.support.multidex.MultiDexApplication;
 import com.smt.wxdj.swxdj.bean.Bay;
 import com.smt.wxdj.swxdj.bean.StackBean;
 import com.smt.wxdj.swxdj.bean.User;
+import com.smt.wxdj.swxdj.network.RetrofitManager;
+import com.smt.wxdj.swxdj.network.account.AccountManager;
 import com.smt.wxdj.swxdj.switchlang.Utils;
 //import com.smtlibrary.crashlog.AppCrashHandler;
+import com.smt.wxdj.swxdj.utils.URLTool;
 import com.smtlibrary.utils.LogUtils;
 
 import java.util.HashMap;
@@ -56,6 +59,8 @@ public class MyApplication extends MultiDexApplication {
         LogUtils.LOG_DEBUG = BuildConfig.DEBUG;
         context = getApplicationContext();
         user = new User();
+        AccountManager.init(this);
+        RetrofitManager.getInstance().init(URLTool.getUrl());
 
 //        PropertyConfigurator.getConfigurator(this).configure();
 //        AppCrashHandler.getInstance().init(this);

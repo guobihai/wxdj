@@ -2,9 +2,12 @@ package com.smt.wxdj.swxdj.logins.model;
 
 import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.R;
+import com.smt.wxdj.swxdj.api.LoginInterface;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.dao.TokenInfo;
 import com.smt.wxdj.swxdj.interfaces.IPublicResultInterface;
+import com.smt.wxdj.swxdj.network.RetrofitManager;
+import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.param.ParamUtils;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
 import com.smt.wxdj.swxdj.utils.PraseJsonUtils;
@@ -21,6 +24,9 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by gbh on 16/6/27.
@@ -96,7 +102,30 @@ public class LoginModelImpl implements LoginModel {
                     onLoginListener.onSucess(JsonUtils.deserialize(response, TokenInfo.class));
                 String data= JsonUtils.serialize(ParamUtils.getCurChaneParam(String.valueOf(userMap.get("id"))));
                 LogUtils.sysout("吊机data=====", data);
-                saveRTG(data,null);
+//                saveRTG(data,null);
+                     RetrofitManager.create(LoginInterface.class).getTeantsInfo(ParamUtils.getCurChaneParam(String.valueOf(userMap.get("id"))))
+                .compose(RxUtils.getWrapper())
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object tenantsBaseResponse) {
+                        LogUtils.sysout("=onComplete===",JsonUtils.serialize(tenantsBaseResponse));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    LogUtils.sysout("=onComplete===","onComplete");
+                    }
+                });
             }
 
             @Override
