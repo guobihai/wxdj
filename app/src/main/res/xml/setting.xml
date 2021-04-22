@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Preference xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--设置排序-->
+    <!--当使用ShowPC参数时，需要把T别名去掉，不同码头要求按不同的方式排序，有按stack，有按work_seq，根据码头要求调整-->
+    <string name="WorkListOrder">
+        T.WORK_PRIORITY ASC,TRUNC((sysdate - T.lst_tx_date) * 1440*20) desc,trk
+        asc,DECODE(T.TRK_TYPE,'MRE',DECODE(T.ACTIVITY,'PK',WORK_SEQ)),T.LST_TX_DATE,TO_LOC
+    </string>
+
+    <!--<string-array name="ShowPCWorkListOrder">-->
+    <!--<item>WORK_PRIORITY ASC,WORK_SEQ,LST_TX_DATE</item>-->
+    <!--</string-array>-->
+</Preference>

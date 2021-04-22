@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+
+    <TextView
+        android:id="@+id/boatName"
+        style="@style/tableTextViewStyle"
+        android:text="@string/boatName"
+        android:background="@drawable/bt_left_corners"
+        android:layout_weight="0.9"
+        />
+
+    <TextView
+        android:id="@+id/jkhc"
+        style="@style/tableTextViewStyle"
+        android:text="@string/jkhc"
+        android:layout_weight="0.9"
+        />
+
+    <TextView
+        android:id="@+id/ckhc"
+        style="@style/tableTextViewStyle"
+        android:text="@string/ckhc"
+        android:layout_weight="0.9"
+        />
+
+    <TextView
+        android:id="@+id/zx"
+        style="@style/tableTextViewStyle"
+        android:text="@string/zx"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        android:id="@+id/boxCount"
+        style="@style/tableTextViewStyle"
+        android:text="@string/boxCount"
+        android:background="@drawable/bt_right_corners"
+        android:layout_weight="1"
+        />
+
+</LinearLayout>

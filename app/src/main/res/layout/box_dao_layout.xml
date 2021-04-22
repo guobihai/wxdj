@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dxwLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/yLayout"
+    android:layout_marginBottom="@dimen/item_dxw_height"
+    android:layout_alignParentBottom="true"
+    >
+
+    <com.smt.wxdj.swxdj.view.DragGrid
+        android:id="@+id/dxwGridView"
+        android:layout_width="@dimen/box_dxw_item_width"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="1"
+        android:scrollbars="vertical"
+        android:stretchMode="columnWidth"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

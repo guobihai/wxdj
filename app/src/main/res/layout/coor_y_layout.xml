@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/yLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/contentLayout"
+    android:layout_marginBottom="@dimen/item_y_height"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    >
+
+    <com.smt.wxdj.swxdj.view.DragGrid
+        android:id="@+id/coorYlayoutGridView"
+        android:layout_width="@dimen/item_x_width"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="1"
+        android:scrollbars="vertical"
+        android:stretchMode="columnWidth"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

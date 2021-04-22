@@ -1,0 +1,133 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.neenbedankt.android-apt'
+
+def appName() {
+    return "无线吊机"
+}
+
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getDefault())
+}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId "com.smt.wxdj"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1912161408
+        versionName "1.0"
+        multiDexEnabled true
+        flavorDimensions "versionCode"
+        javaCompileOptions {
+            // 显式声明支持注解
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
+    }
+
+    //多渠道打包
+    productFlavors {
+        EVCTMS {
+//            applicationId "com.smt.wxdj.JPG.GXWZ"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "EVCTMS"]
+        }
+    }
+
+    //    在生成的apk文件，修改下命名而已
+//    applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            def outputFile = output.outputFile
+//            if (outputFile != null && outputFile.name.endsWith('release.apk')) {
+//                //def fileName = "${variant.productFlavors[0].name}_V${defaultConfig.versionName}_${releaseTime()}.apk"
+////                def productFlavorsName = variant.productFlavors[0].name
+////                def fileName = "${appName()}.V${defaultConfig.versionName}.${versionCode}.release." + productFlavorsName + ".apk"
+//                def fileName = "${appName()}_V${versionCode}.apk"
+////                outputFileName = fileName
+//                output.outputFile = new File(outputFile.parent, fileName)
+//            }
+//        }
+//    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${appName()}_V${versionCode}.apk"
+        }
+    }
+
+    buildTypes {
+        release {
+            //// 是否进行混淆
+            minifyEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "APP_DEBUG", "true"
+            buildConfigField "boolean", "LOG_ENABLE", "true"
+        }
+        debug {
+            buildConfigField "boolean", "APP_DEBUG", "true"
+            buildConfigField "boolean", "LOG_ENABLE", "true"
+        }
+    }
+    // 移除lint检查的error
+    lintOptions {
+        abortOnError false
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+//    compileOptions {
+//        targetCompatibility 1.8
+//        sourceCompatibility 1.8
+//    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/rxjava.PROPERTIES'
+        exclude 'META-INF/RXJAVA.properties'
+        exclude 'META-INF/RXJAVA.PROPERTIES'
+        exclude 'META-INF/rxjava'
+        exclude 'META-INF/RXJAVA'
+    }
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+//    compile 'com.squareup.okhttp:okhttp:2.0.0'
+    implementation 'de.hdodenhof:circleimageview:1.3.0'
+//    implementation(name: 'smtlibrary', ext: 'aar')
+    implementation project(':datelibrary')
+    implementation project(':smtlibrary')
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.jakewharton:butterknife:7.0.1'//view注解
+    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
+    implementation 'com.orhanobut:logger:1.15'
+//    compile 'com.zhy:mpermission-api:1.0.0'
+//    apt 'com.zhy:mpermission-compiler:1.0.0'
+    implementation 'com.pnikosis:materialish-progress:1.0'
+    implementation'com.android.support:multidex:1.0.3'
+    //集成RecyclerView    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+    implementation 'com.google.code.gson:gson:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+//    //自动适配
+//    api 'me.jessyan:autosize:1.0.6'
+}

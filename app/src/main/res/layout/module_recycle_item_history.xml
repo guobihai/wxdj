@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_content_height"
+    android:background="@drawable/recy_item_press"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tvMachine"
+        style="@style/contentTextViewStyle"
+        android:layout_weight="1"
+        android:text="@string/history_machine" />
+    <TextView
+        android:id="@+id/tvWork"
+        style="@style/contentTextViewStyle"
+        android:layout_weight="1"
+        android:text="@string/history_work" />
+    <TextView
+        android:id="@+id/tvWorkNo"
+        style="@style/contentTextViewStyle"
+        android:layout_weight="1"
+        android:text="@string/history_work_no" />
+    <TextView
+        android:id="@+id/tvDriver"
+        style="@style/contentTextViewStyle"
+        android:layout_weight="1"
+        android:text="@string/history_driver" />
+    <TextView
+        android:id="@+id/tvDt"
+        style="@style/contentTextViewStyle"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8"
+        android:text="@string/boxDt" />
+    <TextView
+        android:id="@+id/tvSmallBox"
+        style="@style/contentTextViewStyle"
+        android:layout_weight="1"
+        android:text="@string/history_20_small_box" />
+    <TextView
+        android:id="@+id/tvBigBox"
+        style="@style/contentTextViewStyle"
+        android:layout_weight="1"
+        android:text="@string/history_40_big_box" />
+
+
+</LinearLayout>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_header_height"
+        android:background="@drawable/side_nav_bar"
+        android:gravity="bottom|center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:src="@mipmap/evicon"
+            app:border_color="@color/colorPrimary"
+            app:border_width="1dp" />
+
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/activity_menu_padding"
+            android:text="Hello 301"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textsize28" />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="吊机21"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/menu_zxboat"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/box_ship"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/zxboat"
+            android:visibility="gone" />
+
+        <RadioButton
+            android:id="@+id/menu_verfy"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/verification"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/chaochang" />
+
+        <RadioButton
+            android:id="@+id/menu_cancleBox"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/cancel_box"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/cancleBox"
+            android:visibility="gone" />
+
+        <RadioButton
+            android:id="@+id/menu_zlBox"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/handle_due"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/zlCellBox" />
+
+        <RadioButton
+            android:id="@+id/menu_history"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@drawable/history"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/history" />
+
+        <RadioButton
+            android:id="@+id/menu_search_location"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@drawable/ic_search_black_24dp"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/search_location" />
+
+        <RadioButton
+            android:id="@+id/menu_stack"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/arrows_switch"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/menu_qhcd" />
+
+        <RadioButton
+            android:id="@+id/menu_qhzh"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/arrows_switch"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/menu_qhzh" />
+
+        <RadioButton
+            android:id="@+id/menu_setting"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@drawable/main_menu_setting"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/menu_setting" />
+
+        <RadioButton
+            android:id="@+id/menu_exit"
+            style="@style/MenuTextItemStyle"
+            android:button="@null"
+            android:drawableLeft="@mipmap/exit"
+            android:drawablePadding="@dimen/activity_menu_drawablepadding"
+            android:text="@string/menu_exit" />
+
+    </RadioGroup>
+
+</LinearLayout>

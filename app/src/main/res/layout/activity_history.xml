@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <TextView
+                    android:id="@+id/taskTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:gravity="center"
+                    android:text="@string/putBoxFormat"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize28" />
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_content_height"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tvStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:text="2018-03-08 15:35"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/textview_border"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:textSize="@dimen/login_textsize" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/to"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/login_textsize" />
+
+            <TextView
+                android:id="@+id/tvEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="2018-03-08 15:35"
+                android:background="@drawable/textview_border"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:textSize="@dimen/login_textsize" />
+
+            <Button
+                android:id="@+id/btnQuery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/btn_login_bg"
+                android:text="@string/history_query"
+                android:textSize="@dimen/login_textsize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="1"
+                android:text="@string/history_machine" />
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="1"
+                android:text="@string/history_work" />
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="1"
+                android:text="@string/history_work_no" />
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="1"
+                android:text="@string/history_driver" />
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="0.8"
+                android:text="@string/boxDt" />
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="1"
+                android:text="@string/history_20_small_box" />
+
+            <TextView
+                style="@style/tableTextViewStyle"
+                android:layout_weight="1"
+                android:text="@string/history_40_big_box" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</RelativeLayout>

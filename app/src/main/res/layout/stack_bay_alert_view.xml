@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/title_background"
+                android:padding="10dp"
+                android:text="@string/site_list"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/textsize22" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/title_background"
+                android:padding="10dp"
+                android:text="@string/beta_list"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/textsize22" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:orientation="horizontal">
+
+            <com.smtlibrary.irecyclerview.IRecyclerView
+                android:id="@+id/stack_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                app:loadMore_enabled="false"
+                app:recyview_manager="LinearLayoutManager"
+                app:refresh_enable="false"
+                app:swipe_enabled="false"
+                app:swipe_size="DEFAULT" />
+
+            <com.smtlibrary.irecyclerview.IRecyclerView
+                android:id="@+id/bay_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="1"
+                app:loadMore_enabled="false"
+                app:recyview_manager="LinearLayoutManager"
+                app:refresh_enable="false"
+                app:swipe_enabled="false"
+                app:swipe_size="DEFAULT" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_btn_height"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_cancle_bg"
+            android:text="@string/cancle"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/login_textsize" />
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_btn_height"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_login_bg"
+            android:text="@string/confim"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/login_textsize" />
+
+    </LinearLayout>
+</RelativeLayout>

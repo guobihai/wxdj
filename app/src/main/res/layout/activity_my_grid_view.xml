@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <TextView
+                    android:id="@+id/taskTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:gravity="center"
+                    android:text="@string/putBoxFormat"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textsize28" />
+
+                <LinearLayout
+                    android:id="@+id/getBoxLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/activity_menu_padding"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/tcSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:drawablePadding="@dimen/activity_horizontal_margin"
+                        android:drawableRight="@mipmap/down_icon"
+                        android:gravity="center|left"
+                        android:paddingLeft="@dimen/activity_menu_padding"
+                        android:paddingRight="@dimen/activity_menu_padding"
+                        android:text="A"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28" />
+
+                    <Button
+                        android:id="@+id/btnTcOk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|right"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/confim"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28" />
+                    <Button
+                        android:id="@+id/btnRefresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|right"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/refresh"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|right"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/stack"
+                        android:layout_width="@dimen/toolbar_btn_width"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/field"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28" />
+
+                    <Button
+                        android:id="@+id/twbay"
+                        android:layout_width="@dimen/toolbar_btn_width"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/rown"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28" />
+
+                    <Button
+                        android:id="@+id/btnCc"
+                        android:layout_width="@dimen/toolbar_btn_width"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/clear_field"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/toolbarLayout"
+            android:fillViewport="true">
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/yLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="@dimen/item_dxw_height"
+                    android:paddingBottom="2dp"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/yLayout"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/box_dao_layout" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="1dp"
+                        android:fillViewport="true">
+
+                        <include layout="@layout/xlayout_gridview" />
+
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:gravity="center">
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_select"
+            android:text="@string/checked_box" />
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_move"
+            android:text="@string/move_box_position" />
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_item"
+            android:text="@string/target_box"
+            android:textColor="@android:color/holo_red_dark" />
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_item"
+            android:text="@string/can_exchange_task"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_item"
+            android:text="@string/wait_work"
+            android:textColor="@android:color/holo_green_dark" />
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_recommend"
+            android:text="@string/recommended_bit"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            style="@style/AppTheme.color_TextViewStyle"
+            android:background="@drawable/shapee_gray"
+            android:text="@string/not_accord_with_rule" />
+    </LinearLayout>
+</RelativeLayout>

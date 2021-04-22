@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_content_height"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/num"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.05"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/carNum"/>
+
+    <TextView
+        android:id="@+id/boxNum"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/boxNum"/>
+
+    <TextView
+        android:id="@+id/boxLocation"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.1"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/boxLocation"/>
+
+    <TextView
+        android:id="@+id/tvCell"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.12"
+        android:text="@string/row"/>
+
+    <TextView
+        android:id="@+id/tvTier"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.12"
+        android:text="@string/tier"/>
+
+    <TextView
+        android:id="@+id/boxType"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.1"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/boxType"/>
+
+    <TextView
+        android:id="@+id/workLine"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.08"
+        android:text="@string/workLine"/>
+
+    <TextView
+        android:id="@+id/workLine"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.08"
+        android:text="@string/pod"/>
+
+    <TextView
+        android:id="@+id/workLine"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.1"
+        android:text="@string/eqp_cond"/>
+
+    <TextView
+        android:id="@+id/boxOwn"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.08"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/boxOwn"/>
+
+    <TextView
+        android:id="@+id/boxWeight"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.1"
+        android:text="@string/boxWeiht"/>
+
+    <TextView
+        android:id="@+id/boxDt"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.1"
+        android:text="@string/boxDt"/>
+
+    <TextView
+        android:id="@+id/inSwTime"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.05"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/inSwTime"/>
+
+    <TextView
+        android:id="@+id/boxName"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.1"
+        android:text="@string/boxName"/>
+
+    <TextView
+        android:id="@+id/boxALlWeight"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="1.05"
+        android:drawableRight="@mipmap/up_sort"
+        android:text="@string/boxAllWeiht"/>
+
+    <TextView
+        android:id="@+id/boxHmhc"
+        style="@style/tableTextViewStyle"
+        android:layout_weight="0.9"
+        android:text="@string/boxhmhc"/>
+
+</LinearLayout>

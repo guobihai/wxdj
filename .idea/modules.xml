@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/YmsApp.iml" filepath="$PROJECT_DIR$/.idea/YmsApp.iml" group="YmsApp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="YmsApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/datelibrary/datelibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/datelibrary/datelibrary.iml" group="YmsApp/datelibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/smtlibrary/smtlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/smtlibrary/smtlibrary.iml" group="YmsApp/smtlibrary" />
+    </modules>
+  </component>
+</project>

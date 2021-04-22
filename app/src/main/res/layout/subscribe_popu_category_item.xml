@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_subscribe"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/popu_item_width"
+    android:minWidth="@dimen/popu_item_height" >
+
+    <TextView
+        android:id="@+id/text_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/popu_menu_item_bg"
+        android:gravity="center"
+        android:minHeight="@dimen/popu_item_width"
+        android:minWidth="@dimen/popu_item_height"
+        android:textColor="@android:color/white"
+        android:text="@string/dxw_name"
+        android:textStyle="bold"
+        android:textSize="@dimen/textsize28" />
+    <!-- android:layout_margin="5dip" -->
+
+</RelativeLayout>
