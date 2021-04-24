@@ -17,6 +17,8 @@ public class ParamUtils {
         Map<String, Object> param = new HashMap<>();
         List<FilterEntry> list = new ArrayList<>();
         List<FilterEntry> sorts = new ArrayList<>();
+//        list.add(new FilterEntry("TicketType", null, "C"));
+        //{"member":"TicketType","value":"C"},
         list.add(new FilterEntry("DriverId", 2, userId));
         param.put("pageSize", 0);
         param.put("pageNo", 0);
@@ -30,10 +32,10 @@ public class ParamUtils {
 
 final class FilterEntry {
     String member;
-    int operator;
+    Object operator;
     String value;
 
-    public FilterEntry(String member, int operator, String value) {
+    public FilterEntry(String member, Object operator, String value) {
         this.member = member;
         this.operator = operator;
         this.value = value;

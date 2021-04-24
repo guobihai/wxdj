@@ -39,6 +39,15 @@ public class AccountManager {
     public static boolean isNeedLogin = false;
 
     public static  String tokenInfo;
+    public static  String tenant;
+
+    public static String getTenant() {
+        return tenant;
+    }
+
+    public static void setTenant(String tenant) {
+        AccountManager.tenant = tenant;
+    }
 
     public static String getTokenInfo() {
         return tokenInfo;

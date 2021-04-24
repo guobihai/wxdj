@@ -53,7 +53,7 @@ public class TokenInterceptor implements Interceptor {
             requestBuilder.header("Accept-Language", "zh-Hans");
             requestBuilder.header("content-type", "application/json; charset=utf-8");
             requestBuilder.header("culture", "zh-Hans");
-            requestBuilder.header("__tenant", tenant);
+            requestBuilder.header("__tenant", AccountManager.getTenant());
         }
 
 

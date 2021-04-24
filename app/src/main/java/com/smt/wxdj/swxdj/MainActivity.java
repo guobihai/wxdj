@@ -174,13 +174,13 @@ public class MainActivity extends AppCompatActivity
         /**
          * 开启检测用户服务
          */
-        Intent startIntent = new Intent(this, CheckUserService.class);
-        startService(startIntent);
+//        Intent startIntent = new Intent(this, CheckUserService.class);
+//        startService(startIntent);
         /**
          * 开启检测任务服务
          */
-        startIntent = new Intent(this, CheckTaskService.class);
-        startService(startIntent);
+//        startIntent = new Intent(this, CheckTaskService.class);
+//        startService(startIntent);
 
         mLogoutPresenter = new LogoutPresenterImpl();
         doRegisterReceiver();
@@ -194,9 +194,6 @@ public class MainActivity extends AppCompatActivity
         IntentFilter filter = new IntentFilter(FileKeyName.OPEN);
         filter.addAction(FileKeyName.CHECKTASK);
         registerReceiver(mReceiver, filter);
-//        taskAlarmReceiver = new TaskAlarmReceiver();
-//        filter = new IntentFilter(CheckTaskService.OPEN);
-//        registerReceiver(taskAlarmReceiver, filter);
     }
 
     @Override

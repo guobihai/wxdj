@@ -75,7 +75,7 @@ public class BoxModelImpl implements BoxsModel {
             @Override
             public void onSuccess(String response) {
                 sysout("场地====", response);
-                onLoadBoxsListener.onSucess(PraseJsonUtils.praseCdListData(response));
+//                onLoadBoxsListener.onSucess(PraseJsonUtils.praseCdListData(response));
             }
 
             @Override

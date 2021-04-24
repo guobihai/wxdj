@@ -237,7 +237,7 @@ public class OkHttpUtils {
             public void onResponse(Response response) throws IOException {
                 try {
                     String res = response.body().string();
-                    LogUtils.sysout("返回数据", res);
+//                    LogUtils.sysout("返回数据", res);
                     sendSuccessCallBack(callBack, res);
                 } catch (final Exception e) {
                     e.printStackTrace();

@@ -3,7 +3,6 @@ package com.smt.wxdj.swxdj.logins.presenter;
 import android.text.TextUtils;
 
 import com.smt.wxdj.swxdj.BasePresenter;
-import com.smt.wxdj.swxdj.api.LoginInterface;
 import com.smt.wxdj.swxdj.bean.AppUpdateBean;
 import com.smt.wxdj.swxdj.bean.BasicParam;
 import com.smt.wxdj.swxdj.bean.BoxDetalBean;
@@ -19,10 +18,6 @@ import com.smt.wxdj.swxdj.interfaces.IPublicResultInterface;
 import com.smt.wxdj.swxdj.logins.model.LoginModel;
 import com.smt.wxdj.swxdj.logins.model.LoginModelImpl;
 import com.smt.wxdj.swxdj.logins.view.LoginView;
-import com.smt.wxdj.swxdj.network.RetrofitManager;
-import com.smt.wxdj.swxdj.network.entity.BaseResponse;
-import com.smt.wxdj.swxdj.network.observer.ResponseObserver;
-import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.PraseJsonUtils;
@@ -42,9 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 import static com.smt.wxdj.swxdj.setting.model.SettingModelImpl.InputStreamTOString;
 import static com.smt.wxdj.swxdj.setting.model.SettingModelImpl.StringTOInputStream;
@@ -72,36 +64,11 @@ public class LoginPresenterImpl extends BasePresenter<LoginView> implements Logi
 
             }
         });
-//        RetrofitManager.create(LoginInterface.class).getTeantsInfo()
-//                .compose(RxUtils.getWrapper())
-//                .subscribe(new Observer<Tenants>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Tenants tenantsBaseResponse) {
-//                        LogUtils.sysout("=onComplete===",JsonUtils.serialize(te));
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                    LogUtils.sysout("=onComplete===","onComplete");
-//                    }
-//                });
     }
 
     @Override
     public void loadToken() {
         getView().showProgress();
-
-
         mLoginModel.loadToken(getLoginRequestData(), new IPublicResultInterface() {
             @Override
             public void onSucess(Object object) {
@@ -129,7 +96,7 @@ public class LoginPresenterImpl extends BasePresenter<LoginView> implements Logi
                 if (!isViewAttached()) return;
                 getView().onSuccess(object);
                 getView().hideProgress();
-                mLoginModel.getUserInfo(null);
+
             }
 
             @Override

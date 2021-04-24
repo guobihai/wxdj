@@ -3,6 +3,8 @@ package com.smt.wxdj.swxdj.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelStore;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.smt.wxdj.swxdj.MainActivity;
 import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.MyGridViewActivity;
@@ -51,10 +54,12 @@ import com.smt.wxdj.swxdj.utils.PlayRing;
 import com.smt.wxdj.swxdj.utils.SettingConfig;
 import com.smt.wxdj.swxdj.utils.SortType;
 import com.smt.wxdj.swxdj.view.MyRecyclerView;
+import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
 import com.smtlibrary.dialog.SweetAlertDialog;
 import com.smtlibrary.utils.JsonUtils;
 import com.smtlibrary.utils.LogUtils;
 import com.smtlibrary.utils.PreferenceUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -106,9 +111,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TaskBoxPresenterImpl mBoxsPresenterImpl;
     private String searchKey;
     private boolean isSearch;
+    private WorkViewModel workViewModel;
 
     //新增场地模型类
-    private Spinner mMenuSpinner;
     private boolean isDefault;//系统设置是否有默认参数
 
 
@@ -118,13 +123,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (msg.what == TIMETASK) {
                 if (getUserVisibleHint()) {
                     if (mStackDialog != null && mStackDialog.isShowing()) {
-//                        mStackDialog.dismiss();
                         mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
-                    } else {
-//                        MainActivity activity = (MainActivity) getActivity();
-//                        SearchResultBoxDialog dialog = activity.getBoxDialog();
-//                        if (null == dialog || !dialog.isShowing())
-//                            onRefresh();
                     }
                 }
                 mHandler.sendEmptyMessageDelayed(TIMETASK, delayTime);
@@ -161,6 +160,16 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         isDefault = LruchUtils.isSwitch(getString(R.string.open_stack_list_switch));
 
         mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+        workViewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication())).get(WorkViewModel.class);
+        workViewModel.getCurMachineNo();
+
+        workViewModel.getMachineList().observe(this, nMachineInfos -> {
+            if (null != nMachineInfos && nMachineInfos.size() > 0) {
+                workViewModel.getCurTaskListInfo("39faf629-ef1f-85b9-4c9a-c376ffc48804");
+            }
+            hideProgress();
+        });
+
     }
 
 
@@ -187,8 +196,6 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         boxDetailAdapt = new BoxDetailAdapt(getActivity(), mType);
         mRecyclerView.setAdapter(boxDetailAdapt);
 
-//        mMenuSpinner = (Spinner) view.findViewById(R.id.menuSpinner);
-
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -202,65 +209,27 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
 
 
-        boxDetailAdapt.setOnItemClickListener(new BoxDetailAdapt.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                boxDetalBean = boxDetailAdapt.getItem(position);
-                if (null == boxDetalBean) return;
-//                Log.e("boxDetalBean", boxDetalBean.toString());
-                switch (mType) {
-//                    case MainActivity.TASKTYPE_ALL:
-//                    case TASKTYPE_ZXBOAT:
-//                    case TASKTYPE_ZXC:
-//                    case TASKTYPE_FALLBOX:
-//                    case TASKTYPE_LDBOAT:
-//                    case TASKTYPE_DCBOAT:
-//                        //20190118 参数控制卸船是否自动放箱，默认显示
-//                        boolean isAuto = LruchUtils.isSwitch(getString(R.string.automatic_discharge));
-//                        String str = PreferenceUtils.getString(getActivity(), boxDetalBean.getRown(), null);
-//                        if (isAuto) {
-//                            if (str == null)
-//                                mBoxsPresenterImpl.CheckMaxCellTier(boxDetalBean.getRown());
-//                            else {
-//                                Bay bay = deserialize(str, Bay.class);
-//                                mBoxsPresenterImpl.GetCntrInfoConver(boxDetalBean, bay);
-//                            }
-//                        } else {
-//                            if (str == null)
-//                                mBoxsPresenterImpl.CheckMaxCellTier(boxDetalBean.getRown());
-//                            else {
-//                                Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-//                                it.putExtra("boxBean", boxDetalBean);
-//                                it.putExtra("bay", deserialize(str, Bay.class));
-//                                startActivityForResult(it, 1);
-//                            }
-//                        }
-//                        break;
-                    case MainActivity.TASKTYPE_CANCLEBOX://取消提箱
-                        if (boxDetalBean.getStatus().equals("WD") || boxDetalBean.getStatus().equals("CP"))
-                            showDialog(String.valueOf(boxDetalBean.getCntr()));
-                        break;
-                    default:
-                        String str = PreferenceUtils.getString(getActivity(), boxDetalBean.getRown(), null);
-                        if (str == null)
-                            mBoxsPresenterImpl.CheckMaxCellTier(boxDetalBean.getRown());
-                        else {
-                            //20190118 参数控制卸船是否自动放箱，默认显示
-//                            boolean isAuto = LruchUtils.isSwitch(getString(R.string.automatic_discharge));
-//                            boolean isDC = BoxTool.STATE_MRE.equals(boxDetalBean.getTrk_Type()) && BoxTool.CTRL_PUTBOX.equals(boxDetalBean.getActivity());
-//                            if (isDC && isAuto) {
-//                                Bay bay = deserialize(str, Bay.class);
-//                                mBoxsPresenterImpl.GetCntrInfoConver(boxDetalBean, bay);
-//                            } else {
-                            Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-                            it.putExtra("boxBean", boxDetalBean);
-                            it.putExtra("bay", deserialize(str, Bay.class));
-                            startActivityForResult(it, FileKeyName.resultCode);
-//                            }
+        boxDetailAdapt.setOnItemClickListener((view1, position) -> {
+            boxDetalBean = boxDetailAdapt.getItem(position);
+            if (null == boxDetalBean) return;
+            switch (mType) {
+                case MainActivity.TASKTYPE_CANCLEBOX://取消提箱
+                    if (boxDetalBean.getStatus().equals("WD") || boxDetalBean.getStatus().equals("CP"))
+                        showDialog(String.valueOf(boxDetalBean.getCntr()));
+                    break;
+                default:
+                    String str = PreferenceUtils.getString(getActivity(), boxDetalBean.getRown(), null);
+                    if (str == null)
+                        mBoxsPresenterImpl.CheckMaxCellTier(boxDetalBean.getRown());
+                    else {
+                        //20190118 参数控制卸船是否自动放箱，默认显示
+                        Intent it = new Intent(getActivity(), MyGridViewActivity.class);
+                        it.putExtra("boxBean", boxDetalBean);
+                        it.putExtra("bay", deserialize(str, Bay.class));
+                        startActivityForResult(it, FileKeyName.resultCode);
 
-                        }
-                        break;
-                }
+                    }
+                    break;
             }
         });
         return view;
@@ -270,19 +239,10 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onResume() {
         super.onResume();
-        if (getUserVisibleHint()) {
-//            if (TextUtils.isEmpty(mTaskSql) && null != listStack)
-//                selectStack(listStack);
-//            else
-//                onRefresh();
-        }
-
         if (PreferenceUtils.getBoolean(getActivity(), SettingConfig.OPEN_TIME_TASK, false)) {
             delayTime = PreferenceUtils.getInt(getActivity(), SettingConfig.SETTING_TIME, SettingConfig.TIME_OUT) * 1000;
             mHandler.sendEmptyMessageDelayed(TIMETASK, delayTime);
         }
-
-
     }
 
 
@@ -315,7 +275,6 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         //设置字体大小为14sp
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, DisplayUtil.px2sp(getActivity(), getActivity().getResources().getDimension(R.dimen.textsize28)));//14sp
         textView.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        searchView.setQueryHint("拖车、箱号后3位.");
         searchView.setQueryHint(getString(R.string.the_trailer_and_box_number_are_three_places_behind));
         searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -349,32 +308,27 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     private void showDialog(String boxNO) {
         new CancleBoxDialog(getActivity(), boxNO)
-                .setConfirmClickListener(new CancleBoxDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, View view) {
-                        isStart = true;
-                        mHandler.removeMessages(TIMETASK);
-                        mHandler.sendEmptyMessageDelayed(STARTAC, 2000);
-                        String str = PreferenceUtils.getString(getActivity(), boxDetalBean.getRown(), null);
-                        if (TextUtils.isEmpty(str))
-                            mBoxsPresenterImpl.CheckMaxCellTier(boxDetalBean.getRown());
-                        else {
-                            Bay bay = JsonUtils.deserialize(str, Bay.class);
-                            Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-                            it.putExtra("boxBean", boxDetalBean);
-                            it.putExtra("bay", bay);
-                            startActivityForResult(it, FileKeyName.resultCode);
-                        }
-                        dialog.dismiss();
+                .setConfirmClickListener((dialog, view) -> {
+                    isStart = true;
+                    mHandler.removeMessages(TIMETASK);
+                    mHandler.sendEmptyMessageDelayed(STARTAC, 2000);
+                    String str = PreferenceUtils.getString(getActivity(), boxDetalBean.getRown(), null);
+                    if (TextUtils.isEmpty(str))
+                        mBoxsPresenterImpl.CheckMaxCellTier(boxDetalBean.getRown());
+                    else {
+                        Bay bay = JsonUtils.deserialize(str, Bay.class);
+                        Intent it = new Intent(getActivity(), MyGridViewActivity.class);
+                        it.putExtra("boxBean", boxDetalBean);
+                        it.putExtra("bay", bay);
+                        startActivityForResult(it, FileKeyName.resultCode);
                     }
+                    dialog.dismiss();
                 }).show();
 
     }
 
     @Override
     public void onRefresh() {
-//        if (TextUtils.isEmpty(mTaskSql)) return;
-//        LogUtils.e("tag", "sortType:"+sortType);
         showProgress(1);
         String taskType = "";
         switch (mType) {
@@ -540,37 +494,6 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             onRefresh();
             return;
         }
-//        if (object instanceof BoxDetalBean) {
-//            final BoxDetalBean bean = (BoxDetalBean) object;
-//            String alertMsg = "是否把" + boxDetalBean.getCntr() + "放到:" + bean.getRown() + "/" + bean.getCell() + "/" + bean.getTier() + "位置上?";
-//            new IAlertDialog(getActivity())
-//                    .setContentText(alertMsg)
-//                    .setComfirmBtnText(getActivity().getString(R.string.OK))
-//                    .setCancleBtnText(getActivity().getString(R.string.cancle))
-//                    .setMidContent(getActivity().getString(R.string.details))
-//                    .setConfirmClickListener(new IAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(Dialog dialog) {
-//                            dialog.dismiss();
-//                            mBoxsPresenterImpl.putBoxForCell((bean));
-//                        }
-//                    }).setCancelClickListener(new IAlertDialog.OnSweetClickListener() {
-//                @Override
-//                public void onClick(Dialog dialog) {
-//                    dialog.dismiss();
-//                }
-//            }).setOnMidClickListener(new IAlertDialog.OnSweetClickListener() {
-//                @Override
-//                public void onClick(Dialog dialog) {
-//                    dialog.dismiss();
-//                    String str = PreferenceUtils.getString(getActivity(), boxDetalBean.getRown(), null);
-//                    Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-//                    it.putExtra("boxBean", bean);
-//                    it.putExtra("bay", deserialize(str, Bay.class));
-//                    startActivityForResult(it, 1);
-//                }
-//            }).show();
-//        }
     }
 
 
@@ -606,7 +529,6 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             @Override
             public void onCancelSuitcase(Dialog dialog, StackBean bean, String sql) {
-//                mType = MainActivity.TASKTYPE_CANCLEBOX;
                 mType = MainActivity.TASKTYPE_CANCLEBOX;
                 mTaskSql = sql;
                 if (null != bean) {
@@ -669,12 +591,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         message.setText(msg);
         message.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         final AlertDialog showAlertDialog = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.alert)).setCancelable(false).setView(view).show();
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAlertDialog.dismiss();
-            }
-        });
+        btnOk.setOnClickListener(view1 -> showAlertDialog.dismiss());
     }
 
     @Override
@@ -705,7 +622,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else if (sType.equals(FileKeyName.TASKTYPE_DCBOAT)) {
                 mType = TASKTYPE_DCBOAT;
                 onRefresh();
-            } else if (sType.equals(FileKeyName.CHECKTASKSERVICEMSG)){
+            } else if (sType.equals(FileKeyName.CHECKTASKSERVICEMSG)) {
                 boxDetailAdapt.setData(filterData());
             }
         } else {

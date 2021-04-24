@@ -8,6 +8,7 @@ import com.smt.wxdj.swxdj.network.interceptor.HttpLoggingInterceptor2;
 import com.smt.wxdj.swxdj.network.interceptor.NetworkInterceptor;
 import com.smt.wxdj.swxdj.network.interceptor.TokenInterceptor;
 import com.smt.wxdj.swxdj.network.ssl.ApiServer;
+import com.smt.wxdj.swxdj.network.ssl.SSLFactory;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;

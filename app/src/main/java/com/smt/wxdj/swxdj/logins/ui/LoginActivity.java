@@ -2,6 +2,8 @@ package com.smt.wxdj.swxdj.logins.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelStore;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,7 +31,6 @@ import com.smt.wxdj.swxdj.MvpBaseActivity;
 import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.adapt.MyCdOrTwAdapt;
-import com.smt.wxdj.swxdj.api.LoginInterface;
 import com.smt.wxdj.swxdj.bean.AppUpdateBean;
 import com.smt.wxdj.swxdj.bean.Dock;
 import com.smt.wxdj.swxdj.bean.DriverList;
@@ -38,14 +38,9 @@ import com.smt.wxdj.swxdj.bean.MachineNo;
 import com.smt.wxdj.swxdj.bean.User;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.dao.TokenInfo;
-import com.smt.wxdj.swxdj.enums.DataType;
 import com.smt.wxdj.swxdj.logins.presenter.LoginPresenterImpl;
 import com.smt.wxdj.swxdj.logins.view.LoginView;
-import com.smt.wxdj.swxdj.network.RetrofitManager;
 import com.smt.wxdj.swxdj.network.account.AccountManager;
-import com.smt.wxdj.swxdj.network.entity.BaseResponse;
-import com.smt.wxdj.swxdj.network.observer.ResponseObserver;
-import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.setting.ui.SettingsActivity;
 import com.smt.wxdj.swxdj.switchlang.Constant;
 import com.smt.wxdj.swxdj.switchlang.LangUtils;
@@ -59,6 +54,7 @@ import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.ReadRawFileUtils;
 import com.smt.wxdj.swxdj.utils.SettingConfig;
 import com.smt.wxdj.swxdj.utils.URLTool;
+import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
 import com.smtlibrary.dialog.PassWdDialog;
 import com.smtlibrary.dialog.SweetAlertDialog;
 import com.smtlibrary.https.OkHttpUtils;
@@ -160,11 +156,15 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
         dialog.show();
     }
 
+    WorkViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        viewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
+
 
         WindowManager wm = this.getWindowManager();
 
@@ -200,6 +200,7 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 machineNo = mArrayValue[position];
                 OkHttpUtils.setTenant(mArrayValue[position]);
+                AccountManager.setTenant(mArrayValue[position]);
             }
 
             @Override
@@ -349,23 +350,13 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
 //            focusView.requestFocus();
         } else {
             mLoginPresenterImpl.login();
-//            User user = new User();
-//            user.setSignonUSERID(userName);
-//            user.setSignonPWD(password);
-//            user.setCRANE(machineNo);
-//            mLoginPresenterImpl.CheckSignOnQC(user);
+
         }
     }
 
 
     @Override
     public String getUserName() {
-//        return mEmailView.getText().toString().trim();
-//        String user = spUser.getSelectedItem().toString();
-//        if (user.contains(":")) {
-//            user = user.split(":")[0];
-//        }
-//        return user;
         String user = spUserName.getValue();
         if (user.contains(":")) {
             user = user.split(":")[0];
@@ -423,8 +414,6 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
         isLoadMachineList = true;
         if (LruchUtils.isExist() && isLoadMachineList) {
             findViewById(R.id.email_sign_in_button).setEnabled(true);
-//            isGetAllSystem = false;
-//            isLoadMachineList = false;
         }
         int index = 0;
         String aqh = PreferenceUtils.getString(this, FileKeyName.MACHINENO, "");
@@ -597,9 +586,7 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
     @Override
     public void onSuccess(final Object obj) {
         if (obj instanceof TokenInfo) {
-            TokenInfo info = (TokenInfo) obj;
-            AccountManager.setTokenInfo(info.getAccess_token());
-            OkHttpUtils.setToken(info.getAccess_token());
+//            viewModel.getCurMachineNo();
             loginCrnSuccess();
             return;
         }
@@ -635,20 +622,17 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
     public void onClick(View v) {
         if (v.getId() == R.id.setting) {
             PassWdDialog dialog = new PassWdDialog(this);
-            dialog.setConfirmClickListener(new PassWdDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(PassWdDialog inputDialog, String value) {
-                    if (TextUtils.isEmpty(value)) {
-                        inputDialog.dismiss();
-                        mPresenter.loadDockData();
-                        return;
-                    }
-                    if (new MD5Code().getMD5ofStr(value.trim().toLowerCase()).equals("A85E0847E94E471258F2D6C758E1A9B5")) {
-                        startActivity(new Intent(LoginActivity.this, SettingsActivity.class).putExtra(SettingsActivity.SETTINGTYPE, SettingsActivity.TYPE_ADMINISTRATORS));
-                        inputDialog.dismiss();
-                    } else
-                        inputDialog.setError("");
+            dialog.setConfirmClickListener((inputDialog, value) -> {
+                if (TextUtils.isEmpty(value)) {
+                    inputDialog.dismiss();
+                    mPresenter.loadDockData();
+                    return;
                 }
+//                if (new MD5Code().getMD5ofStr(value.trim().toLowerCase()).equals("A85E0847E94E471258F2D6C758E1A9B5")) {
+                startActivity(new Intent(LoginActivity.this, SettingsActivity.class).putExtra(SettingsActivity.SETTINGTYPE, SettingsActivity.TYPE_ADMINISTRATORS));
+                inputDialog.dismiss();
+//                } else
+//                    inputDialog.setError("");
             });
             dialog.show();
         } else if (v.getId() == R.id.email_sign_in_button) {

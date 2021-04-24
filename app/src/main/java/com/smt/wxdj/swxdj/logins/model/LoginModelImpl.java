@@ -1,14 +1,13 @@
 package com.smt.wxdj.swxdj.logins.model;
 
+import android.text.TextUtils;
+
 import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.R;
-import com.smt.wxdj.swxdj.api.LoginInterface;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.dao.TokenInfo;
 import com.smt.wxdj.swxdj.interfaces.IPublicResultInterface;
-import com.smt.wxdj.swxdj.network.RetrofitManager;
-import com.smt.wxdj.swxdj.network.utils.RxUtils;
-import com.smt.wxdj.swxdj.param.ParamUtils;
+import com.smt.wxdj.swxdj.network.account.AccountManager;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
 import com.smt.wxdj.swxdj.utils.PraseJsonUtils;
 import com.smt.wxdj.swxdj.utils.URLTool;
@@ -24,9 +23,6 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by gbh on 16/6/27.
@@ -71,13 +67,23 @@ public class LoginModelImpl implements LoginModel {
 
     @Override
     public void login(List<OkHttpUtils.Param> params, final IPublicResultInterface onLoginListener) {
-
-
         OkHttpUtils.post(URLTool.authHost, params, new OkHttpUtils.ResultCallBack<String>() {
             @Override
             public void onSuccess(String response) {
-                LogUtils.sysout("login=====", response);
-                onLoginListener.onSucess(JsonUtils.deserialize(response, TokenInfo.class));
+//                LogUtils.sysout("login=====", response);
+                try {
+                    TokenInfo tokenInfo = JsonUtils.deserialize(response, TokenInfo.class);
+                    if(!TextUtils.isEmpty(tokenInfo.getAccess_token())){
+                        AccountManager.setTokenInfo(tokenInfo.getAccess_token());
+                        OkHttpUtils.setToken(tokenInfo.getAccess_token());
+                        getUserInfo(onLoginListener);
+                    }else{
+                        Map<String,String> map = JsonUtils.deserialize(response, Map.class);
+                        onLoginListener.onFailure(map.get("error_description"), null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -94,38 +100,12 @@ public class LoginModelImpl implements LoginModel {
         OkHttpUtils.get(URLTool.getUrl().concat("abp/application-configuration?culture=zh-Hans"), new OkHttpUtils.ResultCallBack<String>() {
             @Override
             public void onSuccess(String response) {
-
                 Map<String, Object> stringObjectMap = JsonUtils.deserialize(response, Map.class);
                 Map<String, Object> userMap = (Map<String, Object>) stringObjectMap.get("currentUser");
                 LogUtils.sysout("get user info=====", userMap.get("id"));
+                AccountManager.saveUser(String.valueOf(userMap.get("id")));
                 if (null != onLoginListener)
-                    onLoginListener.onSucess(JsonUtils.deserialize(response, TokenInfo.class));
-                String data= JsonUtils.serialize(ParamUtils.getCurChaneParam(String.valueOf(userMap.get("id"))));
-                LogUtils.sysout("吊机data=====", data);
-//                saveRTG(data,null);
-                     RetrofitManager.create(LoginInterface.class).getTeantsInfo(ParamUtils.getCurChaneParam(String.valueOf(userMap.get("id"))))
-                .compose(RxUtils.getWrapper())
-                .subscribe(new Observer<Object>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object tenantsBaseResponse) {
-                        LogUtils.sysout("=onComplete===",JsonUtils.serialize(tenantsBaseResponse));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    LogUtils.sysout("=onComplete===","onComplete");
-                    }
-                });
+                    onLoginListener.onSucess(new TokenInfo());
             }
 
             @Override
@@ -136,6 +116,8 @@ public class LoginModelImpl implements LoginModel {
             }
         });
     }
+
+
 
     /**
      * 登录吊机
