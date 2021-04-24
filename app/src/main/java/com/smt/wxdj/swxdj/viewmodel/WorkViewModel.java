@@ -12,6 +12,8 @@ import com.smt.wxdj.swxdj.network.observer.ResponseObserver;
 import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.param.ParamUtils;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.OprTaskInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smtlibrary.utils.LogUtils;
 
 import java.util.HashMap;
@@ -21,11 +23,19 @@ import java.util.Map;
 
 public class WorkViewModel extends ViewModel {
 
+    //设备列表
     private MutableLiveData<List<NMachineInfo>> machineList;
+
+    //设备场地区域
+    private MutableLiveData<List<ChaneStackInfo>> ChaneStackInfoList;
+    //呗位信息
+    private MutableLiveData<List<YardBayInfo>> YardBayInfoList;
 
 
     public WorkViewModel() {
         machineList = new MutableLiveData<>();
+        ChaneStackInfoList = new MutableLiveData<>();
+        YardBayInfoList = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<NMachineInfo>> getMachineList() {
@@ -42,7 +52,6 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<NMachineInfo>>() {
                     @Override
                     public void onSuccess(List<NMachineInfo> data) {
-                        LogUtils.sysout("===吊机列表数据=size==", data.size());
                         LogUtils.sysout("===吊机列表数据===", JsonUtils.serialize(data));
                         machineList.setValue(data);
                     }
@@ -62,15 +71,22 @@ public class WorkViewModel extends ViewModel {
      *
      * @param chanId
      */
-    public void getCurTaskListInfo(String chanId) {
+    public void getJobTicketTaskStack(String chanId) {
         RetrofitManager.createToken(WorkInterface.class)
                 .getJobTicketTaskStack(chanId)
                 .compose(RxUtils.getWrapper())
                 .subscribe(new ResponseObserver<List<ChaneStackInfo>>() {
                     @Override
                     public void onSuccess(List<ChaneStackInfo> data) {
+                        ChaneStackInfoList.setValue(data);
                         LogUtils.sysout("===getCurTaskListInfo===", JsonUtils.serialize(data));
-//                        machineList.setValue(data);
+                        GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
+//                        GetYardBayListBySiteId("39fb1302-e790-9243-06df-83853d8b948e",true,true);
+//                        GetYardBlockListBySiteId("39fb1302-e790-9243-06df-83853d8b948e",true,true);
+//                        GetYardBlockGetByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00",true,true);
+//                        GetTrkWorkByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00","");
+//                        GetTrkWorkIsUPByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
+//                        GetTrkWorkIsCTCByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
                     }
                 });
 
@@ -81,17 +97,17 @@ public class WorkViewModel extends ViewModel {
      * 根据场站ID获取贝位
      *
      * @param blockId
-     * @param includeCell
-     * @param includeCntr
      */
-    public void GetYardBayListByBlockId(String blockId, boolean includeCell, boolean includeCntr) {
+    public void GetYardBayListByBlockId(String blockId) {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetYardBayListByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<Object>>() {
+                .subscribe(new ResponseObserver<List<YardBayInfo>>() {
                     @Override
-                    public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListByBlockId===", JsonUtils.serialize(data));
+                    public void onSuccess(List<YardBayInfo> data) {
+                        YardBayInfoList.setValue(data);
+                        String strData = JsonUtils.serialize(data);
+                        LogUtils.sysout("===GetYardBayListByBlockId===", strData);
                     }
                 });
     }
@@ -111,7 +127,7 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<Object>>() {
                     @Override
                     public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                        LogUtils.sysout("===根据场站ID获取街区信息===", JsonUtils.serialize(data));
                     }
                 });
     }
@@ -131,7 +147,7 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<Object>>() {
                     @Override
                     public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                        LogUtils.sysout("===根据场站ID获取街区信息===", JsonUtils.serialize(data));
                     }
                 });
     }
@@ -139,18 +155,18 @@ public class WorkViewModel extends ViewModel {
     /**
      * 根据场站区域ID获取街区信息
      *
-     * @param siteId
+     * @param areaId
      * @param includeCell
      * @param includeCntr
      */
-    public void GetYardBlockGetListByAreaId(String siteId, boolean includeCell, boolean includeCntr) {
+    public void GetYardBlockGetListByAreaId(String areaId, boolean includeCell, boolean includeCntr) {
         RetrofitManager.createToken(WorkInterface.class)
-                .GetYardBlockGetListByAreaId(siteId, includeCell, includeCntr)
+                .GetYardBlockGetListByAreaId(areaId, includeCell, includeCntr)
                 .compose(RxUtils.getWrapper())
                 .subscribe(new ResponseObserver<List<Object>>() {
                     @Override
                     public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                        LogUtils.sysout("===根据场站区域ID获取街区信息===", JsonUtils.serialize(data));
                     }
                 });
     }
@@ -158,18 +174,18 @@ public class WorkViewModel extends ViewModel {
     /**
      * 根据街区信息ID获取街区信息
      *
-     * @param siteId
+     * @param blockId
      * @param includeCell
      * @param includeCntr
      */
-    public void GetYardBlockGetByBlockId(String siteId, boolean includeCell, boolean includeCntr) {
+    public void GetYardBlockGetByBlockId(String blockId, boolean includeCell, boolean includeCntr) {
         RetrofitManager.createToken(WorkInterface.class)
-                .GetYardBlockGetByBlockId(siteId, includeCell, includeCntr)
+                .GetYardBlockGetByBlockId(blockId, includeCell, includeCntr)
                 .compose(RxUtils.getWrapper())
                 .subscribe(new ResponseObserver<List<Object>>() {
                     @Override
                     public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                        LogUtils.sysout("===根据街区信息ID获取街区信息===", JsonUtils.serialize(data));
                     }
                 });
     }
@@ -184,10 +200,10 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkByBlockId(blockId, activity)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<Object>>() {
+                .subscribe(new ResponseObserver<List<OprTaskInfo>>() {
                     @Override
-                    public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                    public void onSuccess(List<OprTaskInfo> data) {
+                        LogUtils.sysout("===获取指定街区的作业任务列表===", JsonUtils.serialize(data));
                     }
                 });
     }
@@ -201,10 +217,10 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkIsUPByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<Object>>() {
+                .subscribe(new ResponseObserver<List<OprTaskInfo>>() {
                     @Override
-                    public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                    public void onSuccess(List<OprTaskInfo> data) {
+                        LogUtils.sysout("===获取指定街区的取消提箱任务列表===", JsonUtils.serialize(data));
                     }
                 });
     }
@@ -218,10 +234,10 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkIsCTCByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<Object>>() {
+                .subscribe(new ResponseObserver<List<OprTaskInfo>>() {
                     @Override
-                    public void onSuccess(List<Object> data) {
-                        LogUtils.sysout("===GetYardBayListBySiteId===", JsonUtils.serialize(data));
+                    public void onSuccess(List<OprTaskInfo> data) {
+                        LogUtils.sysout("===获取指定街区的倒箱任务列表===", JsonUtils.serialize(data));
                     }
                 });
     }

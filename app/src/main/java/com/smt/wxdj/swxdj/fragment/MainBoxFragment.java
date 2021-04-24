@@ -159,13 +159,13 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         isDefault = LruchUtils.isSwitch(getString(R.string.open_stack_list_switch));
 
-        mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+//        mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
         workViewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication())).get(WorkViewModel.class);
         workViewModel.getCurMachineNo();
 
         workViewModel.getMachineList().observe(this, nMachineInfos -> {
             if (null != nMachineInfos && nMachineInfos.size() > 0) {
-                workViewModel.getCurTaskListInfo("39faf629-ef1f-85b9-4c9a-c376ffc48804");
+                workViewModel.getJobTicketTaskStack("39faf629-ef1f-85b9-4c9a-c376ffc48804");
             }
             hideProgress();
         });
