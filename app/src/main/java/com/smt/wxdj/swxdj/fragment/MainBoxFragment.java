@@ -542,7 +542,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 workViewModel.GetTrkWorkByBlockId(bean.getYardBlockId(), "");
                 mStackDialog.dismiss();
                 mStackBean = bean;
-                Session.getInstance().notifySelect(FileKeyName.CONFIRMBOX);
+//                Session.getInstance().notifySelect(FileKeyName.CONFIRMBOX);
             }
 
             @Override
@@ -568,7 +568,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 workViewModel.GetTrkWorkIsUPByBlockId(bean.getYardBlockId());
                 LogUtils.sysout("====mTaskSql===", mTaskSql);
                 mStackDialog.dismiss();
-                Session.getInstance().notifySelect(FileKeyName.CANCELBOX);
+//                Session.getInstance().notifySelect(FileKeyName.CANCELBOX);
             }
 
             @Override

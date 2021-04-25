@@ -164,9 +164,8 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((ContentView) holder).boxHmhc.setText(isVVDVSL(bean) ? "" : bean.getVVDVSL());
             ((ContentView) holder).boxName.setText("");
             ((ContentView) holder).enter_Time.setText(changeWaitTime(bean.getWaitMinute()));
-            String[] strs =spiltRowAndCell(bean.getLocation());
-            ((ContentView) holder).tvCell.setText(strs[0]);
-            ((ContentView) holder).tvTier.setText(strs[1]);
+            ((ContentView) holder).tvCell.setText(bean.getCell());
+            ((ContentView) holder).tvTier.setText(bean.getTier());
             ((ContentView) holder).workLine.setText(bean.getPortainer());
             String dt = bean.getActivity();
             if (dt.equals("PK") || dt.equals("IP")) {
