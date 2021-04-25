@@ -33,7 +33,7 @@ public interface WorkInterface {
 
     //    SystemSetting/YardBay/GetListBySiteId(根据场站ID获取贝位)、
     @GET("SystemSetting/YardBay/GetListBySiteId")
-    Observable<List<Object>> GetYardBayListBySiteId(@Query("blockId") String blockId, @Query("includeCell") boolean includeCell,
+    Observable<List<Object>> GetYardBayListBySiteId(@Query("siteId") String blockId, @Query("includeCell") boolean includeCell,
                                                     @Query("includeCntr") boolean includeCntr);
 
     //    SystemSetting/YardBlock/GetListBySiteId(根据场站ID获取街区信息)、
