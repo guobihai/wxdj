@@ -113,7 +113,7 @@ public class TaskBoxPresenterImpl implements TaskBoxPresenter {
                         if (!bean.getStack().trim().equals("CHECK"))
                             list.add(bean);
                     }
-                    mBoxsView.addListCd(list);
+//                    mBoxsView.addListCd(list);
                 }
                 mBoxsView.hideProgress();
             }

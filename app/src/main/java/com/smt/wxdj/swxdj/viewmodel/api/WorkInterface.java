@@ -5,6 +5,7 @@ import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.NMachineInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.OprTaskInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -54,15 +55,15 @@ public interface WorkInterface {
 
     //4、获取指定街区的作业任务列表
     @GET("SystemSetting/TrkWork/GetTrkWorkByBlockId")
-    Observable<List<OprTaskInfo>> GetTrkWorkByBlockId(@Query("blockId") String blockId, @Query("activity") String activity);
+    Observable<List<YardCntrInfo>> GetTrkWorkByBlockId(@Query("blockId") String blockId, @Query("activity") String activity);
 
     //5、获取指定街区的取消提箱任务列表
     @GET("SystemSetting/TrkWork/GetTrkWorkIsUPByBlockId")
-    Observable<List<OprTaskInfo>> GetTrkWorkIsUPByBlockId(@Query("blockId") String blockId);
+    Observable<List<YardCntrInfo>> GetTrkWorkIsUPByBlockId(@Query("blockId") String blockId);
 
     //6、获取指定街区的倒箱任务列表
     @GET("SystemSetting/TrkWork/GetTrkWorkIsCTCByBlockId")
-    Observable<List<OprTaskInfo>> GetTrkWorkIsCTCByBlockId(@Query("blockId") String blockId);
+    Observable<List<YardCntrInfo>> GetTrkWorkIsCTCByBlockId(@Query("blockId") String blockId);
 
     //7、放箱确认
     @POST("CntrManagement/CraneWork/GroundConfirm")

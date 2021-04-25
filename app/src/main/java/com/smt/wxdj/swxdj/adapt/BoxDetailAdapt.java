@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smt.wxdj.swxdj.R;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.compares.SmtCompare;
 import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.NumTool;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.PreferenceUtils;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private boolean mShowFooter = true;
     private Context mContext;
-    private List<BoxDetalBean> mData;
+    private List<YardCntrInfo> mData;
     private OnItemClickListener onItemClickListener;
     private int mType;
     private boolean isSortTruck;
@@ -52,12 +52,19 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.mType = type;
     }
 
+    private String[] spiltRowAndCell(String location) {
+        String[] strs = new String[2];
+        if (TextUtils.isEmpty(location)) return strs;
+        strs = location.split("-");
+        return strs;
+    }
 
     /**
      * 等待时间转换
      */
-    private String changeWaitTime(String str) {
-        Long time = Long.parseLong(str);
+    private String changeWaitTime(double waitTime) {
+        Long time = Math.round(waitTime);
+//        Long time = Long.parseLong(str);
         long day = time / (24 * 60);
         long hour = (time % (24 * 60)) / 60;
         long minute = (time % (24 * 60)) % 60;
@@ -71,7 +78,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return day + " " + hour + ":" + minute;
     }
 
-    private boolean isVVDVSL(BoxDetalBean bean) {
+    private boolean isVVDVSL(YardCntrInfo bean) {
         boolean flag = true;
         if (null != bean) {
             if (!TextUtils.isEmpty(bean.getVVDVSL())) {
@@ -88,7 +95,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
      *
      * @param data
      */
-    public void setData(List<BoxDetalBean> data) {
+    public void setData(List<YardCntrInfo> data) {
         this.mData = data;
 //        boolean isSort = PreferenceUtils.getBoolean(mContext, ISSORT, false);
 //        String sortName = PreferenceUtils.getString(mContext, SORT_NAME, SmtCompare.TIME);
@@ -144,21 +151,22 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ContentView) {
-            BoxDetalBean bean = mData.get(position - 1);
+            YardCntrInfo bean = mData.get(position - 1);
             if (null == bean) return;
 
-            ((ContentView) holder).carNum.setText(String.valueOf(bean.getTrk()));
-            ((ContentView) holder).boxNum.setText(String.valueOf(bean.getCntr()));
-            ((ContentView) holder).boxLocation.setText(bean.getRown());
-            ((ContentView) holder).boxType.setText(bean.getEqp_Type());
+            ((ContentView) holder).carNum.setText(String.valueOf(bean.getTrkNo()));
+            ((ContentView) holder).boxNum.setText(String.valueOf(bean.getCntr1()));
+            ((ContentView) holder).boxLocation.setText(bean.getLocation());
+            ((ContentView) holder).boxType.setText(bean.getCntrType1());
             ((ContentView) holder).boxWeight.setText(bean.getFe_Ind());
             ((ContentView) holder).boxOwn.setText(bean.getOpr());
             ((ContentView) holder).boxAllWeight.setText(NumTool.praseNum(bean.getGrs_Ton()));
             ((ContentView) holder).boxHmhc.setText(isVVDVSL(bean) ? "" : bean.getVVDVSL());
             ((ContentView) holder).boxName.setText("");
-            ((ContentView) holder).enter_Time.setText((TextUtils.isEmpty(bean.getWaitTime()) ? "" : changeWaitTime(bean.getWaitTime())));
-            ((ContentView) holder).tvCell.setText(bean.getCell());
-            ((ContentView) holder).tvTier.setText(bean.getTier());
+            ((ContentView) holder).enter_Time.setText(changeWaitTime(bean.getWaitMinute()));
+            String[] strs =spiltRowAndCell(bean.getLocation());
+            ((ContentView) holder).tvCell.setText(strs[0]);
+            ((ContentView) holder).tvTier.setText(strs[1]);
             ((ContentView) holder).workLine.setText(bean.getPortainer());
             String dt = bean.getActivity();
             if (dt.equals("PK") || dt.equals("IP")) {
@@ -166,21 +174,22 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 ((ContentView) holder).boxDt.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
             }
-            ((ContentView) holder).boxDt.setText(BoxTool.keyReference.get(dt));
+//            ((ContentView) holder).boxDt.setText(BoxTool.keyReference.get(dt));
+            ((ContentView) holder).boxDt.setText(bean.getSvcDesc());
             ((ContentView) holder).tvPOD.setText(bean.getPOD());
             ((ContentView) holder).tvEqpCond.setText(bean.getEQP_COND());
         }
     }
 
 
-    public BoxDetalBean getItem(int position) {
+    public YardCntrInfo getItem(int position) {
         if (null == mData) return null;
-        BoxDetalBean box = mData.get(position - 1);
+        YardCntrInfo box = mData.get(position - 1);
         return box;
     }
 
 
-    public void removeObj(BoxDetalBean bean) {
+    public void removeObj(YardCntrInfo bean) {
         if (null != mData) {
             mData.remove(bean);
             this.notifyDataSetChanged();

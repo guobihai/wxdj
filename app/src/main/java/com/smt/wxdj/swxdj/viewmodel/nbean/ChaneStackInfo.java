@@ -1,9 +1,11 @@
 package com.smt.wxdj.swxdj.viewmodel.nbean;
 
+import com.smt.wxdj.swxdj.bean.StackBean;
+
 /**
  * 作业区域
  */
-public class ChaneStackInfo {
+public class ChaneStackInfo extends StackBean {
 
     /**
      * craneNo : RTG01

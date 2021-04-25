@@ -129,7 +129,7 @@ public class CheckTaskService extends Service {
                                 }
 
                                 MainBoxFragment.mData.clear();
-                                MainBoxFragment.mData.addAll(list);
+//                                MainBoxFragment.mData.addAll(list);
                                 Session.getInstance().notifySelect(FileKeyName.CHECKTASKSERVICEMSG);
 
                                 Intent intent = new Intent();

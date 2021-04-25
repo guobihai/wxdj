@@ -10,21 +10,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.smt.wxdj.swxdj.MyApplication;
+import com.smt.wxdj.swxdj.BuildConfig;
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.adapt.StackAdapt;
-import com.smt.wxdj.swxdj.bean.Bay;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.bean.StackBean;
-import com.smt.wxdj.swxdj.bean.User;
-import com.smt.wxdj.swxdj.boxs.presenter.TaskBoxPresenterImpl;
-import com.smt.wxdj.swxdj.boxs.view.TaskBoxView;
-import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.PlayRing;
+import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smtlibrary.dialog.SweetAlertDialog;
 import com.smtlibrary.irecyclerview.IRecyclerView;
-import com.smtlibrary.irecyclerview.OnRefreshListener;
 import com.smtlibrary.irecyclerview.adapter.OnItemClickListener;
 import com.smtlibrary.irecyclerview.animation.ScaleInAnimation;
 import com.smtlibrary.utils.PreferenceUtils;
@@ -37,28 +31,27 @@ import java.util.List;
  * 场地列表
  */
 
-public class StackDialog extends Dialog implements View.OnClickListener, TaskBoxView<BoxDetalBean> {
+public class StackDialog extends Dialog implements View.OnClickListener {
     private Context mContext;
     private Button btnCancle;//取消按钮
     private Button btnOk;//确定按钮
     private IRecyclerView myRecyclerView;
     private StackAdapt adapt;
-    private List<StackBean> mList;
-    private StackBean mStackBean;
+    private List<ChaneStackInfo> mList;
+    private ChaneStackInfo mStackBean;
     //新增取消提箱和刷新功能
     private Button btCancelBox;     //取消提箱
     private Button btRefresh;       //刷新
     private SweetAlertDialog mProgressDialog;
-    private TaskBoxPresenterImpl mBoxsPresenterImpl;
     //新增倒箱功能
     private Button btFallBox;//倒箱
     private boolean isDefault;//系统设置是否有默认参数
-    private List<StackBean> mDataList = new ArrayList<>();//临时list，和传进来的list对比
+    private List<ChaneStackInfo> mDataList = new ArrayList<>();//临时list，和传进来的list对比
 
 
     private OnSweetClickListener mConfirmClickListener;
 
-    public StackDialog(Context context, List<StackBean> list) {
+    public StackDialog(Context context, List<ChaneStackInfo> list) {
         super(context);
         this.mContext = context;
         mList = new ArrayList<>();
@@ -70,9 +63,11 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
         this.mContext = context;
     }
 
-    public void setNewData(List<StackBean> list){
-        if (list.size() > mDataList.size()){
-            PlayRing.ring(mContext);
+    public void setNewData(List<ChaneStackInfo> list) {
+        if(!BuildConfig.DEBUG) {
+            if (list.size() > mDataList.size()) {
+                PlayRing.ring(mContext);
+            }
         }
         mDataList.clear();
         mDataList = list;
@@ -84,6 +79,7 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
         this.mConfirmClickListener = mConfirmClickListener;
         return this;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +111,9 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
         setTitle(mContext.getResources().getString(R.string.select_stack));
         myRecyclerView = (IRecyclerView) findViewById(R.id.recycle_view);
 
-        mBoxsPresenterImpl = new TaskBoxPresenterImpl(this);
         //新添一个标题
-        if (mList.size() > 0 && !TextUtils.isEmpty(mList.get(0).getStack()))
-            mList.add(0, new StackBean());
+        mList.add(0, new ChaneStackInfo());
+
         adapt = new StackAdapt(mContext, mList);
         adapt.openLoadAnimation(new ScaleInAnimation());
         myRecyclerView.setAdapter(adapt);
@@ -126,15 +121,15 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
             @Override
             public void onItemClick(ViewGroup viewGroup, View view, Object o, int i) {
                 if (i == 0) return;
-                for (StackBean bean : mList) {
+                for (ChaneStackInfo bean : mList) {
                     bean.setSelect(false);
                 }
                 adapt.notifyDataSetChanged();
-                mStackBean = (StackBean) o;
+                mStackBean = (ChaneStackInfo) o;
                 mStackBean.setSelect(true);
                 adapt.notifyItemChanged(i);
-                if (!mStackBean.getSTATUS().equals("A"))
-                    btnOk.setEnabled(false);
+//                if (!mStackBean.getStatus().equals("A"))
+//                    btnOk.setEnabled(false);
             }
 
             @Override
@@ -142,11 +137,9 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
                 return false;
             }
         });
-        myRecyclerView.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+        myRecyclerView.setOnRefreshListener(() -> {
+            if (null != mConfirmClickListener) {
+                mConfirmClickListener.onReflashData();
             }
         });
         setBefaultSelect();
@@ -159,7 +152,7 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
      * 选中的场地
      */
     private void setBefaultSelect() {
-        for (StackBean bean : mList) {
+        for (ChaneStackInfo bean : mList) {
             if (bean.isSelect()) {
                 mStackBean = bean;
                 break;
@@ -221,11 +214,14 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
                     dismiss();
                 break;
             case R.id.btRefresh://刷新
-                mProgressDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
-                mProgressDialog.setTitleText(mContext.getString(R.string.loading));
-                mProgressDialog.show();
+//                mProgressDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
+//                mProgressDialog.setTitleText(mContext.getString(R.string.loading));
+//                mProgressDialog.show();
                 // 获取场地信息
-                mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+//                mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+                if (null != mConfirmClickListener) {
+                    mConfirmClickListener.onReflashData();
+                }
                 break;
             case R.id.btFallBox://倒箱
                 if (null != mConfirmClickListener)
@@ -237,42 +233,18 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
     }
 
     public interface OnSweetClickListener {
-        void onClick(Dialog dialog, StackBean bean, String sql);
+        void onClick(Dialog dialog, ChaneStackInfo bean, String sql);
 
-        void onCancelSuitcase(Dialog dialog, StackBean bean, String sql);
+        void onCancelSuitcase(Dialog dialog, ChaneStackInfo bean, String sql);
 
-        void onFallBox(Dialog dialog, StackBean bean, String sql);
+        void onFallBox(Dialog dialog, ChaneStackInfo bean, String sql);
+
+        void onReflashData();
     }
 
-    @Override
-    public User getUser() {
-        return null;
-    }
 
-    @Override
-    public String getCurStack() {
-        return null;
-    }
-
-    @Override
-    public void showProgress(int type) {
-    }
-
-    @Override
-    public void hideProgress() {
-    }
-
-    @Override
-    public void addList(List<BoxDetalBean> list) {
-    }
-
-    @Override
-    public void onFaile(String msg) {
-    }
-
-    @Override
-    public void addListCd(List<StackBean> list) {
-        if (list.size() > mDataList.size()){
+    public void addListCd(List<ChaneStackInfo> list) {
+        if (list.size() > mDataList.size()) {
             PlayRing.ring(mContext);
         }
         mDataList.clear();
@@ -280,11 +252,10 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
         myRecyclerView.setOnRefresh(false);
         adapt.clear();
         mList.clear();
-        mList.add(0, new StackBean());
+        mList.add(0, new ChaneStackInfo());
         adapt = new StackAdapt(mContext, mList);
         adapt.addAll(list);
-        if (null != mProgressDialog && mProgressDialog.isShowing())
-            mProgressDialog.dismiss();
+        dimissDialog();
         adapt.openLoadAnimation(new ScaleInAnimation());
         myRecyclerView.setAdapter(adapt);
         adapt.setOnItemClickListener(new OnItemClickListener() {
@@ -295,7 +266,7 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
                     bean.setSelect(false);
                 }
                 adapt.notifyDataSetChanged();
-                mStackBean = (StackBean) o;
+                mStackBean = (ChaneStackInfo) o;
                 mStackBean.setSelect(true);
                 adapt.notifyItemChanged(i);
                 if (!mStackBean.getSTATUS().equals("A"))
@@ -309,20 +280,10 @@ public class StackDialog extends Dialog implements View.OnClickListener, TaskBox
         });
     }
 
-    @Override
-    public void addBay(Bay bay) {
+    private void dimissDialog() {
+        if (null != mProgressDialog && mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
     }
 
-    @Override
-    public void unLockStackList(List<StackBean> list) {
-    }
 
-    @Override
-    public void lockStack() {
-    }
-
-    @Override
-    public void putBoxForCellData(Object object) {
-
-    }
 }

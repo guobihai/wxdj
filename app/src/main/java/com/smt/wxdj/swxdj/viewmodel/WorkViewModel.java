@@ -14,6 +14,7 @@ import com.smt.wxdj.swxdj.param.ParamUtils;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
 import com.smt.wxdj.swxdj.viewmodel.nbean.OprTaskInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.LogUtils;
 
 import java.util.HashMap;
@@ -30,16 +31,27 @@ public class WorkViewModel extends ViewModel {
     private MutableLiveData<List<ChaneStackInfo>> ChaneStackInfoList;
     //呗位信息
     private MutableLiveData<List<YardBayInfo>> YardBayInfoList;
+    //作业任务列表
+    private MutableLiveData<List<YardCntrInfo>> YardCntrInfoList;
 
 
     public WorkViewModel() {
         machineList = new MutableLiveData<>();
         ChaneStackInfoList = new MutableLiveData<>();
         YardBayInfoList = new MutableLiveData<>();
+        YardCntrInfoList = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<NMachineInfo>> getMachineList() {
         return machineList;
+    }
+
+    public MutableLiveData<List<ChaneStackInfo>> getChaneStackInfoList() {
+        return ChaneStackInfoList;
+    }
+
+    public MutableLiveData<List<YardCntrInfo>> getYardCntrInfoList() {
+        return YardCntrInfoList;
     }
 
     /**
@@ -80,7 +92,7 @@ public class WorkViewModel extends ViewModel {
                     public void onSuccess(List<ChaneStackInfo> data) {
                         ChaneStackInfoList.setValue(data);
                         LogUtils.sysout("===getCurTaskListInfo===", JsonUtils.serialize(data));
-                        GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
+//                        GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
 //                        GetYardBayListBySiteId("39fb1302-e790-9243-06df-83853d8b948e",true,true);
 //                        GetYardBlockListBySiteId("39fb1302-e790-9243-06df-83853d8b948e",true,true);
 //                        GetYardBlockGetByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00",true,true);
@@ -200,10 +212,11 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkByBlockId(blockId, activity)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<OprTaskInfo>>() {
+                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
                     @Override
-                    public void onSuccess(List<OprTaskInfo> data) {
+                    public void onSuccess(List<YardCntrInfo> data) {
                         LogUtils.sysout("===获取指定街区的作业任务列表===", JsonUtils.serialize(data));
+                        YardCntrInfoList.setValue(data);
                     }
                 });
     }
@@ -217,10 +230,11 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkIsUPByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<OprTaskInfo>>() {
+                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
                     @Override
-                    public void onSuccess(List<OprTaskInfo> data) {
+                    public void onSuccess(List<YardCntrInfo> data) {
                         LogUtils.sysout("===获取指定街区的取消提箱任务列表===", JsonUtils.serialize(data));
+                        YardCntrInfoList.setValue(data);
                     }
                 });
     }
@@ -234,10 +248,11 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkIsCTCByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<OprTaskInfo>>() {
+                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
                     @Override
-                    public void onSuccess(List<OprTaskInfo> data) {
+                    public void onSuccess(List<YardCntrInfo> data) {
                         LogUtils.sysout("===获取指定街区的倒箱任务列表===", JsonUtils.serialize(data));
+                        YardCntrInfoList.setValue(data);
                     }
                 });
     }
