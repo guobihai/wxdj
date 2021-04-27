@@ -70,8 +70,8 @@ public class BoxsPresenterImpl extends BasePresenter<BoxsView> implements BoxsPr
                         maps.put(b.getDefaultCell(), b);
                     }
                 }
-                getView().addList(tempList, maps);
-                getView().addDxwList(tempDxwList, maps);
+//                getView().addList(tempList, maps);
+//                getView().addDxwList(tempDxwList, maps);
             }
 
             @Override
@@ -269,7 +269,7 @@ public class BoxsPresenterImpl extends BasePresenter<BoxsView> implements BoxsPr
             public void onSucess(Object object) {
                 if (!isViewAttached()) return;
                 getView().hideProgress();
-                getView().setSearchResult((List<BoxDetalBean>) object);
+//                getView().setSearchResult((List<BoxDetalBean>) object);
             }
 
             @Override
@@ -497,8 +497,8 @@ public class BoxsPresenterImpl extends BasePresenter<BoxsView> implements BoxsPr
                     }
                 }
                 LogUtils.e("GetCntrInfoConver", "" + tempList.size());
-                getView().addList(tempList, maps);
-                getView().addDxwList(tempDxwList, maps);
+//                getView().addList(tempList, maps);
+//                getView().addDxwList(tempDxwList, maps);
             }
 
             @Override

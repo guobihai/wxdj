@@ -119,12 +119,28 @@ public class WorkViewModel extends ViewModel {
                     public void onSuccess(List<YardBayInfo> data) {
                         YardBayInfoList.setValue(data);
                         String strData = JsonUtils.serialize(data);
-                        LogUtils.sysout("===GetYardBayListByBlockId===", strData);
+                        LogUtils.sysout("===根据场站ID获取贝位===", strData);
                     }
                 });
     }
 
-
+    /**
+     * 根据贝位获取id 获取列信息
+     *
+     * @param bayId
+     */
+    public void GetListByBayId(String bayId) {
+        RetrofitManager.createToken(WorkInterface.class)
+                .GetListByBayId(bayId)
+                .compose(RxUtils.getWrapper())
+                .subscribe(new ResponseObserver<List<Object>>() {
+                    @Override
+                    public void onSuccess(List<Object> data) {
+                        String strData = JsonUtils.serialize(data);
+                        LogUtils.sysout("===根据贝位获取id 获取列信息===", strData);
+                    }
+                });
+    }
     /**
      * 根据场站ID获取街区信息
      *

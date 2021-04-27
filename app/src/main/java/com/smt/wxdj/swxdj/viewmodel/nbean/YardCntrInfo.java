@@ -1,6 +1,7 @@
 package com.smt.wxdj.swxdj.viewmodel.nbean;
 
 import com.smt.wxdj.swxdj.bean.BoxDetalBean;
+import com.smt.wxdj.swxdj.utils.BoxTool;
 
 /**
  * 任务类型
@@ -38,6 +39,22 @@ public class YardCntrInfo extends BoxDetalBean {
     private String workTime;
     private String yardBayId;
     private String yardBlockId;
+
+
+    public YardCntrInfo(String cell, int cellX, int CellY, boolean isPutBox) {
+        this.defaultCell = cell;
+        this.setCell(String.valueOf(cellX));
+        this.setCell(String.valueOf(cellX));
+        this.setTier(String.valueOf(CellY));
+        this.setTier(String.valueOf(CellY));
+        setBoxDt(isPutBox ? BoxTool.CTRL_PUTBOX : BoxTool.CTRL_GETBOX);
+    }
+
+    public YardCntrInfo(String cell, String boxDt, boolean isHashBox) {
+        this.defaultCell = cell;
+        this.isHashBox = isHashBox;
+        this.boxDt = boxDt;
+    }
 
     public String getActivity() {
         return activity;

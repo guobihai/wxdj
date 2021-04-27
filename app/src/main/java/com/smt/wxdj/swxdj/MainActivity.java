@@ -48,6 +48,7 @@ import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.ActivityTool;
 import com.smt.wxdj.swxdj.utils.SortType;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.PreferenceUtils;
 
 import java.util.List;
@@ -257,12 +258,12 @@ public class MainActivity extends AppCompatActivity
                 boxDialog = new SearchResultBoxDialog(this);
                 boxDialog.setConfirmClickListener(new SearchResultBoxDialog.OnSweetClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, BoxDetalBean bean) {
+                    public void onClick(Dialog dialog, YardCntrInfo bean) {
 
                     }
 
                     @Override
-                    public void onItemClick(Dialog dialog, BoxDetalBean bean) {
+                    public void onItemClick(Dialog dialog, YardCntrInfo bean) {
                         if (null == bean) return;
 //                        dialog.dismiss();
                         boxDetalBean = bean;

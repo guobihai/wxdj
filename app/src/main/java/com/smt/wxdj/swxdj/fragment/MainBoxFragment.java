@@ -135,6 +135,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             return false;
         }
     });
+    private String mCurCraneId;//当前设备ID
 
 
     public static MainBoxFragment newInstance(int type) {
@@ -166,8 +167,11 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         //设备列表
         workViewModel.getMachineList().observe(this, nMachineInfos -> {
             if (null != nMachineInfos && nMachineInfos.size() > 0) {
-                loadStackInfoo();
+
             }
+            mCurCraneId = "39faf629-ef1f-85b9-4c9a-c376ffc48804";
+            loadStackInfoo();
+
             hideProgress();
         });
 
@@ -430,7 +434,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void addList(List list) {
         if (isSearch) return;
         //判断两个集合元素是否全部相同
-        if(!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             if (!compare(mData, list) && !LogUtils.LOG_DEBUG) {
                 PlayRing.ring(getActivity());
             }
@@ -519,6 +523,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * @param list
      */
     private void selectStack(List<ChaneStackInfo> list) {
+
         if (null == mStackDialog || !mStackDialog.isShowing()) {
             mStackDialog = new StackDialog(getActivity());
         }
@@ -542,6 +547,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 workViewModel.GetTrkWorkByBlockId(bean.getYardBlockId(), "");
                 mStackDialog.dismiss();
                 mStackBean = bean;
+                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(),false,false);
 //                Session.getInstance().notifySelect(FileKeyName.CONFIRMBOX);
             }
 
@@ -589,6 +595,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mStackBean = bean;
                 mStackDialog.dismiss();
                 workViewModel.GetTrkWorkIsCTCByBlockId(bean.getYardBlockId());
+//                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(),false,false);
+                workViewModel.GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
+                workViewModel.GetListByBayId(mStackBean.getCurrentBayId());
 //                Session.getInstance().notifySelect(FileKeyName.FALLBOX);
             }
 
@@ -601,7 +610,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void loadStackInfoo() {
-        workViewModel.getJobTicketTaskStack("39faf629-ef1f-85b9-4c9a-c376ffc48804");
+        if (TextUtils.isEmpty(mCurCraneId)) return;
+        workViewModel.getJobTicketTaskStack(mCurCraneId);
+
     }
 
 

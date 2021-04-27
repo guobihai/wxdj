@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smt.wxdj.swxdj.R;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int TYPE_TITLE = 0;
     private static final int TYPE_ITEM = 1;
 
-    private List<BoxDetalBean> mData;
+    private List<YardCntrInfo> mData;
     private Context mContext;
     private boolean isGetBox;
 
@@ -43,12 +43,12 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
         mData = new ArrayList<>();
     }
 
-    public void setData(List<BoxDetalBean> data) {
+    public void setData(List<YardCntrInfo> data) {
         mData.addAll(data);
         notifyDataSetChanged();
     }
 
-    public void addBean(BoxDetalBean bean) {
+    public void addBean(YardCntrInfo bean) {
         mData.add(bean);
         notifyDataSetChanged();
     }
@@ -60,7 +60,7 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void resetSelect() {
         if (null == mData) return;
-        for (BoxDetalBean bean : mData) {
+        for (YardCntrInfo bean : mData) {
             bean.setSelectedBox(false);
         }
         notifyDataSetChanged();
@@ -90,7 +90,7 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyViewHolder) {
-            BoxDetalBean bean = mData.get(position - 1);
+            YardCntrInfo bean = mData.get(position - 1);
             ((MyViewHolder) holder).cntr.setText(bean.getCntr());
             ((MyViewHolder) holder).eqp_type.setText(bean.getEqp_Type());
             ((MyViewHolder) holder).location.setText(bean.getRown() + "-" + bean.getCell() + "-" + bean.getTier());
@@ -113,11 +113,11 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
      *
      * @param position
      */
-    public BoxDetalBean getItem(int position) {
-        for (BoxDetalBean bean : mData) {
+    public YardCntrInfo getItem(int position) {
+        for (YardCntrInfo bean : mData) {
             bean.setSelectedBox(false);
         }
-        BoxDetalBean bean = mData.get(position - 1);
+        YardCntrInfo bean = mData.get(position - 1);
         bean.setSelectedBox(true);
         notifyDataSetChanged();
         return bean;
@@ -127,7 +127,7 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
      * 监听事件
      */
     public interface OnItemClickListener {
-        void onItemClick(View v, BoxDetalBean bean, int positon);
+        void onItemClick(View v, YardCntrInfo bean, int positon);
     }
 
     @Override

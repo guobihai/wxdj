@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.bean.Bay;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.enums.ColorType;
 import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.CellTool;
 import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.ScreenUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -30,8 +30,8 @@ import java.util.Map;
 public class DragAdapter extends BaseAdapter {
 
     protected Bay mBay;//当前贝位
-    protected BoxDetalBean mPutBox;//要放的箱子
-    protected BoxDetalBean mGetBox;//提的箱子
+    protected YardCntrInfo mPutBox;//要放的箱子
+    protected YardCntrInfo mGetBox;//提的箱子
 
     /**
      * 震动器
@@ -40,7 +40,7 @@ public class DragAdapter extends BaseAdapter {
     /**
      * 可以拖动的列表（即用户选择的频道列表）
      */
-    protected List<BoxDetalBean> channelList;
+    protected List<YardCntrInfo> channelList;
 
     private Context mContext;
     private boolean isShowRecommend; //是否显示推荐位
@@ -53,7 +53,7 @@ public class DragAdapter extends BaseAdapter {
         isShowInOrOut = LruchUtils.isSwitch(FileKeyName.ShowCustomBg);
     }
 
-    public DragAdapter(Context context, BoxDetalBean bean) {
+    public DragAdapter(Context context, YardCntrInfo bean) {
         mContext = context;
         this.mGetBox = bean;
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -68,7 +68,7 @@ public class DragAdapter extends BaseAdapter {
     }
 
     @Override
-    public BoxDetalBean getItem(int position) {
+    public YardCntrInfo getItem(int position) {
         if (channelList == null && channelList.size() <= 0) return null;
         return channelList.get(position);
     }
@@ -102,7 +102,7 @@ public class DragAdapter extends BaseAdapter {
         } else {
             holdView = (MyHoldView) convertView.getTag();
         }
-        BoxDetalBean bean = getItem(position);
+        YardCntrInfo bean = getItem(position);
         if (bean.HashBox()) {
             holdView.title.setText(bean.getCntr());
             holdView.detail.setText(bean.getContent());
@@ -393,7 +393,7 @@ public class DragAdapter extends BaseAdapter {
      * @param selectBean 已选择的箱子
      * @return true 悬空位置, false  非悬空位置
      */
-    public boolean isNullLocation(int col, int row, int position, BoxDetalBean selectBean, boolean isChaoChang) {
+    public boolean isNullLocation(int col, int row, int position, YardCntrInfo selectBean, boolean isChaoChang) {
         CellTool.getCell(position, col, row);
         int cell = CellTool.getCell();
         int tier = CellTool.getTier();
@@ -411,8 +411,8 @@ public class DragAdapter extends BaseAdapter {
         }
         tier = tier - 1;//获取压着位置是否为空
         String key = String.format("(%s,%s)", cell, tier);
-        BoxDetalBean bean = null;
-        for (BoxDetalBean detalBean : channelList) {
+        YardCntrInfo bean = null;
+        for (YardCntrInfo detalBean : channelList) {
             if (detalBean.getDefaultCell().equals(key)) {
                 bean = detalBean;
                 break;
@@ -429,14 +429,14 @@ public class DragAdapter extends BaseAdapter {
     /**
      * 判断提箱是否被压着
      *
-     * @param boxDetalBean
+     * @param YardCntrInfo
      * @return
      */
-    public boolean AboveCntr(BoxDetalBean boxDetalBean) {
-        int tier = Integer.parseInt(boxDetalBean.getTier());
-        String key = String.format("(%s,%s)", boxDetalBean.getCell(), (tier + 1));
-        BoxDetalBean bean = null;
-        for (BoxDetalBean detalBean : channelList) {
+    public boolean AboveCntr(YardCntrInfo YardCntrInfo) {
+        int tier = Integer.parseInt(YardCntrInfo.getTier());
+        String key = String.format("(%s,%s)", YardCntrInfo.getCell(), (tier + 1));
+        YardCntrInfo bean = null;
+        for (YardCntrInfo detalBean : channelList) {
             if (detalBean.getDefaultCell().equals(key)) {
                 bean = detalBean;
                 break;
@@ -456,7 +456,7 @@ public class DragAdapter extends BaseAdapter {
      * @return true 能放,false 不能放
      */
     public boolean getRecomLocation(int position) {
-        BoxDetalBean bean = channelList.get(position);
+        YardCntrInfo bean = channelList.get(position);
         //原判断  if (bean.getRecommendColorType() == null || bean.getRecommendColorType() == ColorType.GRAY) {
         //现改为如下
         if (bean.getRecommendColorType() != null && bean.getRecommendColorType() == ColorType.GRAY) {
@@ -470,7 +470,7 @@ public class DragAdapter extends BaseAdapter {
      * 清除选中的箱子
      */
     public void resetSelectBox() {
-        for (BoxDetalBean bean : channelList)
+        for (YardCntrInfo bean : channelList)
             bean.setSelectedBox(false);
     }
 
@@ -498,7 +498,7 @@ public class DragAdapter extends BaseAdapter {
     public int exchangeSelect(int position) {
         int res = CellTool.BOX_TYPE;
         for (int i = 0; i < channelList.size(); i++) {
-            BoxDetalBean bean = channelList.get(i);
+            YardCntrInfo bean = channelList.get(i);
             if (i == position && bean.HashBox()) {
                 bean.setSelectedBox(true);
                 res = CellTool.BOX_TYPE_SUCESS;
@@ -517,7 +517,7 @@ public class DragAdapter extends BaseAdapter {
      * @return 0
      */
     public int resetDefault() {
-        for (BoxDetalBean bean : channelList) {
+        for (YardCntrInfo bean : channelList) {
             bean.setHashBox(false);
             bean.setSelectedBox(false);
             bean.setMoveSelect(false);
@@ -546,7 +546,7 @@ public class DragAdapter extends BaseAdapter {
      */
     public int exchangeMoveSelect(int position) {
         for (int i = 0; i < channelList.size(); i++) {
-            BoxDetalBean bean = channelList.get(i);
+            YardCntrInfo bean = channelList.get(i);
             if (i == position && !bean.HashBox()) {
                 bean.setMoveSelect(true);
             } else {
@@ -564,7 +564,7 @@ public class DragAdapter extends BaseAdapter {
      * @param selectPosition 当前选中的位置
      * @return true 满足，可以放，false，不满足，提示是否继续放置箱子
      */
-    public boolean hashPutWgtBox(int col, BoxDetalBean putBox, int selectPosition) {
+    public boolean hashPutWgtBox(int col, YardCntrInfo putBox, int selectPosition) {
         //1.要放的箱子，如果是空箱，直接返回true
         if (TextUtils.isEmpty(putBox.getFe_Ind()) || putBox.getFe_Ind().equals(BoxTool.E))
             return true;
@@ -576,7 +576,7 @@ public class DragAdapter extends BaseAdapter {
         else {
             //否则判断，底下的箱子是什么类型的箱子，如果为重箱，直接返回true
             //获得底下的箱子
-            BoxDetalBean bottomBox = channelList.get(selectPosition + col);
+            YardCntrInfo bottomBox = channelList.get(selectPosition + col);
             //如果底下没有箱子，直接返回true
             if (!bottomBox.HashBox()) return true;
             //如果底下的箱子是重箱，直接返回true
@@ -592,9 +592,9 @@ public class DragAdapter extends BaseAdapter {
     public void exchange(int dragPostion, int dropPostion) {
         if (dropPostion == -1) return;
         //获取开始选中的item
-        BoxDetalBean dragItem = getItem(dragPostion);
+        YardCntrInfo dragItem = getItem(dragPostion);
         //要替换的位置item
-        BoxDetalBean dropItem = getItem(dropPostion);
+        YardCntrInfo dropItem = getItem(dropPostion);
         //位置替换
         channelList.set(dropPostion, dragItem);
         channelList.set(dragPostion, dropItem);
@@ -608,7 +608,7 @@ public class DragAdapter extends BaseAdapter {
      * @param dropPostion 要移动的箱子位置
      * @param col         排
      */
-    public int exchange(BoxDetalBean dragItem, int dropPostion, int col) {
+    public int exchange(YardCntrInfo dragItem, int dropPostion, int col) {
         if (dropPostion == -1) return CellTool.BOX_TYPE_EA;
         int row = channelList.size() / col;
         String defaultCell = CellTool.getCell(dropPostion, col, row);
@@ -642,8 +642,8 @@ public class DragAdapter extends BaseAdapter {
         }
         if (dropPostion == -1 || dragPostion < 0) return CellTool.BOX_TYPE_EA;
         //获取开始选中的item
-        BoxDetalBean dragItem = getItem(dragPostion);
-        BoxDetalBean dropItem = getItem(dropPostion);
+        YardCntrInfo dragItem = getItem(dragPostion);
+        YardCntrInfo dropItem = getItem(dropPostion);
         //坐标替换
         String dragCell = dragItem.getDefaultCell();
         String dropCell = dropItem.getDefaultCell();
@@ -674,8 +674,8 @@ public class DragAdapter extends BaseAdapter {
      *
      * @param dragItem
      */
-    public void exchangeGetBox(BoxDetalBean dragItem) {
-        for (BoxDetalBean item : channelList) {
+    public void exchangeGetBox(YardCntrInfo dragItem) {
+        for (YardCntrInfo item : channelList) {
             if (null != item.getCntr() && item.getCntr().equals(dragItem.getCntr())) {
                 item.setHashBox(false);
                 item.setBoxDt(BoxTool.CTRL_PUTBOX);
@@ -690,8 +690,8 @@ public class DragAdapter extends BaseAdapter {
      *
      * @param dragItem
      */
-    public void exchangeCheckGetBox(BoxDetalBean dragItem) {
-        for (BoxDetalBean item : channelList) {
+    public void exchangeCheckGetBox(YardCntrInfo dragItem) {
+        for (YardCntrInfo item : channelList) {
             if (null != item.getCntr() && item.getCntr().equals(dragItem.getCntr())) {
                 item.setBoxDt(BoxTool.CTRL_PUTBOX);
                 break;
@@ -708,7 +708,7 @@ public class DragAdapter extends BaseAdapter {
      */
     public void resetBox(int dragPositon) {
         if (dragPositon == -1) return;
-        BoxDetalBean bean = this.channelList.get(dragPositon);
+        YardCntrInfo bean = this.channelList.get(dragPositon);
         bean.setHashBox(false);
         bean.setRecommendColorType(null);
         bean.setColorType(null);
@@ -724,7 +724,7 @@ public class DragAdapter extends BaseAdapter {
      * @param bay  呗位
      * @param maps 箱子
      */
-    public boolean enadblAllLocation(int col, int row, Bay bay, List<String> reComBay, BoxDetalBean putBox, Map<String, BoxDetalBean> maps) {
+    public boolean enadblAllLocation(int col, int row, Bay bay, List<String> reComBay, YardCntrInfo putBox, Map<String, YardCntrInfo> maps) {
         if (null == maps || null == putBox || null == bay || null == reComBay) return false;
         this.mBay = bay;
         this.mPutBox = putBox;
@@ -733,7 +733,7 @@ public class DragAdapter extends BaseAdapter {
             for (int cell = 1; cell <= col; cell++) {
                 for (int tier = 1; tier <= row; tier++) {
                     String key = String.format("(%s,%s)", cell, tier);
-                    BoxDetalBean bean = maps.get(key);
+                    YardCntrInfo bean = maps.get(key);
                     //判断位置是否有箱子
                     if (null == bean) {
                         if (reComBay.get(0).equals(String.valueOf(cell))) {
@@ -748,14 +748,14 @@ public class DragAdapter extends BaseAdapter {
             for (int cell = 1; cell <= col; cell++) {
                 for (int tier = 1; tier <= row; tier++) {
                     String key = String.format("(%s,%s)", cell, tier);
-                    BoxDetalBean bean = maps.get(key);
+                    YardCntrInfo bean = maps.get(key);
                     //判断位置是否有箱子
                     if (null == bean) {
                         //大小位判断，不是该本位的箱子上面不设置颜色
                         if (tier > 1) {
                             //如果排层都大于1，取下面的箱子，如果下面的箱子不是该贝位的箱子，不设置颜色
                             String bayKey = String.format("(%s,%s)", cell, tier - 1);
-                            BoxDetalBean detalBean = maps.get(bayKey);
+                            YardCntrInfo detalBean = maps.get(bayKey);
                             if (null != detalBean) {
                                 if (!detalBean.getRown().equals(mBay.getBay())) {
                                     continue;
@@ -791,7 +791,7 @@ public class DragAdapter extends BaseAdapter {
      * 设置推荐数据
      */
     protected void setRecommentLocation(String defaultCell, ColorType colorType) {
-        for (BoxDetalBean bean : channelList) {
+        for (YardCntrInfo bean : channelList) {
             if (bean.getDefaultCell().equals(defaultCell)) {
                 bean.setRecommendColorType(colorType);
                 break;
@@ -804,7 +804,7 @@ public class DragAdapter extends BaseAdapter {
      * 初始化推荐位置
      */
     public void resetRecommentLocation() {
-        for (BoxDetalBean bean : channelList) {
+        for (YardCntrInfo bean : channelList) {
             bean.setRecommendColorType(null);
         }
         notifyDataSetChanged();
@@ -813,7 +813,7 @@ public class DragAdapter extends BaseAdapter {
     /**
      * 设置箱子列表
      */
-    public void setListDate(List<BoxDetalBean> list) {
+    public void setListDate(List<YardCntrInfo> list) {
         channelList = list;
         this.notifyDataSetChanged();
     }
@@ -822,10 +822,10 @@ public class DragAdapter extends BaseAdapter {
     /**
      * 更新Map
      */
-    public void reflashMap(Map<String, BoxDetalBean> maps) {
+    public void reflashMap(Map<String, YardCntrInfo> maps) {
         if (null == maps) return;
         maps.clear();
-        for (BoxDetalBean x : channelList) {
+        for (YardCntrInfo x : channelList) {
             //如果相等，替换表格数据，箱子填充
             if (x.HashBox()) {
                 x.setDefaultCell(String.format("(%s,%s)", x.getCell(), x.getTier()));
@@ -842,7 +842,7 @@ public class DragAdapter extends BaseAdapter {
      * @param row  层
      * @param maps 在场箱数据
      */
-    public void findRmCntrList(int col, int row, Map<String, BoxDetalBean> maps) {
+    public void findRmCntrList(int col, int row, Map<String, YardCntrInfo> maps) {
 //        LogUtils.e("tag", "isGetCntr:"+mGetBox.isGetCntr());
 //        LogUtils.e("tag", "isTrkRight:"+mGetBox.isTrkRight());
         if (null == mGetBox || null == maps || !mGetBox.isGetCntr()) return;//只针对提箱这种情况下执行倒箱标志显示
@@ -854,7 +854,7 @@ public class DragAdapter extends BaseAdapter {
                     if (cell == cntrCell && tier < cntrTier) continue;
                     //因为服务端返回坐标格式，保存的也是坐标格式，所以转换为坐标格式获取数据
                     String key = String.format("(%s,%s)", cell, tier);
-                    BoxDetalBean bean = maps.get(key);
+                    YardCntrInfo bean = maps.get(key);
                     if (null == bean) continue;
                     bean.setRmCntr(true);//判断提箱类型
                 }
@@ -864,7 +864,7 @@ public class DragAdapter extends BaseAdapter {
                 for (int tier = 1; tier <= row; tier++) {
                     if (cell == cntrCell && tier < cntrTier) continue;
                     String key = String.format("(%s,%s)", cell, tier);
-                    BoxDetalBean bean = maps.get(key);
+                    YardCntrInfo bean = maps.get(key);
                     if (null == bean) continue;
                     bean.setRmCntr(true);
                 }
@@ -873,7 +873,7 @@ public class DragAdapter extends BaseAdapter {
             for (int tier = 1; tier <= row; tier++) {
                 if (tier < cntrTier) continue;
                 String key = String.format("(%s,%s)", cntrCell, tier);
-                BoxDetalBean bean = maps.get(key);
+                YardCntrInfo bean = maps.get(key);
                 if (null == bean) continue;
                 bean.setRmCntr(true);
             }
@@ -882,7 +882,7 @@ public class DragAdapter extends BaseAdapter {
                 for (int tier = 1; tier <= row; tier++) {
                     if (cell == cntrCell && tier < cntrTier) continue;
                     String key = String.format("(%s,%s)", cell, tier);
-                    BoxDetalBean bean = maps.get(key);
+                    YardCntrInfo bean = maps.get(key);
                     if (null == bean) continue;
                     bean.setRmCntr(true);
                 }

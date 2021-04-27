@@ -21,10 +21,10 @@ import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.MyGridViewActivity;
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.adapt.SearchResultAdapt;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.boxs.presenter.SearchPresenterImpl;
 import com.smt.wxdj.swxdj.boxs.view.SearchView;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.dialog.SweetAlertDialog;
 
 import java.util.List;
@@ -48,8 +48,8 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
     private LinearLayoutManager mLayoutManager;
     private LinearLayout bottom_layout;
     private SearchResultAdapt adapt;
-    private BoxDetalBean mBoxDetalBean;
-    private BoxDetalBean mOldBoxDetalBean;
+    private YardCntrInfo mYardCntrInfo;
+    private YardCntrInfo mOldYardCntrInfo;
     private OnSweetClickListener mConfirmClickListener;
     private StringBuffer cnter = new StringBuffer(5);//存储输入的箱号
     private Vibrator mVibrator;
@@ -67,20 +67,20 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
         adapt = new SearchResultAdapt(mContext, isGetBox);
     }
 
-    public SearchResultBoxDialog(Context context, BoxDetalBean boxDetalBean, boolean isGetBox) {
+    public SearchResultBoxDialog(Context context, YardCntrInfo YardCntrInfo, boolean isGetBox) {
         super(context, R.style.AppTheme_Dialog_Fullscreen);
         this.mContext = context;
-        this.mOldBoxDetalBean = boxDetalBean;
+        this.mOldYardCntrInfo = YardCntrInfo;
         this.isGetBox = isGetBox;
         mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
         adapt = new SearchResultAdapt(mContext, isGetBox);
         if (isGetBox) {
-            mOldBoxDetalBean.setSelectedBox(true);
-            adapt.addBean(mOldBoxDetalBean);
+            mOldYardCntrInfo.setSelectedBox(true);
+            adapt.addBean(mOldYardCntrInfo);
         }
     }
 
-    public SearchResultBoxDialog(Context context, List<BoxDetalBean> list) {
+    public SearchResultBoxDialog(Context context, List<YardCntrInfo> list) {
         super(context, R.style.AppTheme_Dialog_Fullscreen);
         this.mContext = context;
         mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
@@ -142,7 +142,7 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
         switch (view.getId()) {
             case R.id.btnOk:
                 if (null != mConfirmClickListener)
-                    mConfirmClickListener.onClick(this, mBoxDetalBean);
+                    mConfirmClickListener.onClick(this, mYardCntrInfo);
                 else
                     dismiss();
                 break;
@@ -207,7 +207,7 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
             cnter.append(num);
             cnteText.setText(cnter.toString());
             if (cnter.toString().length() == maxLength) {
-                searchPresenter.searchBox(isGetBox ? mOldBoxDetalBean.getCntr() : "", cnter.toString());
+                searchPresenter.searchBox(isGetBox ? mOldYardCntrInfo.getCntr() : "", cnter.toString());
             }
         }
     }
@@ -218,8 +218,8 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
      * @return
      */
     @Override
-    public BoxDetalBean getBoxDealBean() {
-        return mBoxDetalBean;
+    public YardCntrInfo getBoxDealBean() {
+        return mYardCntrInfo;
     }
 
     /**
@@ -228,8 +228,8 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
      * @return
      */
     @Override
-    public BoxDetalBean getUpDealBean() {
-        return mOldBoxDetalBean;
+    public YardCntrInfo getUpDealBean() {
+        return mOldYardCntrInfo;
     }
 
     /**
@@ -238,12 +238,12 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
      * @param list
      */
     @Override
-    public void setSearchResult(List<BoxDetalBean> list) {
+    public void setSearchResult(List<YardCntrInfo> list) {
         cnteText.setText("");
         cnter.delete(0, cnter.length());
         adapt.clearData();
         if (isGetBox)
-            adapt.addBean(mOldBoxDetalBean);
+            adapt.addBean(mOldYardCntrInfo);
         adapt.setData(list);
     }
 
@@ -360,7 +360,7 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
     @Override
     public void onSuccess() {
         if (null != mConfirmClickListener)
-            mConfirmClickListener.onClick(this, mBoxDetalBean);
+            mConfirmClickListener.onClick(this, mYardCntrInfo);
         dismiss();
     }
 
@@ -408,11 +408,11 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
     }
 
     @Override
-    public void onItemClick(View v, final BoxDetalBean bean, int positon) {
-        mBoxDetalBean = bean;
+    public void onItemClick(View v, final YardCntrInfo bean, int positon) {
+        mYardCntrInfo = bean;
         if (isGetBox) {
             //提的箱子跟任务箱子是同一个箱,直接提走
-            if (bean.getCntr().equals(mOldBoxDetalBean.getCntr())) {
+            if (bean.getCntr().equals(mOldYardCntrInfo.getCntr())) {
                 new GetBoxAlertDialog(mContext, bean)
                         .setConfirmClickListener(new GetBoxAlertDialog.OnSweetClickListener() {
                             @Override
@@ -424,19 +424,19 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
                 return;
             }
 
-            if (!mBoxDetalBean.isSWAPFLAG()) {
+            if (!mYardCntrInfo.isSWAPFLAG()) {
                 showAlertDialog(mContext.getString(R.string.the_box_does_not_conform_to_the_exchange_suitcase));
                 return;
             }
 
             //如果有序的,直接走正常流程提箱
-            if (mBoxDetalBean.getISORDERLY().equalsIgnoreCase(ISORDERLY)) {
-                mBoxDetalBean.setMaj_Loc(MyApplication.MAJLOC);
-                mBoxDetalBean.setSub_Loc(MyApplication.SUBLOC);
+            if (mYardCntrInfo.getISORDERLY().equalsIgnoreCase(ISORDERLY)) {
+                mYardCntrInfo.setMaj_Loc(MyApplication.MAJLOC);
+                mYardCntrInfo.setSub_Loc(MyApplication.SUBLOC);
 
                 Intent it = new Intent(mContext, MyGridViewActivity.class);
-                it.putExtra("notOrderBean", mOldBoxDetalBean);
-                it.putExtra("boxBean", mBoxDetalBean);
+                it.putExtra("notOrderBean", mOldYardCntrInfo);
+                it.putExtra("boxBean", mYardCntrInfo);
                 it.putExtra("isOrder", false);
                 mContext.startActivity(it);
                 handler.postDelayed(new Runnable() {
@@ -446,11 +446,11 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
                     }
                 }, 1000);
             } else {
-                new ChangeBoxAlertDialog(mContext, mBoxDetalBean).setConfirmClickListener(new ChangeBoxAlertDialog.OnSweetClickListener() {
+                new ChangeBoxAlertDialog(mContext, mYardCntrInfo).setConfirmClickListener(new ChangeBoxAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(Dialog dialog, View view) {
                         dialog.dismiss();
-                        searchPresenter.LoadCheckChangeBox(mBoxDetalBean.getCntr(), mOldBoxDetalBean.getCntr());
+                        searchPresenter.LoadCheckChangeBox(mYardCntrInfo.getCntr(), mOldYardCntrInfo.getCntr());
                     }
                 }).show();
             }
@@ -467,8 +467,8 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
     }
 
     public interface OnSweetClickListener {
-        void onClick(Dialog dialog, BoxDetalBean bean);
+        void onClick(Dialog dialog, YardCntrInfo bean);
 
-        void onItemClick(Dialog dialog, BoxDetalBean bean);
+        void onItemClick(Dialog dialog, YardCntrInfo bean);
     }
 }

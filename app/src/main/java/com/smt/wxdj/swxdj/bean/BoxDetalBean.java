@@ -12,6 +12,7 @@ import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.CellTool;
 import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.JsonUtils;
 
 import java.io.Serializable;
@@ -28,17 +29,17 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
     /**
      * 箱子动态
      */
-    private transient String boxDt;
+    public transient String boxDt;
 
     /**
      * 箱子位置坐标
      */
-    private transient String defaultCell;
+    public transient String defaultCell;
 
     /**
      * 系统推荐的
      */
-    private transient ColorType recommendColorType;
+    public transient ColorType recommendColorType;
 
     /**
      * 栏目是否选中
@@ -49,40 +50,40 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
     /**
      * 判断是否已有箱子（这也是判断是否为箱子）
      */
-    private transient boolean isHashBox;
+    public transient boolean isHashBox;
 
 
     /**
      * 移动的位置是否选中
      */
-    private transient boolean isMoveSelect;
+    public transient boolean isMoveSelect;
 
     /**
      * 是否显示倒箱位
      */
-    private transient boolean isShowDxw;
+    public transient boolean isShowDxw;
 
     /**
      * 背景颜色
      */
-    private transient ColorType colorType;
+    public transient ColorType colorType;
     /**
      * 字体颜色
      */
-    private transient TextColorType textColorType;
+    public transient TextColorType textColorType;
 
     /**
      * 判断提箱类型
      */
-    private transient boolean isRmCntr;
+    public transient boolean isRmCntr;
 
     /**
      * 判断是否本贝位的箱子
      */
-    private transient boolean isSameBay;
+    public transient boolean isSameBay;
 
 
-    private String ISORDERLY; //是否排序 Y 有序,N 无序
+    public String ISORDERLY; //是否排序 Y 有序,N 无序
 
     public BoxDetalBean() {
     }
@@ -362,7 +363,7 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
     /**
      * 设置提箱的时候背景颜色
      */
-    public void setGetCntrBackGroupColor(BoxDetalBean getBoxBean, Map<String, BoxDetalBean> maps) {
+    public void setGetCntrBackGroupColor(YardCntrInfo getBoxBean, Map<String, YardCntrInfo> maps) {
         isColorGreen(getBoxBean);
         isColorYellow(getBoxBean, maps);
         isColorPink(getBoxBean, maps);
@@ -383,7 +384,7 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
      * @param getBoxBean
      * @return
      */
-    private boolean isColorGreen(BoxDetalBean getBoxBean) {
+    public boolean isColorGreen(BoxDetalBean getBoxBean) {
         if(!LruchUtils.isSwitch(FileKeyName.rm_color_switch)) return false;
         //A)出口或转口集装箱，有相同船名，航次，中转港及相同重量等级;
         // B空箱，有相同持箱人及集装箱类型
@@ -404,7 +405,7 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
      * @param maps
      * @return
      */
-    private boolean isColorYellow(BoxDetalBean getBoxBean, Map<String, BoxDetalBean> maps) {
+    public boolean isColorYellow(BoxDetalBean getBoxBean, Map<String, YardCntrInfo> maps) {
         //A)出口或转口集装箱，有相同船名，航次，中转港及重箱压在轻箱上面。
         // B)空箱，放置到首层
         String firstTier = "(1,1)";
@@ -437,7 +438,7 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
      * @param maps
      * @return
      */
-    private boolean isColorPink(BoxDetalBean getBoxBean, Map<String, BoxDetalBean> maps) {
+    public boolean isColorPink(BoxDetalBean getBoxBean, Map<String, YardCntrInfo> maps) {
         if ((getBoxBean.getEqp_Sta().equals(BoxTool.EQP_STA) &&
                 getBoxBean.getMISC_NO().equals(getMISC_NO()) &&
                 getBoxBean.getPOL().equals(getPOL()))) {
@@ -462,7 +463,7 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
      * @param getBoxBean
      * @return
      */
-    private boolean isColorRed(BoxDetalBean getBoxBean) {
+    public boolean isColorRed(BoxDetalBean getBoxBean) {
         // A) 出口或转口集装箱，有相同船名及航次。
         // B)出口或转口集装箱，有相同的中转港。
         //C)空箱，有相同的持箱人。

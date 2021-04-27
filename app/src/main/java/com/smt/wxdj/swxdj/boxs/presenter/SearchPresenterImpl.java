@@ -47,7 +47,7 @@ public class SearchPresenterImpl implements SearchPresenter {
             public void onSucess(Object object) {
                 if (null == searchView) return;
                 searchView.hideProgress();
-                searchView.setSearchResult((List<BoxDetalBean>) object);
+//                searchView.setSearchResult((List<BoxDetalBean>) object);
             }
 
             @Override

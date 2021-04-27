@@ -65,6 +65,11 @@ public interface WorkInterface {
     @GET("SystemSetting/TrkWork/GetTrkWorkIsCTCByBlockId")
     Observable<List<YardCntrInfo>> GetTrkWorkIsCTCByBlockId(@Query("blockId") String blockId);
 
+
+    //6、根据贝位获取id 获取列信息
+    @GET("SystemSetting/YardCell/GetListByBayId")
+    Observable<List<Object>> GetListByBayId(@Query("bayId") String blockId);
+
     //7、放箱确认
     @POST("CntrManagement/CraneWork/GroundConfirm")
     Observable<Object> GroundConfirm(@Body Map map);

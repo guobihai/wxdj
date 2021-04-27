@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.bean.Bay;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.compares.SmtCompare;
 import com.smt.wxdj.swxdj.enums.ColorType;
 import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.CellTool;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.JsonUtils;
 import com.smtlibrary.utils.LogUtils;
 
@@ -36,7 +36,7 @@ public class DxwAdapt extends DragAdapter {
     }
 
     @Override
-    public BoxDetalBean getItem(int position) {
+    public YardCntrInfo getItem(int position) {
         // TODO Auto-generated method stub
         if (channelList != null && channelList.size() != 0) {
             return channelList.get(position);
@@ -45,14 +45,14 @@ public class DxwAdapt extends DragAdapter {
     }
 
     @Override
-    public void setListDate(List<BoxDetalBean> list) {
+    public void setListDate(List<YardCntrInfo> list) {
         channelList = list;
         sortDxw();
     }
 
     public void sortDxw() {
-        List<BoxDetalBean> tList = new ArrayList<>();
-        for (BoxDetalBean bean : channelList) {
+        List<YardCntrInfo> tList = new ArrayList<>();
+        for (YardCntrInfo bean : channelList) {
             if (bean.HashBox())
                 tList.add(bean);
         }
@@ -118,7 +118,7 @@ public class DxwAdapt extends DragAdapter {
         } else {
             holdView = (MyHoldView) convertView.getTag();
         }
-        BoxDetalBean bean = getItem(position);
+        YardCntrInfo bean = getItem(position);
         if (bean.HashBox()) {
             holdView.dxw.setVisibility(View.GONE);
             holdView.layout.setVisibility(View.VISIBLE);
@@ -149,7 +149,7 @@ public class DxwAdapt extends DragAdapter {
     }
 
     @Override
-    public int exchange(BoxDetalBean dragItem, int dropPostion, int col) {
+    public int exchange(YardCntrInfo dragItem, int dropPostion, int col) {
         String cellY;
         int res = CellTool.BOX_TYPE;
         //计算出列数
@@ -157,7 +157,7 @@ public class DxwAdapt extends DragAdapter {
         //遍历判断位置是否有箱子存在
         for (int i = row; i > 0; i--) {
             int index = i - 1;
-            BoxDetalBean dropBean = channelList.get(index);
+            YardCntrInfo dropBean = channelList.get(index);
             if (!dropBean.HashBox()) {
                 LogUtils.sysout("dxw bean=2=", JsonUtils.serialize(dragItem));
                 dragItem.setSelectedBox(false);
@@ -186,14 +186,14 @@ public class DxwAdapt extends DragAdapter {
      * @param col
      * @return
      */
-    public int getCellY(BoxDetalBean dragItem, int dropPostion, int col) {
+    public int getCellY(YardCntrInfo dragItem, int dropPostion, int col) {
         int cellY = 0;
         //计算出列数
         int row = channelList.size();
         //遍历判断位置是否有箱子存在 4  3  2  1
         for (int i = row; i > 0; i--) {
             int index = i - 1;
-            BoxDetalBean dropBean = channelList.get(index);
+            YardCntrInfo dropBean = channelList.get(index);
             if (!dropBean.HashBox()) {
                 cellY = row - index;
                 //赋值，直接退出循环
@@ -207,7 +207,7 @@ public class DxwAdapt extends DragAdapter {
         this.mBay = bay;
     }
 
-    public void setPutBox(BoxDetalBean putBox) {
+    public void setPutBox(YardCntrInfo putBox) {
         this.mPutBox = putBox;
     }
 
@@ -219,13 +219,13 @@ public class DxwAdapt extends DragAdapter {
      * @param bay  呗位
      * @param maps 箱子
      */
-    public void findRecommentdLocation(int col, int row, Bay bay, BoxDetalBean putBox, Map<String, BoxDetalBean> maps) {
+    public void findRecommentdLocation(int col, int row, Bay bay, YardCntrInfo putBox, Map<String, YardCntrInfo> maps) {
         if (null == maps || null == putBox || null == bay) return;
         //一层一层的遍历
         for (int cell = 0; cell < col; cell++) {
             for (int tier = 1; tier <= row; tier++) {
                 String key = String.format("(%s,%s)", cell, tier);
-                BoxDetalBean bean = maps.get(key);
+                YardCntrInfo bean = maps.get(key);
                 //判断位置是否有箱子
                 if (null == bean) {//说明该位置可允许放箱
                     if (tier == 1) {

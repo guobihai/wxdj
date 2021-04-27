@@ -1,7 +1,8 @@
 package com.smt.wxdj.swxdj.boxs.view;
 
 
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
+
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface SearchView {
      *
      * @return
      */
-    BoxDetalBean getBoxDealBean();
+    YardCntrInfo getBoxDealBean();
 
 
     /**
@@ -23,14 +24,14 @@ public interface SearchView {
      *
      * @return
      */
-    BoxDetalBean getUpDealBean();
+    YardCntrInfo getUpDealBean();
 
     /**
      * 模糊搜索箱子结果
      *
      * @param list
      */
-    void setSearchResult(List<BoxDetalBean> list);
+    void setSearchResult(List<YardCntrInfo> list);
 
     /**
      * 加载失败结果

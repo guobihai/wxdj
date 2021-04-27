@@ -1,10 +1,10 @@
 package com.smt.wxdj.swxdj.boxs.view;
 
 import com.smt.wxdj.swxdj.bean.Bay;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.bean.Trk;
 import com.smt.wxdj.swxdj.bean.User;
 import com.smt.wxdj.swxdj.enums.BOXCTRLTYPE;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -28,14 +28,14 @@ public interface BoxsView {
      *
      * @return
      */
-    BoxDetalBean getBoxDealBean();
+    YardCntrInfo getBoxDealBean();
 
     /**
      * 获取提箱子对象
      *
      * @return
      */
-    BoxDetalBean getUpDealBean();
+    YardCntrInfo getUpDealBean();
 
     /**
      * h获取场地名称
@@ -67,14 +67,14 @@ public interface BoxsView {
      *
      * @param list
      */
-    void addList(List<BoxDetalBean> list, Map<String, BoxDetalBean> maps);
+    void addList(List<YardCntrInfo> list, Map<String, YardCntrInfo> maps);
 
     /**
      * 倒箱位数据
      *
      * @param dxwList
      */
-    void addDxwList(List<BoxDetalBean> dxwList, Map<String, BoxDetalBean> maps);
+    void addDxwList(List<YardCntrInfo> dxwList, Map<String, YardCntrInfo> maps);
 
     /**
      * 放箱推荐位
@@ -133,7 +133,7 @@ public interface BoxsView {
      *
      * @param list
      */
-    void setSearchResult(List<BoxDetalBean> list);
+    void setSearchResult(List<YardCntrInfo> list);
 
     /**
      * 加载失败结果

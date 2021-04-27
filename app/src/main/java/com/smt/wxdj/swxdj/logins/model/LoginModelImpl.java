@@ -36,7 +36,11 @@ public class LoginModelImpl implements LoginModel {
             @Override
             public void onSuccess(String response) {
                 LogUtils.sysout("getTenants=====", response);
-                onLoginListener.onSucess(JsonUtils.deserialize(response, Tenants.class));
+                try {
+                    onLoginListener.onSucess(JsonUtils.deserialize(response, Tenants.class));
+                } catch (Exception e) {
+                    onLoginListener.onFailure("数据解析异常", e);
+                }
             }
 
             @Override
@@ -100,12 +104,17 @@ public class LoginModelImpl implements LoginModel {
         OkHttpUtils.get(URLTool.getUrl().concat("abp/application-configuration?culture=zh-Hans"), new OkHttpUtils.ResultCallBack<String>() {
             @Override
             public void onSuccess(String response) {
-                Map<String, Object> stringObjectMap = JsonUtils.deserialize(response, Map.class);
-                Map<String, Object> userMap = (Map<String, Object>) stringObjectMap.get("currentUser");
-                LogUtils.sysout("get user info=====", userMap.get("id"));
-                AccountManager.saveUser(String.valueOf(userMap.get("id")));
-                if (null != onLoginListener)
-                    onLoginListener.onSucess(new TokenInfo());
+                try {
+                    LogUtils.sysout("get user info=====", response);
+                    Map<String, Object> stringObjectMap = JsonUtils.deserialize(response, Map.class);
+                    Map<String, Object> userMap = (Map<String, Object>) stringObjectMap.get("currentUser");
+
+                    AccountManager.saveUser(String.valueOf(userMap.get("id")));
+                    if (null != onLoginListener)
+                        onLoginListener.onSucess(new TokenInfo());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

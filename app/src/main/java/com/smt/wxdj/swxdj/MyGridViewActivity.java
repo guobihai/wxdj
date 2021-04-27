@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.smt.wxdj.swxdj.adapt.DragAdapter;
 import com.smt.wxdj.swxdj.adapt.DxwAdapt;
 import com.smt.wxdj.swxdj.bean.Bay;
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.bean.StackBean;
 import com.smt.wxdj.swxdj.bean.Trk;
 import com.smt.wxdj.swxdj.bean.User;
@@ -45,7 +44,6 @@ import com.smt.wxdj.swxdj.dialog.ClearBoxDialog;
 import com.smt.wxdj.swxdj.dialog.CommitDialog;
 import com.smt.wxdj.swxdj.dialog.CommitDxwDialog;
 import com.smt.wxdj.swxdj.dialog.GetBoxAlertDialog;
-import com.smt.wxdj.swxdj.dialog.IAlertDialog;
 import com.smt.wxdj.swxdj.dialog.SearchResultBoxDialog;
 import com.smt.wxdj.swxdj.dialog.ShowPutWgtBoxDialog;
 import com.smt.wxdj.swxdj.dialog.TrkDialog;
@@ -56,15 +54,13 @@ import com.smt.wxdj.swxdj.enums.DataType;
 import com.smt.wxdj.swxdj.session.Session;
 import com.smt.wxdj.swxdj.session.SessionInfo;
 import com.smt.wxdj.swxdj.session.SortEt;
-import com.smt.wxdj.swxdj.utils.ActivityTool;
 import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.CellTool;
 import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
-import com.smt.wxdj.swxdj.utils.ScreenUtils;
 import com.smt.wxdj.swxdj.utils.SettingConfig;
 import com.smt.wxdj.swxdj.view.DragGrid;
-import com.smtlibrary.utils.JsonUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.LogUtils;
 import com.smtlibrary.utils.PreferenceUtils;
 
@@ -98,13 +94,13 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private Button cdStack;//场地
     private Button twSpinner;//田位
     private Button tcSpinner, btnTcOk, btnCc;//
-    private final ArrayList<BoxDetalBean> defaultBoxList = new ArrayList<>();
-    private final ArrayList<BoxDetalBean> mDxwData = new ArrayList<>();//倒箱位数据
+    private final ArrayList<YardCntrInfo> defaultBoxList = new ArrayList<>();
+    private final ArrayList<YardCntrInfo> mDxwData = new ArrayList<>();//倒箱位数据
     private int mCol = 0;//gridview 排数
     private int mRow = 0;// gridview 层数
-    private BoxDetalBean bean;//任务对象
-    private BoxDetalBean tempBoxBean;//临时存储换场地，换田位的BOX对象
-    private BoxDetalBean getBoxBean;//临时存储换场地，换田位的BOX对象
+    private YardCntrInfo bean;//任务对象
+    private YardCntrInfo tempBoxBean;//临时存储换场地，换田位的BOX对象
+    private YardCntrInfo getBoxBean;//临时存储换场地，换田位的BOX对象
     private boolean select;//是否处于选中箱子状态
     private int selectPositon = DEFAULT_TYPE;//相当从外部引用一个新得对象
     private int forwordSelectPositon = DEFAULT_TYPE;//选择要前往位置
@@ -121,7 +117,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private boolean mArrangeTag;//整理堆场标示
     private List<String> mRmList;//推荐位
     private boolean isDoRmList;//是否已经处理过放箱推荐位置
-    private Map<String, BoxDetalBean> mBoxMaps;//箱子信息
+    private Map<String, YardCntrInfo> mBoxMaps;//箱子信息
     private List<Trk> mTrkList;
     private LinearLayout llBottom;//底部显示
     private Button btnRefresh;//新增刷新功能
@@ -151,12 +147,12 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_grid_view);
         if (null != this.getIntent().getExtras()) {
-            bean = (BoxDetalBean) this.getIntent().getExtras().getSerializable("boxBean");
+            bean = (YardCntrInfo) this.getIntent().getExtras().getSerializable("boxBean");
             mBay = (Bay) this.getIntent().getExtras().getSerializable("bay");
             curBay = mBay;
             tempBoxBean = bean;
             if (null != bean)
-                getBoxBean = (BoxDetalBean) bean.clone();
+                getBoxBean = (YardCntrInfo) bean.clone();
 //            LogUtils.sysout("bean:",bean.toString());
         }
         initView();
@@ -246,7 +242,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                         break;
                 }
                 tempBoxBean = bean;
-                if (null != bean) getBoxBean = (BoxDetalBean) bean.clone();
+                if (null != bean) getBoxBean = (YardCntrInfo) bean.clone();
                 btnRefresh.setVisibility(View.GONE);
             } else if (bean.isPJCntr()) {//倒箱
                 toolTitle.setText(getString(R.string.pjBoxFormat));
@@ -330,7 +326,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         int count = mCol * mRow;
         for (int i = 0; i < count; i++) {
             String cell = CellTool.getCell(i, mCol, mRow);
-            defaultBoxList.add(new BoxDetalBean(cell, CellTool.getCell(), CellTool.getTier(), false));
+            defaultBoxList.add(new YardCntrInfo(cell, CellTool.getCell(), CellTool.getTier(), false));
         }
         userAdapter.setListDate(defaultBoxList);
     }
@@ -361,7 +357,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private void initDaoXiangWei() {
         mDxwData.clear();
         for (int i = 0; i < mRow; i++)
-            mDxwData.add(new BoxDetalBean(CellTool.getDxwCell(i, 1, mRow), BoxTool.CTRL_GETBOX, false));
+            mDxwData.add(new YardCntrInfo(CellTool.getDxwCell(i, 1, mRow), BoxTool.CTRL_GETBOX, false));
         if (null == dxwAdapter) dxwAdapter = new DxwAdapt(this);
         dxwAdapter.setListDate(mDxwData);
         dxwGridView.setAdapter(dxwAdapter);
@@ -376,7 +372,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                             select = true;
                             bean = dxwAdapter.getItem(position);
                             //还是选择克隆一个新的对象
-                            tempBoxBean = (BoxDetalBean) bean.clone();
+                            tempBoxBean = (YardCntrInfo) bean.clone();
                             selectPositon = DEFAULT_TYPE;
                             selectDwxPositon = position;
                             mBoxType = DWX;
@@ -461,20 +457,20 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
 
         new SearchResultBoxDialog(this).setConfirmClickListener(new SearchResultBoxDialog.OnSweetClickListener() {
             @Override
-            public void onClick(Dialog dialog, BoxDetalBean boxDetalBean) {
-                if (null == boxDetalBean) {
+            public void onClick(Dialog dialog, YardCntrInfo YardCntrInfo) {
+                if (null == YardCntrInfo) {
                     onFaile(getString(R.string.please_select_box_info));
                     return;
                 }
                 dialog.dismiss();
                 selectPositon = DEFAULT_TYPE;
                 //内部放箱
-                bean = boxDetalBean;
+                bean = YardCntrInfo;
                 bean.setMaj_Loc(MyApplication.MAJLOC);
                 bean.setSub_Loc(MyApplication.SUBLOC);
                 tempBoxBean = bean;
                 if (null != bean)
-                    getBoxBean = (BoxDetalBean) bean.clone();
+                    getBoxBean = (YardCntrInfo) bean.clone();
                 if (bean.getRown().equalsIgnoreCase(CHECK)) {
                     handlerTask(forwordSelectPositon);
                 } else {
@@ -490,7 +486,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             }
 
             @Override
-            public void onItemClick(Dialog dialog, BoxDetalBean bean) {
+            public void onItemClick(Dialog dialog, YardCntrInfo bean) {
 
             }
         }).show();
@@ -568,17 +564,17 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private void selectBox(int position) {
         dxwAdapter.resetSelectBox();
         int res = userAdapter.exchangeSelect(mCol, position);
-        BoxDetalBean detalBean1 = userAdapter.getItem(position);
+        YardCntrInfo detalBean1 = userAdapter.getItem(position);
         LogUtils.e("detalBean1", detalBean1.toString());
         switch (res) {
             case CellTool.BOX_TYPE_SUCESS:
-                BoxDetalBean detalBean = userAdapter.getItem(position);
+                YardCntrInfo detalBean = userAdapter.getItem(position);
                 if (!detalBean.getRown().equals(mBayName)) {
                     return;
                 }
 
                 bean = userAdapter.getItem(position);
-                tempBoxBean = (BoxDetalBean) bean.clone();//临时缓存箱子对象
+                tempBoxBean = (YardCntrInfo) bean.clone();//临时缓存箱子对象
                 select = true;
                 selectPositon = position;//保存选中的箱子位置倒缓存当中
                 mBoxType = BOXTYPE.DEFAULT;
@@ -779,7 +775,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
      * @param bean
      * @param isSame
      */
-    private void onGetBoxAlertDialog(final BoxDetalBean bean, final boolean isSame) {
+    private void onGetBoxAlertDialog(final YardCntrInfo bean, final boolean isSame) {
         if (null == bean) return;
         new GetBoxAlertDialog(this, bean)
                 .setConfirmClickListener(new GetBoxAlertDialog.OnSweetClickListener() {
@@ -802,7 +798,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     /**
      * 交换提箱子确认
      */
-    private void onChangeBoxAlertDialog(final BoxDetalBean tBean) {
+    private void onChangeBoxAlertDialog(final YardCntrInfo tBean) {
         if (null == tBean) return;
         new ChangeBoxAlertDialog(this, tBean).setConfirmClickListener(new ChangeBoxAlertDialog.OnSweetClickListener() {
             @Override
@@ -848,12 +844,12 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     }
 
     @Override
-    public BoxDetalBean getBoxDealBean() {
+    public YardCntrInfo getBoxDealBean() {
         return tempBoxBean;
     }
 
     @Override
-    public BoxDetalBean getUpDealBean() {
+    public YardCntrInfo getUpDealBean() {
         if (bean.getCntr().equals(getBoxBean.getCntr())) {
             return getBoxDealBean();
         } else {
@@ -874,13 +870,13 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
 
 
     @Override
-    public void addList(List<BoxDetalBean> list, Map<String, BoxDetalBean> maps) {
+    public void addList(List<YardCntrInfo> list, Map<String, YardCntrInfo> maps) {
         this.mBoxMaps = maps;
         int currentIndex = 0;
         //3.根据坐标填充对于的位置
         for (int i = 0; i < defaultBoxList.size(); i++) {
-            BoxDetalBean dItem = defaultBoxList.get(i);
-            BoxDetalBean mItem = maps.get(dItem.getDefaultCell());
+            YardCntrInfo dItem = defaultBoxList.get(i);
+            YardCntrInfo mItem = maps.get(dItem.getDefaultCell());
             if (null == mItem) continue;
             mItem.setHashBox(true);//设置位置有箱子
             mItem.setMoveSelect(false);
@@ -955,7 +951,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             //获取同一排的田位
             final List<Integer> beanList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                BoxDetalBean detalBean = list.get(i);
+                YardCntrInfo detalBean = list.get(i);
                 if (!bean.getCell().equals(detalBean.getCell())) continue;
                 beanList.add(Integer.parseInt(detalBean.getTier()));
             }
@@ -1000,11 +996,11 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     }
 
     @Override
-    public void addDxwList(List<BoxDetalBean> dxwlist, Map<String, BoxDetalBean> maps) {
+    public void addDxwList(List<YardCntrInfo> dxwlist, Map<String, YardCntrInfo> maps) {
         //处理倒箱位数据
         for (int i = 0; i < mDxwData.size(); i++) {
-            BoxDetalBean dItem = mDxwData.get(i);
-            BoxDetalBean temp = maps.get(dItem.getDefaultCell());
+            YardCntrInfo dItem = mDxwData.get(i);
+            YardCntrInfo temp = maps.get(dItem.getDefaultCell());
             if (null != temp) {
                 temp.setHashBox(true);//设置位置有箱子
                 mDxwData.set(i, temp);
@@ -1147,7 +1143,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             getBoxBean.setRown(mBayName);
             getBoxBean.setRown(mBayName);
             getBoxBean.setActivity("");
-            BoxDetalBean putBox = (BoxDetalBean) getBoxBean.clone();
+            YardCntrInfo putBox = (YardCntrInfo) getBoxBean.clone();
             userAdapter.exchange(putBox, forwordSelectPositon, mCol);
             isHandler = true;
             mBoxCtrlType = BOXCTRLTYPE.MOVEBOX;
@@ -1191,23 +1187,23 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
      * @param list
      */
     @Override
-    public void setSearchResult(List<BoxDetalBean> list) {
+    public void setSearchResult(List<YardCntrInfo> list) {
         new SearchResultBoxDialog(this, list).setConfirmClickListener(new SearchResultBoxDialog.OnSweetClickListener() {
             @Override
-            public void onClick(Dialog dialog, BoxDetalBean boxDetalBean) {
-                if (null == boxDetalBean) {
+            public void onClick(Dialog dialog, YardCntrInfo YardCntrInfo) {
+                if (null == YardCntrInfo) {
                     onFaile(getString(R.string.please_select_box_info));
                     return;
                 }
                 dialog.dismiss();
                 selectPositon = DEFAULT_TYPE;
                 //内部放箱
-                bean = boxDetalBean;
+                bean = YardCntrInfo;
                 bean.setMaj_Loc(MyApplication.MAJLOC);
                 bean.setSub_Loc(MyApplication.SUBLOC);
                 tempBoxBean = bean;
                 if (null != bean) {
-                    getBoxBean = (BoxDetalBean) bean.clone();
+                    getBoxBean = (YardCntrInfo) bean.clone();
                 }
                 if (bean.getRown().equalsIgnoreCase("CHECK")) {
                     handlerTask(forwordSelectPositon);
@@ -1223,7 +1219,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             }
 
             @Override
-            public void onItemClick(Dialog dialog, BoxDetalBean bean) {
+            public void onItemClick(Dialog dialog, YardCntrInfo bean) {
 
             }
         }).show();

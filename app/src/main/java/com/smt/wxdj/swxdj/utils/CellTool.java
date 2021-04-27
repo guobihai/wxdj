@@ -1,6 +1,7 @@
 package com.smt.wxdj.swxdj.utils;
 
 import com.smt.wxdj.swxdj.bean.BoxDetalBean;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.List;
 
@@ -175,7 +176,7 @@ public class CellTool {
      * @param movePosition   移动箱子要放置的位置
      * @param col            排
      */
-    public static int isLegal(int selectPosition, int movePosition, int col, List<BoxDetalBean> channelList) {
+    public static int isLegal(int selectPosition, int movePosition, int col, List<YardCntrInfo> channelList) {
         if (selectPosition == movePosition) return CellTool.BOX_TYPE;
         //计算出列数
         int row = channelList.size() / col;
@@ -222,7 +223,7 @@ public class CellTool {
      * @param movePosition 移动箱子要放置的位置
      * @param col          排
      */
-    public static int isLegal(int movePosition, int col, List<BoxDetalBean> channelList) {
+    public static int isLegal(int movePosition, int col, List<YardCntrInfo> channelList) {
         //计算出列数
         int row = channelList.size() / col;
         // 1、计算出当前的坐标,得要坐标Y的数值：
@@ -258,7 +259,7 @@ public class CellTool {
      * @param selectPosition 选中的箱子
      * @param col            排
      */
-    public static int isSelectLegal(int selectPosition, int col, List<BoxDetalBean> channelList) {
+    public static int isSelectLegal(int selectPosition, int col, List<YardCntrInfo> channelList) {
         //计算出列数
         int row = channelList.size() / col;
         int y = getCellY(selectPosition, col, row);
