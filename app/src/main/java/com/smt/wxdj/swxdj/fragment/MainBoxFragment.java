@@ -56,7 +56,7 @@ import com.smt.wxdj.swxdj.utils.SortType;
 import com.smt.wxdj.swxdj.view.MyRecyclerView;
 import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
 import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
-import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import com.smtlibrary.dialog.SweetAlertDialog;
 import com.smtlibrary.utils.JsonUtils;
 import com.smtlibrary.utils.LogUtils;
@@ -82,7 +82,7 @@ import static com.smtlibrary.utils.JsonUtils.deserialize;
  * Created by gbh on 16/6/21.
  * 箱子任务列表
  */
-public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, TaskBoxView<YardCntrInfo>, Observer {
+public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, TaskBoxView<YardTaskInfo>, Observer {
     private static final int TIMETASK = 1;
     private static final int STARTAC = 2;
     MyRecyclerView mRecyclerView;
@@ -91,12 +91,12 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private BoxDetailAdapt boxDetailAdapt;
 
     private SweetAlertDialog mProgressDialog;
-    private YardCntrInfo YardCntrInfo;
+    private YardTaskInfo yardTaskInfo;
     private String sType = "all";
     private String sortType = "all";
     private String spuType = "AllBox";
 
-    public static List<YardCntrInfo> mData = new ArrayList<>();
+    public static List<YardTaskInfo> mData = new ArrayList<>();
     public static int mType;//类型
     public static String mTaskSql;//
     //新增场地模型类
@@ -182,11 +182,15 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
 
         //作业任务
-        workViewModel.getYardCntrInfoList().observe(this, yardCntrInfos -> {
-            addList(yardCntrInfos);
+        workViewModel.getYardCntrInfoList().observe(this, yardTaskInfos -> {
+            addList(yardTaskInfos);
             hideProgress();
         });
 
+        //箱子信息
+        workViewModel.getCntrInfoMutableLiveData().observe(this, yardBayCntrInfo -> {
+            hideProgress();
+        });
     }
 
 
@@ -227,21 +231,23 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
         boxDetailAdapt.setOnItemClickListener((view1, position) -> {
-            YardCntrInfo = boxDetailAdapt.getItem(position);
-            if (null == YardCntrInfo) return;
+            yardTaskInfo = boxDetailAdapt.getItem(position);
+            if (null == yardTaskInfo) return;
             switch (mType) {
                 case MainActivity.TASKTYPE_CANCLEBOX://取消提箱
-                    if (YardCntrInfo.getStatus().equals("WD") || YardCntrInfo.getStatus().equals("CP"))
-                        showDialog(String.valueOf(YardCntrInfo.getCntr()));
+                    if (yardTaskInfo.getStatus().equals("WD") || yardTaskInfo.getStatus().equals("CP"))
+                        showDialog(String.valueOf(yardTaskInfo.getCntr()));
                     break;
                 default:
-                    String str = PreferenceUtils.getString(getActivity(), YardCntrInfo.getRown(), null);
-                    if (str == null)
-                        mBoxsPresenterImpl.CheckMaxCellTier(YardCntrInfo.getRown());
-                    else {
+                    String str = PreferenceUtils.getString(getActivity(), yardTaskInfo.getYardBayId(), null);
+                    if (str == null) {
+//                        workViewModel.GetWithCntrByBayId("39fb7959-6e6b-099a-415e-16f54a658bc2");
+//                        showProgress(1);
+                        MyGridViewActivity.start(getActivity(),yardTaskInfo.getCntr(),"39fb7959-6e6b-099a-415e-16f54a658bc2");
+                    } else {
                         //20190118 参数控制卸船是否自动放箱，默认显示
                         Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-                        it.putExtra("boxBean", YardCntrInfo);
+                        it.putExtra("boxBean", yardTaskInfo);
                         it.putExtra("bay", deserialize(str, Bay.class));
                         startActivityForResult(it, FileKeyName.resultCode);
 
@@ -329,13 +335,13 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     isStart = true;
                     mHandler.removeMessages(TIMETASK);
                     mHandler.sendEmptyMessageDelayed(STARTAC, 2000);
-                    String str = PreferenceUtils.getString(getActivity(), YardCntrInfo.getRown(), null);
+                    String str = PreferenceUtils.getString(getActivity(), yardTaskInfo.getRown(), null);
                     if (TextUtils.isEmpty(str))
-                        mBoxsPresenterImpl.CheckMaxCellTier(YardCntrInfo.getRown());
+                        mBoxsPresenterImpl.CheckMaxCellTier(yardTaskInfo.getRown());
                     else {
                         Bay bay = JsonUtils.deserialize(str, Bay.class);
                         Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-                        it.putExtra("boxBean", YardCntrInfo);
+                        it.putExtra("boxBean", yardTaskInfo);
                         it.putExtra("bay", bay);
                         startActivityForResult(it, FileKeyName.resultCode);
                     }
@@ -455,7 +461,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * @param b
      * @return
      */
-    private boolean compare(List<YardCntrInfo> a, List<YardCntrInfo> b) {
+    private boolean compare(List<YardTaskInfo> a, List<YardTaskInfo> b) {
         if (a.size() < b.size())
             return false;
         return true;
@@ -481,9 +487,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @Override
     public void addBay(Bay bay) {
-        PreferenceUtils.putString(getActivity(), YardCntrInfo.getRown(), bay.toString());
+        PreferenceUtils.putString(getActivity(), yardTaskInfo.getRown(), bay.toString());
         Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-        it.putExtra("boxBean", YardCntrInfo);
+        it.putExtra("boxBean", yardTaskInfo);
         it.putExtra("bay", bay);
         startActivityForResult(it, FileKeyName.resultCode);
     }
@@ -547,7 +553,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 workViewModel.GetTrkWorkByBlockId(bean.getYardBlockId(), "");
                 mStackDialog.dismiss();
                 mStackBean = bean;
-                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(),false,false);
+                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(), false, false);
 //                Session.getInstance().notifySelect(FileKeyName.CONFIRMBOX);
             }
 
@@ -596,8 +602,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mStackDialog.dismiss();
                 workViewModel.GetTrkWorkIsCTCByBlockId(bean.getYardBlockId());
 //                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(),false,false);
-                workViewModel.GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
-                workViewModel.GetListByBayId(mStackBean.getCurrentBayId());
+//                workViewModel.GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
+//                workViewModel.GetListByBayId(mStackBean.getCurrentBayId());
+
 //                Session.getInstance().notifySelect(FileKeyName.FALLBOX);
             }
 
@@ -679,8 +686,8 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 sortType = info.getSortType();
                 boxDetailAdapt.setData(filterData());
             } else if (info.getSortEt() == SortEt.DOTASK) {
-                boxDetailAdapt.removeObj(YardCntrInfo);
-                mData.remove(YardCntrInfo);
+                boxDetailAdapt.removeObj(yardTaskInfo);
+                mData.remove(yardTaskInfo);
                 if (!TextUtils.isEmpty(searchKey) && isSearch) {
                     boxDetailAdapt.setData(goIntoBoxNo(searchKey));
                     return;
@@ -700,13 +707,13 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
      *
      * @return
      */
-    private List<YardCntrInfo> filterData() {
-        List<YardCntrInfo> tList = new ArrayList<>();
+    private List<YardTaskInfo> filterData() {
+        List<YardTaskInfo> tList = new ArrayList<>();
         if (sortType.equals(SortType.ALL) && spuType.equals(SortType.AllBox)) {
             tList.addAll(mData);
             return tList;
         }
-        for (YardCntrInfo bean : mData) {
+        for (YardTaskInfo bean : mData) {
             if (sortType.equals(SortType.ALL) && spuType.equals(SortType.PutBox)) {
                 if (bean.getActivity().trim().equals(CTRL_PUTBOX) || bean.getActivity().trim().equals(CTRL_PUTBOXIG))
                     tList.add(bean);
@@ -748,9 +755,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
      *
      * @param boxNo
      */
-    private List<YardCntrInfo> goIntoBoxNo(String boxNo) {
-        List<YardCntrInfo> tempData = new ArrayList<>();
-        for (YardCntrInfo bean : mData) {
+    private List<YardTaskInfo> goIntoBoxNo(String boxNo) {
+        List<YardTaskInfo> tempData = new ArrayList<>();
+        for (YardTaskInfo bean : mData) {
             if (bean.getCntr().contains(boxNo.toUpperCase()) ||
                     bean.getCntr().contains(boxNo) ||
                     bean.getCntr().endsWith(boxNo) ||

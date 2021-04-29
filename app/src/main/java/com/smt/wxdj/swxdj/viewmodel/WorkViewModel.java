@@ -3,6 +3,7 @@ package com.smt.wxdj.swxdj.viewmodel;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.viewmodel.api.WorkInterface;
 import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.NMachineInfo;
@@ -13,10 +14,13 @@ import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.param.ParamUtils;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
 import com.smt.wxdj.swxdj.viewmodel.nbean.OprTaskInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import com.smtlibrary.utils.LogUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +36,15 @@ public class WorkViewModel extends ViewModel {
     //呗位信息
     private MutableLiveData<List<YardBayInfo>> YardBayInfoList;
     //作业任务列表
-    private MutableLiveData<List<YardCntrInfo>> YardCntrInfoList;
+    private MutableLiveData<List<YardTaskInfo>> YardCntrInfoList;
+
+    //贝位信息(包含箱子信息)
+    private MutableLiveData<YardBayCntrInfo> cntrInfoMutableLiveData;
+    //箱子对应的键值对信息
+    private MutableLiveData<Map<String, YardCntrInfo>> mCntrYardCntrInfo;
+    //倒箱信息
+    private MutableLiveData<List<YardCntrInfo>> mCurBayCntrInfo;//贝位中的箱子
+    private MutableLiveData<List<YardCntrInfo>> mDwListCntrInfo;//倒箱的信息
 
 
     public WorkViewModel() {
@@ -40,6 +52,9 @@ public class WorkViewModel extends ViewModel {
         ChaneStackInfoList = new MutableLiveData<>();
         YardBayInfoList = new MutableLiveData<>();
         YardCntrInfoList = new MutableLiveData<>();
+        cntrInfoMutableLiveData = new MutableLiveData<>();
+        mCntrYardCntrInfo = new MutableLiveData<>();
+        mCurBayCntrInfo = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<NMachineInfo>> getMachineList() {
@@ -50,8 +65,27 @@ public class WorkViewModel extends ViewModel {
         return ChaneStackInfoList;
     }
 
-    public MutableLiveData<List<YardCntrInfo>> getYardCntrInfoList() {
+    public MutableLiveData<List<YardTaskInfo>> getYardCntrInfoList() {
         return YardCntrInfoList;
+    }
+
+    public MutableLiveData<YardBayCntrInfo> getCntrInfoMutableLiveData() {
+        return cntrInfoMutableLiveData;
+    }
+
+    public MutableLiveData<List<YardCntrInfo>> getCurBayCntrInfo() {
+        return mCurBayCntrInfo;
+    }
+
+    public MutableLiveData<Map<String, YardCntrInfo>> getCntrYardCntrInfo() {
+        if (null == mCntrYardCntrInfo) mCntrYardCntrInfo = new MutableLiveData<>();
+        return mCntrYardCntrInfo;
+    }
+
+    //倒箱
+    public MutableLiveData<List<YardCntrInfo>> getDwListCntrInfo() {
+        if(null == mDwListCntrInfo)mDwListCntrInfo = new MutableLiveData<>();
+        return mDwListCntrInfo;
     }
 
     /**
@@ -141,6 +175,44 @@ public class WorkViewModel extends ViewModel {
                     }
                 });
     }
+
+
+    /**
+     * 获取贝位信息，包括箱子信息
+     *
+     * @param bayId
+     */
+    public void GetWithCntrByBayId(String bayId) {
+        RetrofitManager.createToken(WorkInterface.class)
+                .GetWithCntr(bayId)
+                .compose(RxUtils.getWrapper())
+                .subscribe(new ResponseObserver<YardBayCntrInfo>() {
+                    @Override
+                    public void onSuccess(YardBayCntrInfo data) {
+                        String strData = JsonUtils.serialize(data);
+                        LogUtils.sysout("===获取贝位信息，包括箱子信息===", strData);
+                        if (null != data.getContainers()) {
+                            List<YardCntrInfo> cntrList = new ArrayList<>(data.getContainers());
+                            List<YardCntrInfo> dxList = new ArrayList<>();
+                            Map<String, YardCntrInfo> maps = new HashMap<>();
+                            for (YardCntrInfo cntrInfo : data.getContainers()) {
+                                if (cntrInfo.getCell().equals("0")) {
+                                    dxList.add(cntrInfo);
+//                                    cntrList.remove(cntrInfo);
+                                }
+                                //如果相等，替换表格数据，箱子填充
+                                cntrInfo.setDefaultCell(String.format("(%s,%s)", cntrInfo.getCurCell(), cntrInfo.getCurTier()));
+                                maps.put(cntrInfo.getDefaultCell(), cntrInfo);
+                            }
+                            mCurBayCntrInfo.setValue(cntrList);
+                            getCntrYardCntrInfo().setValue(maps);
+                            getDwListCntrInfo().setValue(dxList);
+                        }
+                        cntrInfoMutableLiveData.setValue(data);
+                    }
+                });
+    }
+
     /**
      * 根据场站ID获取街区信息
      *
@@ -228,9 +300,9 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkByBlockId(blockId, activity)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
+                .subscribe(new ResponseObserver<List<YardTaskInfo>>() {
                     @Override
-                    public void onSuccess(List<YardCntrInfo> data) {
+                    public void onSuccess(List<YardTaskInfo> data) {
                         LogUtils.sysout("===获取指定街区的作业任务列表===", JsonUtils.serialize(data));
                         YardCntrInfoList.setValue(data);
                     }
@@ -246,9 +318,9 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkIsUPByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
+                .subscribe(new ResponseObserver<List<YardTaskInfo>>() {
                     @Override
-                    public void onSuccess(List<YardCntrInfo> data) {
+                    public void onSuccess(List<YardTaskInfo> data) {
                         LogUtils.sysout("===获取指定街区的取消提箱任务列表===", JsonUtils.serialize(data));
                         YardCntrInfoList.setValue(data);
                     }
@@ -264,9 +336,9 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetTrkWorkIsCTCByBlockId(blockId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
+                .subscribe(new ResponseObserver<List<YardTaskInfo>>() {
                     @Override
-                    public void onSuccess(List<YardCntrInfo> data) {
+                    public void onSuccess(List<YardTaskInfo> data) {
                         LogUtils.sysout("===获取指定街区的倒箱任务列表===", JsonUtils.serialize(data));
                         YardCntrInfoList.setValue(data);
                     }
@@ -304,7 +376,7 @@ public class WorkViewModel extends ViewModel {
 
 
     /**
-     * 放箱确认
+     * 提箱确认
      *
      * @param yardSiteId  yardSiteId	 场站Id
      * @param containerId 集装箱Id

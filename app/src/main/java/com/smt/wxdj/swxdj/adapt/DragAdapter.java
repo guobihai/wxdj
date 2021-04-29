@@ -566,7 +566,7 @@ public class DragAdapter extends BaseAdapter {
      */
     public boolean hashPutWgtBox(int col, YardCntrInfo putBox, int selectPosition) {
         //1.要放的箱子，如果是空箱，直接返回true
-        if (TextUtils.isEmpty(putBox.getFe_Ind()) || putBox.getFe_Ind().equals(BoxTool.E))
+        if (TextUtils.isEmpty(putBox.getFeInd()) || putBox.getFeInd().equals(BoxTool.E))
             return true;
         //计算出列数
         int row = channelList.size() / col;
@@ -580,7 +580,7 @@ public class DragAdapter extends BaseAdapter {
             //如果底下没有箱子，直接返回true
             if (!bottomBox.HashBox()) return true;
             //如果底下的箱子是重箱，直接返回true
-            if (TextUtils.isEmpty(putBox.getFe_Ind()) || bottomBox.getFe_Ind().equalsIgnoreCase(BoxTool.F))
+            if (TextUtils.isEmpty(putBox.getFeInd()) || bottomBox.getFeInd().equalsIgnoreCase(BoxTool.F))
                 return true;
         }
         return false;

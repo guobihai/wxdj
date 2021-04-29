@@ -1,7 +1,12 @@
 package com.smt.wxdj.swxdj;
 
 import android.app.Dialog;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelStore;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -60,10 +65,13 @@ import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.SettingConfig;
 import com.smt.wxdj.swxdj.view.DragGrid;
+import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.LogUtils;
 import com.smtlibrary.utils.PreferenceUtils;
 
+import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,6 +133,18 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private boolean isStay; // 参数控制是否停留在界面， 默认不停留
 
 
+    private WorkViewModel workViewModel;
+    private YardBayCntrInfo mYardBayCntrInfo;//贝位信息
+    private String mCntrNo;//传过来的箱子
+
+    public static void start(Context context, String cntrNo, String bayId) {
+        Intent starter = new Intent(context, MyGridViewActivity.class);
+        starter.putExtra("bayId", bayId);
+        starter.putExtra("isArrange", true);
+        starter.putExtra("cntrNo", cntrNo);
+        context.startActivity(starter);
+    }
+
     // 参数控制自动刷新
     private int delayTime = 30000;//30秒自动刷新请求
     private static final int TIMETASK = 1;
@@ -146,6 +166,8 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_grid_view);
+        workViewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
+
         if (null != this.getIntent().getExtras()) {
             bean = (YardCntrInfo) this.getIntent().getExtras().getSerializable("boxBean");
             mBay = (Bay) this.getIntent().getExtras().getSerializable("bay");
@@ -154,9 +176,28 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             if (null != bean)
                 getBoxBean = (YardCntrInfo) bean.clone();
 //            LogUtils.sysout("bean:",bean.toString());
+            mCntrNo = this.getIntent().getExtras().getString("cntrNo");
+            String bayId = this.getIntent().getExtras().getString("bayId");
+            workViewModel.GetWithCntrByBayId(bayId);
         }
+
+
+        showProgress();
+        workViewModel.getCntrInfoMutableLiveData().observe(this, info -> {
+            mYardBayCntrInfo = info;
+            initData();
+            hideProgress();
+            List<YardCntrInfo> curListInfo = workViewModel.getCurBayCntrInfo().getValue();
+            List<YardCntrInfo> dwCurListInfo = workViewModel.getDwListCntrInfo().getValue();
+            Map<String, YardCntrInfo> cntrInfoMap = workViewModel.getCntrYardCntrInfo().getValue();
+            if (null != curListInfo && null != cntrInfoMap) {
+                addList(curListInfo, cntrInfoMap);
+            }
+            if (null != dwCurListInfo) {
+                addDxwList(dwCurListInfo, cntrInfoMap);
+            }
+        });
         initView();
-        initData();
     }
 
     /**
@@ -197,70 +238,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         isDoRmList = false;
         //加载场地
         if (null != bean) {
-            if (bean.isPutCntr()) {//卸箱
-                getBoxLayout.setVisibility(View.VISIBLE);
-                btnTcOk.setVisibility(View.GONE);
-                toolTitle.setText(getString(R.string.putBoxFormat));
-                tcSpinner.setText(String.format(getString(R.string.rztc), getBoxBean.getTrk()));
-                select = true;
-                mBoxCtrlType = BOXCTRLTYPE.PUTBOX;
-                mBoxType = BOXTYPE.DEFAULT;
-                bean.setStatus(BoxTool.STATE_PL);
-                tempBoxBean.setStatus(BoxTool.STATE_PL);
-                getBoxBean.setStatus(BoxTool.STATE_PL);
-                btnRefresh.setVisibility(View.GONE);
-            } else if (bean.isGetCntr()) {//提箱
-                getBoxLayout.setVisibility(View.VISIBLE);
-                mBoxCtrlType = BOXCTRLTYPE.GETBOX;
-                toolTitle.setText(getString(R.string.getBoxFormat));
-                tcSpinner.setText(String.format(getString(R.string.cztc), getBoxBean.getTrk()));
-                bean.setStatus(BoxTool.STATE_PL);
-                tempBoxBean.setStatus(BoxTool.STATE_PL);
-                getBoxBean.setStatus(BoxTool.STATE_PL);
-                mBoxsPresenterImpl.loadTrkList(DataType.TRK, getBoxBean.getTrk());
-                btnRefresh.setVisibility(View.VISIBLE);
-            } else if (bean.cancleGetCntr()) {//取消提箱
-                getBoxLayout.setVisibility(View.GONE);
-                toolTitle.setText(getString(R.string.cancleBox));
-                mBoxCtrlType = BOXCTRLTYPE.PUTBOX;
-                bean.setSvc_Code(bean.getTrk_Type());//MAR转场，BRG装卸船，CY闸口，CSV修改箱信息,CP
-                bean.setRown(bean.getRown());
-                bean.setCell(bean.getiToCell());
-                bean.setTier(bean.getiToTier());
-                if (bean.getActivity().equals(BoxTool.CTRL_UPBOX))
-                    bean.setActivity(BoxTool.CTRL_GETBOX);
-                else bean.setActivity(BoxTool.CTRL_GETBOXIP);
-
-                switch (bean.getStatus()) {
-                    case BoxTool.STATE_WD://外拖车、装卸船
-                        bean.setStatus(BoxTool.STATE_PW);
-                        break;
-                    case BoxTool.STATE_CP://内部转场
-                        bean.setStatus(BoxTool.STATE_WD);
-                        break;
-                    default:
-                        break;
-                }
-                tempBoxBean = bean;
-                if (null != bean) getBoxBean = (YardCntrInfo) bean.clone();
-                btnRefresh.setVisibility(View.GONE);
-            } else if (bean.isPJCntr()) {//倒箱
-                toolTitle.setText(getString(R.string.pjBoxFormat));
-                select = true;
-                mBoxCtrlType = BOXCTRLTYPE.MOVEBOX;
-                mBoxType = BOXTYPE.DEFAULT;
-                bean.setStatus(BoxTool.STATE_PL);
-                tempBoxBean.setStatus(BoxTool.STATE_PL);
-                getBoxBean.setStatus(BoxTool.STATE_PL);
-                LogUtils.sysout("bean", bean);
-                btnRefresh.setVisibility(View.GONE);
-            } else {
-                toolTitle.setText("");
-            }
-            mBayName = getBoxBean.getRown();
-            mStackName = getBoxBean.getStack();
-            cdStack.setText(String.format(getString(R.string.cd), mStackName));
-            twSpinner.setText(String.format(getString(R.string.tw), mBayName));
+            initCntrTaskType();
         } else {//抄场，整理箱区
             mArrangeTag = true;
             isArrange = this.getIntent().getExtras().getBoolean("isArrange");
@@ -269,23 +247,88 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             btnCc.setVisibility(isArrange ? View.GONE : View.VISIBLE);
             btnRefresh.setVisibility(View.GONE);
         }
-        mCol = mBay == null ? 6 : Integer.parseInt(mBay.getMax_Cell());
-        mRow = mBay == null ? 5 : Integer.parseInt(mBay.getMax_Tier());
+        mCol = mYardBayCntrInfo == null ? 6 : (int) mYardBayCntrInfo.getMaxCell();
+        mRow = mYardBayCntrInfo == null ? 5 : (int) mYardBayCntrInfo.getMaxTier();
         init();
 
-        if (null != mBay)
-//            mBoxsPresenterImpl.GetCntrListByConditionNotCell(mBay.getBay(), bean == null ? "" : bean.getCntr(), true);
+        if (null != mBay) {
             mBoxsPresenterImpl.GetCntrInfoConver(getBoxBean);
+        }
 
         String value = LruchUtils.getValues(FileKeyName.isStayWorkActivity);
-        if(!TextUtils.isEmpty(value) || "YES".equals(value)){
+        if (!TextUtils.isEmpty(value) || "YES".equals(value)) {
             isStay = true;
         }
-//        isStay = false;
         if (isStay && PreferenceUtils.getBoolean(this, SettingConfig.OPEN_TIME_TASK, false)) {
             delayTime = PreferenceUtils.getInt(this, SettingConfig.SETTING_TIME, SettingConfig.TIME_OUT) * 1000;
-//            mHandler.sendEmptyMessageDelayed(TIMETASK, delayTime);
         }
+    }
+
+    private void initCntrTaskType() {
+        if (bean.isPutCntr()) {//卸箱
+            getBoxLayout.setVisibility(View.VISIBLE);
+            btnTcOk.setVisibility(View.GONE);
+            toolTitle.setText(getString(R.string.putBoxFormat));
+            tcSpinner.setText(String.format(getString(R.string.rztc), getBoxBean.getTrk()));
+            select = true;
+            mBoxCtrlType = BOXCTRLTYPE.PUTBOX;
+            mBoxType = BOXTYPE.DEFAULT;
+            bean.setStatus(BoxTool.STATE_PL);
+            tempBoxBean.setStatus(BoxTool.STATE_PL);
+            getBoxBean.setStatus(BoxTool.STATE_PL);
+            btnRefresh.setVisibility(View.GONE);
+        } else if (bean.isGetCntr()) {//提箱
+            getBoxLayout.setVisibility(View.VISIBLE);
+            mBoxCtrlType = BOXCTRLTYPE.GETBOX;
+            toolTitle.setText(getString(R.string.getBoxFormat));
+            tcSpinner.setText(String.format(getString(R.string.cztc), getBoxBean.getTrk()));
+            bean.setStatus(BoxTool.STATE_PL);
+            tempBoxBean.setStatus(BoxTool.STATE_PL);
+            getBoxBean.setStatus(BoxTool.STATE_PL);
+            mBoxsPresenterImpl.loadTrkList(DataType.TRK, getBoxBean.getTrk());
+            btnRefresh.setVisibility(View.VISIBLE);
+        } else if (bean.cancleGetCntr()) {//取消提箱
+            getBoxLayout.setVisibility(View.GONE);
+            toolTitle.setText(getString(R.string.cancleBox));
+            mBoxCtrlType = BOXCTRLTYPE.PUTBOX;
+            bean.setSvc_Code(bean.getTrk_Type());//MAR转场，BRG装卸船，CY闸口，CSV修改箱信息,CP
+            bean.setRown(bean.getRown());
+            bean.setCell(bean.getiToCell());
+            bean.setTier(bean.getiToTier());
+            if (bean.getActivity().equals(BoxTool.CTRL_UPBOX))
+                bean.setActivity(BoxTool.CTRL_GETBOX);
+            else bean.setActivity(BoxTool.CTRL_GETBOXIP);
+
+            switch (bean.getStatus()) {
+                case BoxTool.STATE_WD://外拖车、装卸船
+                    bean.setStatus(BoxTool.STATE_PW);
+                    break;
+                case BoxTool.STATE_CP://内部转场
+                    bean.setStatus(BoxTool.STATE_WD);
+                    break;
+                default:
+                    break;
+            }
+            tempBoxBean = bean;
+            if (null != bean) getBoxBean = (YardCntrInfo) bean.clone();
+            btnRefresh.setVisibility(View.GONE);
+        } else if (bean.isPJCntr()) {//倒箱
+            toolTitle.setText(getString(R.string.pjBoxFormat));
+            select = true;
+            mBoxCtrlType = BOXCTRLTYPE.MOVEBOX;
+            mBoxType = BOXTYPE.DEFAULT;
+            bean.setStatus(BoxTool.STATE_PL);
+            tempBoxBean.setStatus(BoxTool.STATE_PL);
+            getBoxBean.setStatus(BoxTool.STATE_PL);
+            LogUtils.sysout("bean", bean);
+            btnRefresh.setVisibility(View.GONE);
+        } else {
+            toolTitle.setText("");
+        }
+        mBayName = getBoxBean.getRown();
+        mStackName = getBoxBean.getStack();
+        cdStack.setText(String.format(getString(R.string.cd), mStackName));
+        twSpinner.setText(String.format(getString(R.string.tw), mBayName));
     }
 
     private void init() {
@@ -569,7 +612,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         switch (res) {
             case CellTool.BOX_TYPE_SUCESS:
                 YardCntrInfo detalBean = userAdapter.getItem(position);
-                if (!detalBean.getRown().equals(mBayName)) {
+                if (!detalBean.getYardBayId().equals(mBayName)) {
                     return;
                 }
 
@@ -626,7 +669,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                                 selectPositon = DEFAULT_TYPE;
 //                                String str = PreferenceUtils.getString(MyGridViewActivity.this, bay.getBay(), null);
 //                                if (str == null)
-                                if(null != getBoxBean) getBoxBean.setRown(bay.getBay());
+                                if (null != getBoxBean) getBoxBean.setRown(bay.getBay());
                                 mBoxsPresenterImpl.CheckMaxCellTier(bay.getBay());
 //                                if (null != mRmList) {
 //                                    mRmList.clear();
@@ -756,7 +799,8 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                 .setConfirmClickListener(new CommitDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(Dialog dialog, View view) {
-                        mBoxsPresenterImpl.loadCheckMoveForCell(tempBoxBean, cellX, cellY);
+//                        mBoxsPresenterImpl.loadCheckMoveForCell(tempBoxBean, cellX, cellY);
+                        Toast.makeText(MyGridViewActivity.this,"换箱确认",Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 }).setCancelClickListener(new CommitDialog.OnSweetClickListener() {
@@ -778,20 +822,17 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private void onGetBoxAlertDialog(final YardCntrInfo bean, final boolean isSame) {
         if (null == bean) return;
         new GetBoxAlertDialog(this, bean)
-                .setConfirmClickListener(new GetBoxAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(Dialog getBoxAlertDialog, View view) {
-                        getBoxAlertDialog.dismiss();
-                        if (isSame) {
-                            if (userAdapter.AboveCntr(bean)) {
-                                onFaile("\"" + bean.getCntr() + getString(R.string.the_box_was_pressed_down));
-                            } else if (bean.isCntrReeferAStatus())
-                                onFaile("\"" + bean.getCntr() + getString(R.string.refrigerator_has_not_been_unplugged));
-                            else
-                                mBoxsPresenterImpl.isValidOperation(bean);
-                        } else
-                            mBoxsPresenterImpl.LoadCheckChangeBox();
-                    }
+                .setConfirmClickListener((getBoxAlertDialog, view) -> {
+                    getBoxAlertDialog.dismiss();
+                    if (isSame) {
+                        if (userAdapter.AboveCntr(bean)) {
+                            onFaile("\"" + bean.getCntr() + getString(R.string.the_box_was_pressed_down));
+                        } else if (bean.isCntrReeferAStatus())
+                            onFaile("\"" + bean.getCntr() + getString(R.string.refrigerator_has_not_been_unplugged));
+                        else
+                            mBoxsPresenterImpl.isValidOperation(bean);
+                    } else
+                        mBoxsPresenterImpl.LoadCheckChangeBox();
                 }).show();
     }
 
@@ -880,6 +921,13 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             if (null == mItem) continue;
             mItem.setHashBox(true);//设置位置有箱子
             mItem.setMoveSelect(false);
+            if (TextUtils.equals(mCntrNo, dItem.getCntr())) {
+                bean = mItem;
+                tempBoxBean = bean;
+                if (null != bean)
+                    getBoxBean = (YardCntrInfo) bean.clone();
+                initCntrTaskType();
+            }
             //提箱
             if (getBoxBean != null && getBoxBean.isGetCntr()) {
                 //判断一车两箱颜色
@@ -976,12 +1024,9 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             window.setAttributes(lp);
             window.setGravity(Gravity.TOP | Gravity.RIGHT);
             dialog.show();
-            dialog.setConfirmClickListener(new AutoPutBoxDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(Dialog dialog, View view) {
-                    dialog.dismiss();
-                    mBoxsPresenterImpl.putBoxForCell(Integer.parseInt(bean.getCell()), Integer.parseInt(bean.getTier()));
-                }
+            dialog.setConfirmClickListener((dialog1, view) -> {
+                dialog1.dismiss();
+                mBoxsPresenterImpl.putBoxForCell(Integer.parseInt(bean.getCell()), Integer.parseInt(bean.getTier()));
             });
             //田位最大排
             int maxBayCell = Integer.parseInt(mBay.getMax_Cell());

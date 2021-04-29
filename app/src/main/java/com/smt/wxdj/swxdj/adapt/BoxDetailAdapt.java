@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.compares.SmtCompare;
-import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.NumTool;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import com.smtlibrary.utils.PreferenceUtils;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private boolean mShowFooter = true;
     private Context mContext;
-    private List<YardCntrInfo> mData;
+    private List<YardTaskInfo> mData;
     private OnItemClickListener onItemClickListener;
     private int mType;
     private boolean isSortTruck;
@@ -78,7 +78,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return day + " " + hour + ":" + minute;
     }
 
-    private boolean isVVDVSL(YardCntrInfo bean) {
+    private boolean isVVDVSL(YardTaskInfo bean) {
         boolean flag = true;
         if (null != bean) {
             if (!TextUtils.isEmpty(bean.getVVDVSL())) {
@@ -95,7 +95,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
      *
      * @param data
      */
-    public void setData(List<YardCntrInfo> data) {
+    public void setData(List<YardTaskInfo> data) {
         this.mData = data;
 //        boolean isSort = PreferenceUtils.getBoolean(mContext, ISSORT, false);
 //        String sortName = PreferenceUtils.getString(mContext, SORT_NAME, SmtCompare.TIME);
@@ -151,7 +151,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ContentView) {
-            YardCntrInfo bean = mData.get(position - 1);
+            YardTaskInfo bean = mData.get(position - 1);
             if (null == bean) return;
 
             ((ContentView) holder).carNum.setText(String.valueOf(bean.getTrkNo()));
@@ -181,14 +181,14 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    public YardCntrInfo getItem(int position) {
+    public YardTaskInfo getItem(int position) {
         if (null == mData) return null;
-        YardCntrInfo box = mData.get(position - 1);
+        YardTaskInfo box = mData.get(position - 1);
         return box;
     }
 
 
-    public void removeObj(YardCntrInfo bean) {
+    public void removeObj(YardTaskInfo bean) {
         if (null != mData) {
             mData.remove(bean);
             this.notifyDataSetChanged();
