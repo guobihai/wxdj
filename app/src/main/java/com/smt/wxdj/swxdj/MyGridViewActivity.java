@@ -68,6 +68,7 @@ import com.smt.wxdj.swxdj.view.DragGrid;
 import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import com.smtlibrary.utils.LogUtils;
 import com.smtlibrary.utils.PreferenceUtils;
 
@@ -136,12 +137,13 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private WorkViewModel workViewModel;
     private YardBayCntrInfo mYardBayCntrInfo;//贝位信息
     private String mCntrNo;//传过来的箱子
+    private YardTaskInfo mYardTaskInfo;
 
-    public static void start(Context context, String cntrNo, String bayId) {
+    public static void start(Context context, YardTaskInfo yardTaskInfo, String bayId) {
         Intent starter = new Intent(context, MyGridViewActivity.class);
         starter.putExtra("bayId", bayId);
         starter.putExtra("isArrange", true);
-        starter.putExtra("cntrNo", cntrNo);
+        starter.putExtra("yardTaskInfo", yardTaskInfo);
         context.startActivity(starter);
     }
 
@@ -169,6 +171,12 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         workViewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
 
         if (null != this.getIntent().getExtras()) {
+            //任务
+            mYardTaskInfo = (YardTaskInfo) this.getIntent().getExtras().getSerializable("yardTaskInfo");
+            if (null != mYardTaskInfo) {
+                mCntrNo = mYardTaskInfo.getCntr1();
+            }
+
             bean = (YardCntrInfo) this.getIntent().getExtras().getSerializable("boxBean");
             mBay = (Bay) this.getIntent().getExtras().getSerializable("bay");
             curBay = mBay;
@@ -176,7 +184,6 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             if (null != bean)
                 getBoxBean = (YardCntrInfo) bean.clone();
 //            LogUtils.sysout("bean:",bean.toString());
-            mCntrNo = this.getIntent().getExtras().getString("cntrNo");
             String bayId = this.getIntent().getExtras().getString("bayId");
             workViewModel.GetWithCntrByBayId(bayId);
         }
@@ -800,7 +807,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                     @Override
                     public void onClick(Dialog dialog, View view) {
 //                        mBoxsPresenterImpl.loadCheckMoveForCell(tempBoxBean, cellX, cellY);
-                        Toast.makeText(MyGridViewActivity.this,"换箱确认",Toast.LENGTH_LONG).show();
+                        Toast.makeText(MyGridViewActivity.this, "换箱确认", Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 }).setCancelClickListener(new CommitDialog.OnSweetClickListener() {
@@ -827,12 +834,14 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                     if (isSame) {
                         if (userAdapter.AboveCntr(bean)) {
                             onFaile("\"" + bean.getCntr() + getString(R.string.the_box_was_pressed_down));
-                        } else if (bean.isCntrReeferAStatus())
+                        } else if (bean.isCntrReeferAStatus()) {
                             onFaile("\"" + bean.getCntr() + getString(R.string.refrigerator_has_not_been_unplugged));
-                        else
+                        } else {
                             mBoxsPresenterImpl.isValidOperation(bean);
-                    } else
+                        }
+                    } else {
                         mBoxsPresenterImpl.LoadCheckChangeBox();
+                    }
                 }).show();
     }
 
@@ -921,11 +930,15 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             if (null == mItem) continue;
             mItem.setHashBox(true);//设置位置有箱子
             mItem.setMoveSelect(false);
-            if (TextUtils.equals(mCntrNo, dItem.getCntr())) {
+            if (TextUtils.equals(mCntrNo, mItem.getCntr())) {
                 bean = mItem;
+                bean.setActivity(mYardTaskInfo.getActivity());
+                bean.setTrk(mYardTaskInfo.getTrkNo());
                 tempBoxBean = bean;
-                if (null != bean)
+                if (null != bean) {
                     getBoxBean = (YardCntrInfo) bean.clone();
+                    userAdapter.setGetBox(getBoxBean);
+                }
                 initCntrTaskType();
             }
             //提箱
@@ -935,15 +948,14 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                 //判断当前提箱字体颜色
                 if (mItem.isSameCntr(getBoxBean)) {
                     //同步任务箱，与在场箱位置一样
-                    getBoxBean.setCell(mItem.getCell());
-                    getBoxBean.setTier(mItem.getTier());
-                    tempBoxBean.setCell(mItem.getCell());
-                    tempBoxBean.setTier(mItem.getTier());
-                    bean.setCell(mItem.getCell());
-                    bean.setTier(mItem.getTier());
+//                    getBoxBean.setCell(mItem.getCell());
+//                    getBoxBean.setTier(mItem.getTier());
+//                    tempBoxBean.setCell(mItem.getCell());
+//                    tempBoxBean.setTier(mItem.getTier());
+//                    bean.setCell(mItem.getCell());
+//                    bean.setTier(mItem.getTier());
                     currentIndex = Integer.parseInt(mItem.getCell());
                 }
-
                 //提箱背景颜色判断
                 mItem.setGetCntrBackGroupColor(getBoxBean, maps);
                 boolean b = mItem.getCntr().equals(bean.getCntr());

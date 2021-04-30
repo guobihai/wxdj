@@ -243,7 +243,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     if (str == null) {
 //                        workViewModel.GetWithCntrByBayId("39fb7959-6e6b-099a-415e-16f54a658bc2");
 //                        showProgress(1);
-                        MyGridViewActivity.start(getActivity(),yardTaskInfo.getCntr(),"39fb7959-6e6b-099a-415e-16f54a658bc2");
+                        MyGridViewActivity.start(getActivity(),yardTaskInfo,"39fb7959-6e6b-099a-415e-16f54a658bc2");
                     } else {
                         //20190118 参数控制卸船是否自动放箱，默认显示
                         Intent it = new Intent(getActivity(), MyGridViewActivity.class);

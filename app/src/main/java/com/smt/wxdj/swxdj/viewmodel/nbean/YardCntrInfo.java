@@ -5,9 +5,13 @@ import android.text.TextUtils;
 import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.bean.BoxDetalBean;
+import com.smt.wxdj.swxdj.enums.ColorType;
 import com.smt.wxdj.swxdj.utils.BoxTool;
+import com.smt.wxdj.swxdj.utils.FileKeyName;
+import com.smt.wxdj.swxdj.utils.LruchUtils;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 
 /**
  * 任务类型
@@ -906,6 +910,125 @@ public class YardCntrInfo extends BoxDetalBean {
                 TextUtils.isEmpty(getTradeType()) ? "" : getTradeType() + "/", TextUtils.isEmpty(getHazInd()) ? "" : getHazInd() + "/"
                 ,getOszIndDesc(),getReefInd()+"/",
                 new DecimalFormat("#.0").format( getGrsWgt()));
+    }
+
+
+    /**
+     * 设置提箱的时候背景颜色
+     */
+    public void setGetCntrBackGroupColor(YardCntrInfo getBoxBean, Map<String, YardCntrInfo> maps) {
+        isColorGreen(getBoxBean);
+        isColorYellow(getBoxBean, maps);
+        isColorPink(getBoxBean, maps);
+        isColorRed(getBoxBean);
+        setBoxDt(BoxTool.CTRL_GETBOX);
+    }
+
+    /**
+     * 设置提箱默认背景颜色
+     */
+    public void setTXDefaultBackgroundColor() {
+        setColorType(ColorType.GRAY);
+    }
+
+    /**
+     * 判断提箱是否绿色背景
+     *
+     * @param getBoxBean
+     * @return
+     */
+    public boolean isColorGreen(YardCntrInfo getBoxBean) {
+        if(!LruchUtils.isSwitch(FileKeyName.rm_color_switch)) return false;
+        //A)出口或转口集装箱，有相同船名，航次，中转港及相同重量等级;
+        // B空箱，有相同持箱人及集装箱类型
+        if ((getBoxBean.getEqp_Sta().equals(BoxTool.EQP_STA) && getBoxBean.getMISC_NO().equals(getMISC_NO()) &&
+//                getBoxBean.getGrs_Ton().equals(getGrs_Ton()) && getBoxBean.getPOL().equals(getPOL()) ||
+                (getBoxBean.getFeInd().equals(BoxTool.E) && getBoxBean.getOpr().equals(getOpr()) &&
+                        getBoxBean.getCntrType().equals(getCntrType())))) {
+            setColorType(ColorType.GREEN);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否是黄色背景
+     *
+     * @param getBoxBean 提箱
+     * @param maps
+     * @return
+     */
+    public boolean isColorYellow(YardCntrInfo getBoxBean, Map<String, YardCntrInfo> maps) {
+        //A)出口或转口集装箱，有相同船名，航次，中转港及重箱压在轻箱上面。
+        // B)空箱，放置到首层
+        String firstTier = "(1,1)";
+        if ((getBoxBean.getEqp_Sta().equals(BoxTool.EQP_STA) &&
+                getBoxBean.getMISC_NO().equals(getMISC_NO()) &&
+                getBoxBean.getPOL().equals(getPOL())) ||
+                (getDefaultCell().equals(firstTier) && getFeInd().equals(BoxTool.E))) {
+            //A)出口或转口集装箱，有相同船名，航次，中转港及重箱压在轻箱上面。
+            // B)空箱，放置到首层
+            int tier = getCurTier();
+            if (tier != 1 && getFeInd().equals(BoxTool.F)) {
+                String key = String.format("(%s,%s)", getCell(), (tier - 1));
+                YardCntrInfo box = maps.get(key);
+                if (null != box && box.getFeInd().equals(BoxTool.E)) {
+                    setColorType(ColorType.YELLOW);
+                    return true;
+                }
+            } else if (getFeInd().equals(BoxTool.E)) {
+                setColorType(ColorType.YELLOW);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断背景颜色是否粉色
+     *
+     * @param getBoxBean
+     * @param maps
+     * @return
+     */
+    public boolean isColorPink(YardCntrInfo getBoxBean, Map<String, YardCntrInfo> maps) {
+        if ((getBoxBean.getEqp_Sta().equals(BoxTool.EQP_STA) &&
+                getBoxBean.getMISC_NO().equals(getMISC_NO()) &&
+                getBoxBean.getPOL().equals(getPOL()))) {
+            //出口或转口集装箱，有相同船名，航次，中转港及轻箱压在重箱上面。
+            int tier = getCurTier();
+            if (tier == 1 || getFe_Ind().equals(BoxTool.F))
+                return false;//说明该箱在最底下,不存在压箱;或者该箱为重箱,则返回
+            //取出压在地下的箱子
+            String key = String.format("(%s,%s)", getCell(), (tier - 1));
+            YardCntrInfo box = maps.get(key);
+            if (null == box || box.getFeInd().equals(BoxTool.E))
+                return false;//箱子不存在,或者是空箱,直接返回
+            setColorType(ColorType.PINK);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断背景颜色是否红色
+     *
+     * @param getBoxBean
+     * @return
+     */
+    public boolean isColorRed(YardCntrInfo getBoxBean) {
+        // A) 出口或转口集装箱，有相同船名及航次。
+        // B)出口或转口集装箱，有相同的中转港。
+        //C)空箱，有相同的持箱人。
+        //D) 空箱，并有不同的集装箱类型。
+        if (getBoxBean.getEqp_Sta().equals(BoxTool.EQP_STA) && getBoxBean.getMISC_NO().equals(getMISC_NO()) ||
+                getBoxBean.getPOL().equals(getPOL()) ||//(已屏蔽,待恢复)
+                (getFeInd().equals(BoxTool.E) && getBoxBean.getOpr().equals(getOpr())) ||
+                (getFeInd().equals(BoxTool.E) && !getBoxBean.getCntrType().equals(getCntrType()))) {
+//            setColorType(ColorType.RED);//20180207,滔哥说去掉
+            return true;
+        }
+        return false;
     }
 
 }

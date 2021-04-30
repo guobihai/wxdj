@@ -61,6 +61,9 @@ public class DragAdapter extends BaseAdapter {
         isShowInOrOut = LruchUtils.isSwitch(FileKeyName.ShowCustomBg);
     }
 
+    public void setGetBox(YardCntrInfo mGetBox) {
+        this.mGetBox = mGetBox;
+    }
 
     @Override
     public int getCount() {
@@ -846,8 +849,8 @@ public class DragAdapter extends BaseAdapter {
 //        LogUtils.e("tag", "isGetCntr:"+mGetBox.isGetCntr());
 //        LogUtils.e("tag", "isTrkRight:"+mGetBox.isTrkRight());
         if (null == mGetBox || null == maps || !mGetBox.isGetCntr()) return;//只针对提箱这种情况下执行倒箱标志显示
-        int cntrCell = Integer.parseInt(mGetBox.getCell());
-        int cntrTier = Integer.parseInt(mGetBox.getTier());
+        int cntrCell = mGetBox.getCurCell();
+        int cntrTier = mGetBox.getCurTier();
         if (mGetBox.isTrkRight()) {
             for (int cell = cntrCell; cell <= col; cell++) {
                 for (int tier = 1; tier <= row; tier++) {
