@@ -2,6 +2,7 @@ package com.smt.wxdj.swxdj.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import com.smt.wxdj.swxdj.bean.StackBean;
 import com.smt.wxdj.swxdj.boxs.presenter.BayPresenter;
 import com.smt.wxdj.swxdj.boxs.presenter.BayPresenterImpl;
 import com.smt.wxdj.swxdj.boxs.view.BayView;
+import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
+import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smtlibrary.dialog.SweetAlertDialog;
 import com.smtlibrary.irecyclerview.IRecyclerView;
 import com.smtlibrary.irecyclerview.OnRefreshListener;
@@ -37,28 +41,36 @@ import java.util.List;
  * 贝位列表
  */
 
-public class BayDialog extends Dialog implements View.OnClickListener, BayView {
+public class BayDialog extends Dialog implements View.OnClickListener {
+    public static final String ALL_STATCK = "AllStatck";
     private Context mContext;
     private Button btnCancle;
     private Button btnOk;
     private IRecyclerView mStackRecyclerView;
     private IRecyclerView mBayRecyclerView;
-    private CommonRecycleViewAdapter<Bay> bayAdapter;
-    private List<StackBean> mListStack;
-    private StackBean mStackBean;
-    private Bay mBay;
+    private CommonRecycleViewAdapter<YardBayInfo> bayAdapter;
+    private List<ChaneStackInfo> mListStack;
+    private ChaneStackInfo mStackBean;
+    private YardBayInfo mBay;
     private String mCurBayName;//当前田位
     private String mCurStack;//当前场地
     private SweetAlertDialog sweetAlertDialog;
-    private BayPresenter bayPresenter;
+    //    private BayPresenter bayPresenter;
     private MyApplication app;
     private int index;
 
-    private CommonRecycleViewAdapter<StackBean> adapter;
+    private CommonRecycleViewAdapter<ChaneStackInfo> adapter;
 
     private OnSweetClickListener mConfirmClickListener;
 
-    public BayDialog(Context context, String curStack, String curBay, List<StackBean> listStack) {
+    private WorkViewModel workViewModel;
+
+    public BayDialog setWorkViewModel(WorkViewModel workViewModel) {
+        this.workViewModel = workViewModel;
+        return this;
+    }
+
+    public BayDialog(Context context, String curStack, String curBay, List<ChaneStackInfo> listStack) {
         super(context);
         this.mContext = context;
         this.mListStack = new ArrayList<>();
@@ -67,8 +79,8 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
         if (null != listStack) {
             mListStack.addAll(listStack);
             for (int i = 0; i < mListStack.size(); i++) {
-                StackBean bean = mListStack.get(i);
-                if (bean.getStack().equals(curStack)) {
+                ChaneStackInfo bean = mListStack.get(i);
+                if (bean.getYardBlock().equals(curStack)) {
                     bean.setSelect(true);
                     mStackBean = bean;
                     index = i;
@@ -99,7 +111,7 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
         app = (MyApplication) ((Activity) mContext).getApplication();
         sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog.setTitleText(mContext.getString(R.string.loading));
-        bayPresenter = new BayPresenterImpl(this);
+//        bayPresenter = new BayPresenterImpl(this);
 
         btnCancle = (Button) findViewById(R.id.btnCancle);
         btnOk = (Button) findViewById(R.id.btnOk);
@@ -109,12 +121,12 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
         mStackRecyclerView = (IRecyclerView) findViewById(R.id.stack_recycle_view);
         mBayRecyclerView = (IRecyclerView) findViewById(R.id.bay_recycle_view);
 
-        adapter = new CommonRecycleViewAdapter<StackBean>(mContext, R.layout.stack_bay_item_layout,
+        adapter = new CommonRecycleViewAdapter<ChaneStackInfo>(mContext, R.layout.stack_bay_item_layout,
                 mListStack) {
             @Override
-            public void convert(ViewHolderHelper holder, StackBean bean, int i) {
+            public void convert(ViewHolderHelper holder, ChaneStackInfo bean, int i) {
                 TextView title = holder.getView(R.id.stack_title);
-                title.setText(bean.getStack());
+                title.setText(bean.getYardBlock());
                 if (bean.isSelect()) {
                     title.setBackgroundColor(Color.YELLOW);
                 } else {
@@ -131,15 +143,17 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
                     bean.setSelect(false);
                 }
                 adapter.notifyDataSetChanged();
-                mStackBean = (StackBean) o;
+                mStackBean = (ChaneStackInfo) o;
                 mStackBean.setSelect(true);
                 adapter.notifyItemChanged(i);
 
-                if (app.getMapBay(mStackBean.getStack()) == null)
-                    bayPresenter.getSelectedBay(mStackBean.getStack());
-                else {
+                if (app.getMapBay(mStackBean.getYardBlock()) == null) {
+//                    bayPresenter.getSelectedBay(mStackBean.getYardBlock());
+                    showProgress();
+                    workViewModel.GetYardBayListByBlockId(mStackBean.getYardBlockId());
+                } else {
                     bayAdapter.clear();
-                    bayAdapter.addAll(app.getMapBay(mStackBean.getStack()));
+                    bayAdapter.addAll(app.getMapBay(mStackBean.getYardBlock()));
                 }
             }
 
@@ -149,9 +163,9 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
             }
         });
 
-        bayAdapter = new CommonRecycleViewAdapter<Bay>(mContext, R.layout.stack_bay_item_layout) {
+        bayAdapter = new CommonRecycleViewAdapter<YardBayInfo>(mContext, R.layout.stack_bay_item_layout) {
             @Override
-            public void convert(ViewHolderHelper holder, Bay bay, int i) {
+            public void convert(ViewHolderHelper holder, YardBayInfo bay, int i) {
                 TextView title = holder.getView(R.id.stack_title);
                 title.setText(bay.getBay());
                 if (bay.isSelect()) {
@@ -170,7 +184,7 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
                     bay.setSelect(false);
                 }
                 bayAdapter.notifyDataSetChanged();
-                mBay = (Bay) o;
+                mBay = (YardBayInfo) o;
                 mBay.setSelect(true);
                 bayAdapter.notifyItemChanged(i);
                 btnOk.setEnabled(true);
@@ -182,14 +196,14 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
             }
         });
 
-        if (app.getKeyListStack("AllStatck") == null) {
-            bayPresenter.getAllStackList();
+        if (app.getKeyListStack(ALL_STATCK) == null) {
+            //bayPresenter.getAllStackList();
         } else {
-            mListStack.addAll(app.getKeyListStack("AllStatck"));
+            mListStack.addAll(app.getKeyListStack(ALL_STATCK));
             adapter.notifyDataSetChanged();
             for (int i = 0; i < mListStack.size(); i++) {
-                StackBean bean = mListStack.get(i);
-                if(!TextUtils.isEmpty(mCurStack) && mCurStack.equals(bean.getStack())){
+                ChaneStackInfo bean = mListStack.get(i);
+                if (!TextUtils.isEmpty(mCurStack) && mCurStack.equals(bean.getYardBlock())) {
                     mStackBean = bean;
                     mStackBean.setSelect(true);
                     index = i;
@@ -199,6 +213,14 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
         }
         mStackRecyclerView.setSelect(index);
         setBefaultSelect();
+
+        if (null != workViewModel) {
+            workViewModel.getYardBayInfoList().observe((LifecycleOwner) mContext, yardBayInfos -> {
+                bayAdapter.clear();
+                bayAdapter.addAll(yardBayInfos);
+                hideProgress();
+            });
+        }
     }
 
     /**
@@ -211,9 +233,10 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
             mBayRecyclerView.setImageResource(R.drawable.ic_no_data);
             mBayRecyclerView.setNoDataLayout(mContext.getString(R.string.get_data_failure));
         } else {
-            if (app.getMapBay(mStackBean.getStack()) == null)
-                bayPresenter.getSelectedBay(mStackBean.getStack());
-            else
+            if (app.getMapBay(mStackBean.getYardBlock()) == null) {
+//                bayPresenter.getSelectedBay(mStackBean.getYardBlock());
+                workViewModel.GetYardBayListByBlockId(mStackBean.getYardBlockId());
+            } else
                 setBayList();
         }
 
@@ -256,10 +279,13 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
         adapter.notifyDataSetChanged();
     }
 
-    @Override
     public void showProgress() {
         if (!sweetAlertDialog.isShowing())
             sweetAlertDialog.show();
+    }
+    public void hideProgress() {
+        if (sweetAlertDialog.isShowing())
+            sweetAlertDialog.dismiss();
     }
 
     /**
@@ -267,19 +293,19 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
      *
      * @param list
      */
-    @Override
-    public void addListCd(List<StackBean> list) {
+//    @Override
+    public void addListCd1(List<ChaneStackInfo> list) {
         if (sweetAlertDialog.isShowing())
             sweetAlertDialog.dismiss();
         this.mListStack = list;
         adapter.addAll(list);
         adapter.notifyDataSetChanged();
-        app.putStackMap("AllStatck", mListStack);
+        app.putStackMap(ALL_STATCK, mListStack);
         if (TextUtils.isEmpty(mCurStack)) return;
         //定位到当前场地
         for (int i = 0; i < list.size(); i++) {
-            StackBean bean = list.get(i);
-            if (mCurStack.equals(bean.getStack())) {
+            ChaneStackInfo bean = list.get(i);
+            if (mCurStack.equals(bean.getYardBlock())) {
                 bean.setSelect(true);
                 mStackBean = bean;
                 index = i;
@@ -287,13 +313,14 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
             }
         }
         mStackRecyclerView.setSelect(index);
-        if (app.getMapBay(mStackBean.getStack()) == null)
-            bayPresenter.getSelectedBay(mStackBean.getStack());
-        else {
+        if (app.getMapBay(mStackBean.getYardBlock()) == null) {
+//            bayPresenter.getSelectedBay(mStackBean.getYardBlock());
+            workViewModel.GetYardBayListByBlockId(mStackBean.getYardBlockId());
+        } else {
             List<String> dbay = new ArrayList<>();
-            List<Bay> bayList = app.getMapBay(mStackBean.getStack());
+            List<YardBayInfo> bayList = app.getMapBay(mStackBean.getYardBlock());
             for (int i = 0; i < bayList.size(); i++) {
-                dbay.add(bayList.get(i).getStack());
+                dbay.add(bayList.get(i).getBay());
             }
             addListBay(dbay);
         }
@@ -304,16 +331,15 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
      *
      * @param dbay
      */
-    @Override
     public void addListBay(List<String> dbay) {
         if (sweetAlertDialog.isShowing())
             sweetAlertDialog.dismiss();
         bayAdapter.clear();
-        List<Bay> listBay = new ArrayList<>();
+        List<YardBayInfo> listBay = new ArrayList<>();
         int index = 0;
         for (int i = 0; i < dbay.size(); i++) {
             String s = dbay.get(i);
-            Bay b = new Bay();
+            YardBayInfo b = new YardBayInfo();
             b.setBay(s);
             if (s.equals(mCurBayName)) {
                 b.setSelect(true);
@@ -323,14 +349,14 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
                 b.setSelect(false);
             listBay.add(b);
         }
-        app.putBayMap(mStackBean.getStack(), listBay);
+        app.putBayMap(mStackBean.getYardBlock(), listBay);
         bayAdapter.addAll(listBay);
         mBayRecyclerView.setSelect(index);
     }
 
     private void setBayList() {
         int pos = 0;
-        List<Bay> listBay = app.getMapBay(mStackBean.getStack());
+        List<YardBayInfo> listBay = app.getMapBay(mStackBean.getYardBlock());
         if (null == listBay) return;
         for (int i = 0; i < listBay.size(); i++) {
             Bay b = listBay.get(i);
@@ -345,7 +371,6 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
     }
 
 
-    @Override
     public void onFaile(String msg) {
         sweetAlertDialog.dismiss();
         new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
@@ -355,6 +380,6 @@ public class BayDialog extends Dialog implements View.OnClickListener, BayView {
     }
 
     public interface OnSweetClickListener {
-        void onClick(Dialog dialog, StackBean stackBean, Bay bay);
+        void onClick(Dialog dialog, ChaneStackInfo stackBean, YardBayInfo bay);
     }
 }

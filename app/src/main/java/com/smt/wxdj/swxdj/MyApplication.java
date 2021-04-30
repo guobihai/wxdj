@@ -12,6 +12,8 @@ import com.smt.wxdj.swxdj.network.account.AccountManager;
 import com.smt.wxdj.swxdj.switchlang.Utils;
 //import com.smtlibrary.crashlog.AppCrashHandler;
 import com.smt.wxdj.swxdj.utils.URLTool;
+import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smtlibrary.utils.LogUtils;
 
 import java.util.HashMap;
@@ -25,8 +27,8 @@ public class MyApplication extends MultiDexApplication {
     public static User user;
     public static String MAJLOC;//主区
     public static String SUBLOC;
-    public Map<String, List<Bay>> mapBay;//田位缓存
-    public Map<String, List<StackBean>> mkeyStack;//场地缓存
+    public Map<String, List<YardBayInfo>> mapBay;//田位缓存
+    public Map<String, List<ChaneStackInfo>> mkeyStack;//场地缓存
     private static Context context;
 
     private static MyApplication myApplication = null;
@@ -81,7 +83,7 @@ public class MyApplication extends MultiDexApplication {
      * @param key
      * @return
      */
-    public List<Bay> getMapBay(String key) {
+    public List<YardBayInfo> getMapBay(String key) {
         return mapBay.get(key);
     }
 
@@ -91,7 +93,7 @@ public class MyApplication extends MultiDexApplication {
      * @param key
      * @param list
      */
-    public void putBayMap(String key, List<Bay> list) {
+    public void putBayMap(String key, List<YardBayInfo> list) {
         mapBay.put(key, list);
     }
 
@@ -102,7 +104,7 @@ public class MyApplication extends MultiDexApplication {
      * @param key
      * @return
      */
-    public List<StackBean> getKeyListStack(String key) {
+    public List<ChaneStackInfo> getKeyListStack(String key) {
         return mkeyStack.get(key);
     }
 
@@ -112,7 +114,7 @@ public class MyApplication extends MultiDexApplication {
      * @param key
      * @param list
      */
-    public void putStackMap(String key, List<StackBean> list) {
+    public void putStackMap(String key, List<ChaneStackInfo> list) {
         mkeyStack.put(key, list);
     }
 

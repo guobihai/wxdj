@@ -50,11 +50,15 @@ public class WorkViewModel extends ViewModel {
     public WorkViewModel() {
         machineList = new MutableLiveData<>();
         ChaneStackInfoList = new MutableLiveData<>();
-        YardBayInfoList = new MutableLiveData<>();
         YardCntrInfoList = new MutableLiveData<>();
         cntrInfoMutableLiveData = new MutableLiveData<>();
         mCntrYardCntrInfo = new MutableLiveData<>();
         mCurBayCntrInfo = new MutableLiveData<>();
+    }
+
+    public MutableLiveData<List<YardBayInfo>> getYardBayInfoList() {
+        if(null == YardBayInfoList)YardBayInfoList = new MutableLiveData<>();
+        return YardBayInfoList;
     }
 
     public MutableLiveData<List<NMachineInfo>> getMachineList() {
@@ -151,7 +155,7 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<YardBayInfo>>() {
                     @Override
                     public void onSuccess(List<YardBayInfo> data) {
-                        YardBayInfoList.setValue(data);
+                        getYardBayInfoList().setValue(data);
                         String strData = JsonUtils.serialize(data);
                         LogUtils.sysout("===根据场站ID获取贝位===", strData);
                     }

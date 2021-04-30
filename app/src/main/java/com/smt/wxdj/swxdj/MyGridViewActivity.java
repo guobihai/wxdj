@@ -66,7 +66,9 @@ import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.SettingConfig;
 import com.smt.wxdj.swxdj.view.DragGrid;
 import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
+import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import com.smtlibrary.utils.LogUtils;
@@ -117,7 +119,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private int forwordDwxPositon = DEFAULT_TYPE;//相当从外部引用一个新得对象
     private String mStackName = "";//场地名称
     private String mBayName = "";//田位名称
-    private Bay mBay;//贝位
+    private YardBayInfo mBay;//贝位
     private Bay curBay;//当前贝位，即传进来的贝位
     private boolean isHandler;//标记是否已经被处理过了，回调后更新数据
     private BOXCTRLTYPE mBoxCtrlType;//判断箱子动作行为
@@ -169,6 +171,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_grid_view);
         workViewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
+        initView();
 
         if (null != this.getIntent().getExtras()) {
             //任务
@@ -178,21 +181,27 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             }
 
             bean = (YardCntrInfo) this.getIntent().getExtras().getSerializable("boxBean");
-            mBay = (Bay) this.getIntent().getExtras().getSerializable("bay");
+            mBay = (YardBayInfo) this.getIntent().getExtras().getSerializable("bay");
             curBay = mBay;
             tempBoxBean = bean;
             if (null != bean)
                 getBoxBean = (YardCntrInfo) bean.clone();
 //            LogUtils.sysout("bean:",bean.toString());
+            //有任务的情况下
             String bayId = this.getIntent().getExtras().getString("bayId");
-            workViewModel.GetWithCntrByBayId(bayId);
+            if (!TextUtils.isEmpty(bayId)) {
+                workViewModel.GetWithCntrByBayId(bayId);
+                showProgress();
+            } else {
+                init();
+            }
         }
+        initData();
 
-
-        showProgress();
+        //堆场箱子信息
         workViewModel.getCntrInfoMutableLiveData().observe(this, info -> {
             mYardBayCntrInfo = info;
-            initData();
+            init();
             hideProgress();
             List<YardCntrInfo> curListInfo = workViewModel.getCurBayCntrInfo().getValue();
             List<YardCntrInfo> dwCurListInfo = workViewModel.getDwListCntrInfo().getValue();
@@ -204,7 +213,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                 addDxwList(dwCurListInfo, cntrInfoMap);
             }
         });
-        initView();
+
     }
 
     /**
@@ -254,9 +263,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             btnCc.setVisibility(isArrange ? View.GONE : View.VISIBLE);
             btnRefresh.setVisibility(View.GONE);
         }
-        mCol = mYardBayCntrInfo == null ? 6 : (int) mYardBayCntrInfo.getMaxCell();
-        mRow = mYardBayCntrInfo == null ? 5 : (int) mYardBayCntrInfo.getMaxTier();
-        init();
+
 
         if (null != mBay) {
             mBoxsPresenterImpl.GetCntrInfoConver(getBoxBean);
@@ -339,6 +346,8 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     }
 
     private void init() {
+        mCol = mYardBayCntrInfo == null ? 6 : (int) mYardBayCntrInfo.getMaxCell();
+        mRow = mYardBayCntrInfo == null ? 5 : (int) mYardBayCntrInfo.getMaxTier();
         int itemWidth = (int) this.getResources().getDimension(R.dimen.box_item_width);
         int gridviewWidth = (mCol * (itemWidth + 2));
         //重新计算宽度
@@ -656,33 +665,35 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             case R.id.stack:
             case R.id.twbay:
                 //提箱，是否开启场地切换倒箱
-                LogUtils.sysout("=========open_rm_stack_switch", LruchUtils.isSwitch(getString(R.string.open_rm_stack_switch)));
+//                LogUtils.sysout("=========open_rm_stack_switch", LruchUtils.isSwitch(getString(R.string.open_rm_stack_switch)));
                 if (null != getBoxBean && getBoxBean.isGetCntr() && !LruchUtils.isSwitch(getString(R.string.open_rm_stack_switch))) {
                     showAlertDialog(getString(R.string.error_rm_msg));
                     return;
                 }
                 new BayDialog(this, mStackName, mBayName, null)
-                        .setConfirmClickListener(new BayDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog, StackBean stackBean, Bay bay) {
-                                dialog.dismiss();
-                                isDoRmList = false;
-                                mStackName = stackBean.getStack();
-                                mBay = bay;
-                                userAdapter.setBay(bay);
-                                mBayName = bay.getBay();
-                                cdStack.setText(String.format(getString(R.string.cd), mStackName));
-                                twSpinner.setText(String.format(getString(R.string.tw), mBayName));
-                                selectPositon = DEFAULT_TYPE;
+                        .setWorkViewModel(workViewModel)
+                        .setConfirmClickListener((dialog, stackBean, bay) -> {
+                            dialog.dismiss();
+                            isDoRmList = false;
+                            mStackName = stackBean.getYardBlock();
+                            mBay = bay;
+                            userAdapter.setBay(bay);
+                            mBayName = bay.getBay();
+                            mCol = (int)mBay.getMaxCell();
+                            mRow = (int)mBay.getMaxTier();
+                            cdStack.setText(String.format(getString(R.string.cd), mStackName));
+                            twSpinner.setText(String.format(getString(R.string.tw), mBayName));
+                            selectPositon = DEFAULT_TYPE;
 //                                String str = PreferenceUtils.getString(MyGridViewActivity.this, bay.getBay(), null);
 //                                if (str == null)
-                                if (null != getBoxBean) getBoxBean.setRown(bay.getBay());
-                                mBoxsPresenterImpl.CheckMaxCellTier(bay.getBay());
+                            if (null != getBoxBean) getBoxBean.setRown(bay.getBay());
+                            showProgress();
+                            workViewModel.GetWithCntrByBayId(bay.getId());
+//                            mBoxsPresenterImpl.CheckMaxCellTier(bay.getBay());
 //                                if (null != mRmList) {
 //                                    mRmList.clear();
 //                                    mRmList = null;
 //                                }
-                            }
                         }).show();
                 break;
             case R.id.tcSpinner:
@@ -1087,12 +1098,12 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
      */
     @Override
     public void addBay(Bay bay) {
-        mBay = bay;
-        mCol = Integer.parseInt(mBay.getMax_Cell());
-        mRow = Integer.parseInt(mBay.getMax_Tier());
-        init();
-
-        mBoxsPresenterImpl.GetCntrListByConditionNotCell(bay.getBay(), bean == null ? "" : bean.getCntr(), false);
+//        mBay = bay;
+//        mCol = Integer.parseInt(mBay.getMax_Cell());
+//        mRow = Integer.parseInt(mBay.getMax_Tier());
+//        init();
+//
+//        mBoxsPresenterImpl.GetCntrListByConditionNotCell(bay.getBay(), bean == null ? "" : bean.getCntr(), false);
 //        mBoxsPresenterImpl.GetCntrInfoConver(bean == null ? null : bean);
     }
 

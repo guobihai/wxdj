@@ -1,11 +1,13 @@
 package com.smt.wxdj.swxdj.viewmodel.nbean;
 
+import com.smt.wxdj.swxdj.bean.Bay;
+
 import java.util.List;
 
 /**
  * 呗位信息
  */
-public class YardBayInfo {
+public class YardBayInfo extends Bay {
 
     /**
      * id : 3fa85f64-5717-4562-b3fc-2c963f66afa6

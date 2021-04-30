@@ -41,6 +41,7 @@ import com.smt.wxdj.swxdj.bean.StackBean;
 import com.smt.wxdj.swxdj.bean.User;
 import com.smt.wxdj.swxdj.boxs.presenter.TaskBoxPresenterImpl;
 import com.smt.wxdj.swxdj.boxs.view.TaskBoxView;
+import com.smt.wxdj.swxdj.dialog.BayDialog;
 import com.smt.wxdj.swxdj.dialog.CancleBoxDialog;
 import com.smt.wxdj.swxdj.dialog.StackDialog;
 import com.smt.wxdj.swxdj.session.Session;
@@ -178,6 +179,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         //设备工作区域
         workViewModel.getChaneStackInfoList().observe(this, chaneStackInfos -> {
             selectStack(chaneStackInfos);
+            app.putStackMap(BayDialog.ALL_STATCK, chaneStackInfos);
             hideProgress();
         });
 
@@ -476,7 +478,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void addListCd(List<StackBean> list) {
         listStack = list;
-        app.putStackMap(MyApplication.user.getCrn(), listStack);
+//        app.putStackMap(MyApplication.user.getCrn(), listStack);
 //        selectStack(listStack);
     }
 
