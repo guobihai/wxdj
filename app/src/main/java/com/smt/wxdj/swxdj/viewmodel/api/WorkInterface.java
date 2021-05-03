@@ -42,7 +42,7 @@ public interface WorkInterface {
 
     //    SystemSetting/YardBlock/GetListBySiteId(根据场站ID获取街区信息)、
     @GET("SystemSetting/YardBlock/GetListBySiteId")
-    Observable<List<Object>> GetYardBlockListBySiteId(@Query("siteId") String siteId,
+    Observable<Object> GetYardBlockListBySiteId(@Query("siteId") String siteId,
                                                       @Query("includeCell") boolean includeCell,
                                                       @Query("includeCntr") boolean includeCntr);
 

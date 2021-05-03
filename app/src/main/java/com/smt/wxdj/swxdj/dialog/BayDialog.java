@@ -240,18 +240,8 @@ public class BayDialog extends Dialog implements View.OnClickListener {
                 setBayList();
         }
 
-        mStackRecyclerView.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mStackRecyclerView.setOnRefresh(false);
-            }
-        });
-        mBayRecyclerView.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mBayRecyclerView.setOnRefresh(false);
-            }
-        });
+        mStackRecyclerView.setOnRefreshListener(() -> mStackRecyclerView.setOnRefresh(false));
+        mBayRecyclerView.setOnRefreshListener(() -> mBayRecyclerView.setOnRefresh(false));
     }
 
 

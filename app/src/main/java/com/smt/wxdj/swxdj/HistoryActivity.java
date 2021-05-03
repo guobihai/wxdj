@@ -71,7 +71,7 @@ public class HistoryActivity extends BaseActivity<HistoryView, HistoryPresenterI
         tvStartDate.setText(date + " 00:00");
         tvEndDate.setText(date + " 23:59");
 
-        getHistoryData();
+//        getHistoryData();
     }
 
     private void getHistoryData(){
@@ -136,7 +136,7 @@ public class HistoryActivity extends BaseActivity<HistoryView, HistoryPresenterI
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnQuery://查询
-                getHistoryData();
+//                getHistoryData();
                 break;
             case R.id.tvStartDate://开始时间日期
                 showDatePickDialog(tvStartDate);

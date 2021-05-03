@@ -14,7 +14,7 @@ package com.smt.wxdj.swxdj.network.entity;
 public class BaseResponse<T> {
 
     private String status;
-    private String msg;
+    private String message;
     private T data;
     private boolean succeed;
 
@@ -28,11 +28,11 @@ public class BaseResponse<T> {
     }
 
     public String getMsg() {
-        return msg;
+        return message;
     }
 
     public void setMsg(String msg) {
-        this.msg = msg;
+        this.message = msg;
     }
 
     public T getData() {

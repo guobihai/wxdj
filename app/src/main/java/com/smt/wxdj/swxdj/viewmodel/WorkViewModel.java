@@ -3,7 +3,6 @@ package com.smt.wxdj.swxdj.viewmodel;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.smt.wxdj.swxdj.bean.BoxDetalBean;
 import com.smt.wxdj.swxdj.viewmodel.api.WorkInterface;
 import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.NMachineInfo;
@@ -13,7 +12,6 @@ import com.smt.wxdj.swxdj.network.observer.ResponseObserver;
 import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.param.ParamUtils;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
-import com.smt.wxdj.swxdj.viewmodel.nbean.OprTaskInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
@@ -27,6 +25,15 @@ import java.util.Map;
 
 
 public class WorkViewModel extends ViewModel {
+
+    public static final int UP_BOX = 1;//提箱子
+    public static final int PUT_BOX = 2;//放箱子
+    public static final int MOVE_BOX = 3;//移动箱子
+    public static final int DX_BOX = 4;//倒箱子
+
+    public MutableLiveData<String> ErrorMsg = new MutableLiveData<>();
+    //任务类型
+    public MutableLiveData<Integer> DoTaskStatus = new MutableLiveData<>();
 
     //设备列表
     private MutableLiveData<List<NMachineInfo>> machineList;
@@ -57,7 +64,7 @@ public class WorkViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<YardBayInfo>> getYardBayInfoList() {
-        if(null == YardBayInfoList)YardBayInfoList = new MutableLiveData<>();
+        if (null == YardBayInfoList) YardBayInfoList = new MutableLiveData<>();
         return YardBayInfoList;
     }
 
@@ -88,7 +95,7 @@ public class WorkViewModel extends ViewModel {
 
     //倒箱
     public MutableLiveData<List<YardCntrInfo>> getDwListCntrInfo() {
-        if(null == mDwListCntrInfo)mDwListCntrInfo = new MutableLiveData<>();
+        if (null == mDwListCntrInfo) mDwListCntrInfo = new MutableLiveData<>();
         return mDwListCntrInfo;
     }
 
@@ -248,9 +255,9 @@ public class WorkViewModel extends ViewModel {
         RetrofitManager.createToken(WorkInterface.class)
                 .GetYardBlockListBySiteId(siteId, includeCell, includeCntr)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<List<Object>>() {
+                .subscribe(new ResponseObserver<Object>() {
                     @Override
-                    public void onSuccess(List<Object> data) {
+                    public void onSuccess(Object data) {
                         LogUtils.sysout("===根据场站ID获取街区信息===", JsonUtils.serialize(data));
                     }
                 });
@@ -359,8 +366,8 @@ public class WorkViewModel extends ViewModel {
      * @param cell        目标层
      * @param tier        目标高
      */
-    public void GroundConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, String cell, String tier) {
-        Map<String, String> map = new HashMap<>();
+    public void GroundConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, int cell, int tier) {
+        Map<String, Object> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
         map.put("containerId", containerId);
         map.put("yardBayId", yardBayId);
@@ -374,6 +381,13 @@ public class WorkViewModel extends ViewModel {
                     @Override
                     public void onSuccess(Object data) {
                         LogUtils.sysout("===GroundConfirm===", JsonUtils.serialize(data));
+                        DoTaskStatus.setValue(PUT_BOX);
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue(msg);
                     }
                 });
     }
@@ -400,6 +414,13 @@ public class WorkViewModel extends ViewModel {
                     @Override
                     public void onSuccess(Object data) {
                         LogUtils.sysout("===PickupConfirm===", JsonUtils.serialize(data));
+                        DoTaskStatus.setValue(UP_BOX);
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue(msg);
                     }
                 });
     }
@@ -415,8 +436,8 @@ public class WorkViewModel extends ViewModel {
      * @param cell        目标层
      * @param tier        目标高
      */
-    public void PutOtherConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, String cell, String tier) {
-        Map<String, String> map = new HashMap<>();
+    public void PutOtherConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, int cell, int tier) {
+        Map<String, Object> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
         map.put("containerId", containerId);
         map.put("yardBayId", yardBayId);
@@ -427,11 +448,19 @@ public class WorkViewModel extends ViewModel {
                 .PutOtherConfirm(map)
                 .compose(RxUtils.getWrapper())
                 .subscribe(new ResponseObserver<Object>() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        LogUtils.sysout("===GroundConfirm===", JsonUtils.serialize(data));
-                    }
-                });
+                               @Override
+                               public void onSuccess(Object data) {
+                                   LogUtils.sysout("===GroundConfirm===", JsonUtils.serialize(data));
+                                   DoTaskStatus.setValue(DX_BOX);
+                               }
+
+                               @Override
+                               public void onError(String code, String msg) {
+                                   super.onError(code, msg);
+                                   ErrorMsg.setValue(msg);
+                               }
+                           }
+                );
     }
 
     /**

@@ -15,6 +15,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -46,12 +47,13 @@ public abstract class ResponseObserver<T> implements Observer<T> {
 
                 try {
                     msg = ((HttpException) e).response().errorBody().string();
-                    BaseResponse response = new Gson().fromJson(msg, BaseResponse.class);
+                    Map response = new Gson().fromJson(msg, Map.class);
                     if (response != null) {
-                        if (response.getMsg() != null)
-                            msg = response.getMsg();
-                        if (response.getStatus() != null)
-                            apiCode = response.getStatus();
+                        response = (Map) response.get("error");
+                        if (response != null)
+                            msg = (String) response.get("message");
+//                        if (response.getStatus() != null)
+//                            apiCode = response.getStatus();
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();
