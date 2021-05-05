@@ -141,10 +141,12 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private YardBayCntrInfo mYardBayCntrInfo;//贝位信息
     private String mCntrNo;//传过来的箱子
     private YardTaskInfo mYardTaskInfo;
+    private String mCurCraneId;//当前吊机号
 
-    public static void start(Context context, YardTaskInfo yardTaskInfo, String bayId) {
+    public static void start(Context context, YardTaskInfo yardTaskInfo, String bayId,String curCraneId) {
         Intent starter = new Intent(context, MyGridViewActivity.class);
         starter.putExtra("bayId", bayId);
+        starter.putExtra("curCraneId", curCraneId);
         starter.putExtra("isArrange", true);
         starter.putExtra("yardTaskInfo", yardTaskInfo);
         context.startActivity(starter);
@@ -190,6 +192,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
 //            LogUtils.sysout("bean:",bean.toString());
             //有任务的情况下
             String bayId = this.getIntent().getExtras().getString("bayId");
+            mCurCraneId = this.getIntent().getExtras().getString("curCraneId");
             if (!TextUtils.isEmpty(bayId)) {
                 mBayId = bayId;
                 workViewModel.GetWithCntrByBayId(bayId);
@@ -220,6 +223,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         workViewModel.ErrorMsg.observe(this, str -> onFaile(str));
 
         workViewModel.DoTaskStatus.observe(this, integer -> {
+            hideProgress();
             switch (integer.intValue()) {
                 case WorkViewModel.UP_BOX:
                     updateUpBoxData();
@@ -807,7 +811,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         new CommitDxwDialog(this, boxNo)
                 .setConfirmClickListener((dialog, view) -> {
 //                    mBoxsPresenterImpl.loadCheckMoveForCell(tempBoxBean, 0, cellY);
-                    workViewModel.PutOtherConfirm(tempBoxBean.getYardSiteId(), tempBoxBean.getId(), tempBoxBean.getYardBayId(), "", 0, cellY);
+                    workViewModel.PutOtherConfirm(tempBoxBean.getYardSiteId(), tempBoxBean.getId(), tempBoxBean.getYardBayId(), mCurCraneId, 0, cellY);
                     dialog.dismiss();
                 }).setCancelClickListener((dialog, view) -> {
             selectDwxPositon = DEFAULT_TYPE;
@@ -827,7 +831,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
         new CommitDialog(this, msg, boxNo, cellX, cellY, mBayName)
                 .setConfirmClickListener((dialog, view) -> {
 //                        mBoxsPresenterImpl.loadCheckMoveForCell(tempBoxBean, cellX, cellY);
-                    workViewModel.GroundConfirm(bean.getYardSiteId(), bean.getId(), bean.getYardBayId(), "", cellX, cellY);
+                    workViewModel.PutOtherConfirm(bean.getYardSiteId(), bean.getId(), bean.getYardBayId(), mCurCraneId, cellX, cellY);
 //                        Toast.makeText(MyGridViewActivity.this, "换箱确认", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                 }).setCancelClickListener((dialog, view) -> {
@@ -948,7 +952,11 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
             mItem.setMoveSelect(false);
             if (TextUtils.equals(mCntrNo, mItem.getCntr())) {
                 bean = mItem;
+
                 bean.setActivity(mYardTaskInfo.getActivity());
+//                if (BuildConfig.DEBUG)
+//                    bean.setActivity(BoxTool.CTRL_UPBOX);
+
                 bean.setTrk(mYardTaskInfo.getTrkNo());
                 tempBoxBean = bean;
                 if (null != bean) {

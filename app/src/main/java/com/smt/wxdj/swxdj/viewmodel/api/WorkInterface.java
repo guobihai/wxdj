@@ -3,10 +3,8 @@ package com.smt.wxdj.swxdj.viewmodel.api;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.NMachineInfo;
-import com.smt.wxdj.swxdj.viewmodel.nbean.OprTaskInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
-import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 
 import java.util.List;

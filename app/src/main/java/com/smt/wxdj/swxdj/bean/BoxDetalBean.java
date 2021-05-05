@@ -351,9 +351,12 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
      * @return
      */
     public boolean cancleGetCntr() {
-        if ((getActivity().equals(BoxTool.CTRL_UPBOX) || getActivity().equals(BoxTool.CTRL_UIBOX))
-                && (getStatus().equals(BoxTool.STATE_WD)
-                || getStatus().equals(BoxTool.STATE_CP))) {
+//        if ((getActivity().equals(BoxTool.CTRL_UPBOX) || getActivity().equals(BoxTool.CTRL_UIBOX))
+//                && (getStatus().equals(BoxTool.STATE_WD)
+//                || getStatus().equals(BoxTool.STATE_CP))) {
+//            return true;
+//        }
+        if ((getActivity().equals(BoxTool.CTRL_UPBOX) || getActivity().equals(BoxTool.CTRL_UIBOX))) {
             return true;
         }
         return false;

@@ -168,7 +168,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         //设备列表
         workViewModel.getMachineList().observe(this, nMachineInfos -> {
             if (null != nMachineInfos && nMachineInfos.size() > 0) {
-
+                mCurCraneId = nMachineInfos.get(0).getCraneId();
             }
             mCurCraneId = "39faf629-ef1f-85b9-4c9a-c376ffc48804";
             loadStackInfoo();
@@ -245,7 +245,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     if (str == null) {
 //                        workViewModel.GetWithCntrByBayId("39fb7959-6e6b-099a-415e-16f54a658bc2");
 //                        showProgress(1);
-                        MyGridViewActivity.start(getActivity(),yardTaskInfo,"39fb7959-6e6b-099a-415e-16f54a658bc2");
+                        MyGridViewActivity.start(getActivity(), yardTaskInfo, "39fb7959-6e6b-099a-415e-16f54a658bc2",mCurCraneId);
                     } else {
                         //20190118 参数控制卸船是否自动放箱，默认显示
                         Intent it = new Intent(getActivity(), MyGridViewActivity.class);

@@ -432,16 +432,16 @@ public class WorkViewModel extends ViewModel {
      * @param yardSiteId  yardSiteId	 场站Id
      * @param containerId 集装箱Id
      * @param yardBayId   贝位Id
-     * @param trkWorkId   拖车作业Id
+     * @param craneId     吊机id
      * @param cell        目标层
      * @param tier        目标高
      */
-    public void PutOtherConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, int cell, int tier) {
+    public void PutOtherConfirm(String yardSiteId, String containerId, String yardBayId, String craneId, int cell, int tier) {
         Map<String, Object> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
         map.put("containerId", containerId);
         map.put("yardBayId", yardBayId);
-        map.put("trkWorkId", trkWorkId);
+        map.put("craneId", craneId);
         map.put("cell", cell);
         map.put("tier", tier);
         RetrofitManager.createToken(WorkInterface.class)
