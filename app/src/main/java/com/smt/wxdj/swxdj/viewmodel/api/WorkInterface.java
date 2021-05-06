@@ -10,7 +10,9 @@ import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -87,7 +89,7 @@ public interface WorkInterface {
 
     //10、倒箱确认
     @POST("CntrManagement/CraneWork/PutOtherConfirm")
-    Observable<Object> PutOtherConfirm(@Body Map map);
+    Flowable<Response<Void>> PutOtherConfirm(@Body Map map);
 
     // 9、判断能否交换箱(获取提箱交换箱的信息)
     @GET("SystemSetting/TrkWork/ExchangeCntr")

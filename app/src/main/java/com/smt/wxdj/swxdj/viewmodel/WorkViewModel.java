@@ -1,5 +1,6 @@
 package com.smt.wxdj.swxdj.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
@@ -22,6 +23,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 
 public class WorkViewModel extends ViewModel {
@@ -436,6 +442,7 @@ public class WorkViewModel extends ViewModel {
      * @param cell        目标层
      * @param tier        目标高
      */
+    @SuppressLint("CheckResult")
     public void PutOtherConfirm(String yardSiteId, String containerId, String yardBayId, String craneId, int cell, int tier) {
         Map<String, Object> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
@@ -446,20 +453,22 @@ public class WorkViewModel extends ViewModel {
         map.put("tier", tier);
         RetrofitManager.createToken(WorkInterface.class)
                 .PutOtherConfirm(map)
-                .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<Object>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Response>() {
                                @Override
-                               public void onSuccess(Object data) {
-                                   LogUtils.sysout("===GroundConfirm===", JsonUtils.serialize(data));
-                                   DoTaskStatus.setValue(DX_BOX);
+                               public void accept(Response response) throws Exception {
+                                   DoTaskStatus.setValue(UP_BOX);
                                }
+                           },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                throwable.printStackTrace();
+                                ErrorMsg.setValue(throwable.toString());
+                            }
+                        }
 
-                               @Override
-                               public void onError(String code, String msg) {
-                                   super.onError(code, msg);
-                                   ErrorMsg.setValue(msg);
-                               }
-                           }
                 );
     }
 

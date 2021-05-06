@@ -43,7 +43,7 @@ public class RxUtils {
             }
 
 
-            if (response.getStatus().equals("200")) {
+            if (response.getStatus().equals("200")|| response.getStatus().equals("204")) {
 
                 if (response.getData() == null) {
                     return Observable.error(new NoDataException());
