@@ -143,7 +143,7 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
     private YardTaskInfo mYardTaskInfo;
     private String mCurCraneId;//当前吊机号
 
-    public static void start(Context context, YardTaskInfo yardTaskInfo, String bayId,String curCraneId) {
+    public static void start(Context context, YardTaskInfo yardTaskInfo, String bayId, String curCraneId) {
         Intent starter = new Intent(context, MyGridViewActivity.class);
         starter.putExtra("bayId", bayId);
         starter.putExtra("curCraneId", curCraneId);
@@ -229,8 +229,11 @@ public class MyGridViewActivity extends BaseActivity<BoxsView, BoxsPresenterImpl
                     updateUpBoxData();
                     break;
                 case WorkViewModel.MOVE_BOX:
+                    updateAdapt();
                     break;
                 case WorkViewModel.PUT_BOX:
+                    break;
+                case WorkViewModel.DX_BOX:
                     break;
                 default:
                     break;

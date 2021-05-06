@@ -458,7 +458,7 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new Consumer<Response>() {
                                @Override
                                public void accept(Response response) throws Exception {
-                                   DoTaskStatus.setValue(UP_BOX);
+                                   DoTaskStatus.setValue(MOVE_BOX);
                                }
                            },
                         new Consumer<Throwable>() {
