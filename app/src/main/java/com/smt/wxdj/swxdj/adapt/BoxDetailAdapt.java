@@ -155,18 +155,18 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (null == bean) return;
 
             ((ContentView) holder).carNum.setText(String.valueOf(bean.getTrkNo()));
-            ((ContentView) holder).boxNum.setText(String.valueOf(bean.getCntr1()));
+            ((ContentView) holder).boxNum.setText(String.valueOf(bean.getCntr()));
             ((ContentView) holder).boxLocation.setText(bean.getLocation());
-            ((ContentView) holder).boxType.setText(bean.getCntrType1());
-            ((ContentView) holder).boxWeight.setText(bean.getFe_Ind());
-            ((ContentView) holder).boxOwn.setText(bean.getOpr());
-            ((ContentView) holder).boxAllWeight.setText(NumTool.praseNum(bean.getGrs_Ton()));
+            ((ContentView) holder).boxType.setText(bean.getSizeClass()+""+bean.getTypeClass());
+            ((ContentView) holder).boxWeight.setText(bean.getFeIndDesc());
+            ((ContentView) holder).boxOwn.setText(bean.getOptr());
+            ((ContentView) holder).boxAllWeight.setText(NumTool.praseNum(String.valueOf(bean.getGrsWgt())));
             ((ContentView) holder).boxHmhc.setText(isVVDVSL(bean) ? "" : bean.getVVDVSL());
             ((ContentView) holder).boxName.setText("");
             ((ContentView) holder).enter_Time.setText(changeWaitTime(bean.getWaitMinute()));
-            ((ContentView) holder).tvCell.setText(bean.getCell());
-            ((ContentView) holder).tvTier.setText(bean.getTier());
-            ((ContentView) holder).workLine.setText(bean.getPortainer());
+            ((ContentView) holder).tvCell.setText(String.valueOf(bean.getIntCell()));
+            ((ContentView) holder).tvTier.setText(String.valueOf(bean.getIntTier()));
+            ((ContentView) holder).workLine.setText(bean.getWorkLine());
             String dt = bean.getActivity();
             if (dt.equals("PK") || dt.equals("IP")) {
                 ((ContentView) holder).boxDt.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
@@ -176,7 +176,7 @@ public class BoxDetailAdapt extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //            ((ContentView) holder).boxDt.setText(BoxTool.keyReference.get(dt));
             ((ContentView) holder).boxDt.setText(bean.getSvcDesc());
             ((ContentView) holder).tvPOD.setText(bean.getPOD());
-            ((ContentView) holder).tvEqpCond.setText(bean.getEQP_COND());
+            ((ContentView) holder).tvEqpCond.setText(bean.getCntrCond());
         }
     }
 

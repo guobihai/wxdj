@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
@@ -118,6 +119,17 @@
                         android:text="@string/clear_field"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/textsize28"
+                        android:visibility="gone" />
+                    <Button
+                        android:id="@+id/btnRmdBay"
+                        android:layout_width="@dimen/toolbar_btn_width"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/cd_or_tw_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/rmd_bay_field"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize28"
+                        tools:visibility="visible"
                         android:visibility="gone" />
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>

@@ -51,18 +51,15 @@ public class SettingsActivity extends AppCompatActivity implements ViewPager.OnP
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int id = radioGroup.getCheckedRadioButtonId();
-                switch (id) {
-                    case R.id.radio1:
-                        viewPager.setCurrentItem(0);
-                        break;
-                    case R.id.radio2:
-                        viewPager.setCurrentItem(1);
-                        break;
-                }
+        radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            int id = radioGroup.getCheckedRadioButtonId();
+            switch (id) {
+                case R.id.radio1:
+                    viewPager.setCurrentItem(0);
+                    break;
+                case R.id.radio2:
+                    viewPager.setCurrentItem(1);
+                    break;
             }
         });
 

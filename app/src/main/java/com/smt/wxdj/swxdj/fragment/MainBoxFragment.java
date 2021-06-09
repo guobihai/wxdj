@@ -77,7 +77,6 @@ import static com.smt.wxdj.swxdj.utils.BoxTool.CTRL_GETBOX;
 import static com.smt.wxdj.swxdj.utils.BoxTool.CTRL_GETBOXIP;
 import static com.smt.wxdj.swxdj.utils.BoxTool.CTRL_PUTBOX;
 import static com.smt.wxdj.swxdj.utils.BoxTool.CTRL_PUTBOXIG;
-import static com.smtlibrary.utils.JsonUtils.deserialize;
 
 /**
  * Created by gbh on 16/6/21.
@@ -126,7 +125,12 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (msg.what == TIMETASK) {
                 if (getUserVisibleHint()) {
                     if (mStackDialog != null && mStackDialog.isShowing()) {
-                        mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+//                        mBoxsPresenterImpl.loadBoxCdData(MyApplication.user.getCrn(), isDefault);
+//                        loadStackInfoo();
+                        if (TextUtils.isEmpty(mCurCraneId)) return false;
+                        workViewModel.getJobTicketTaskStack(mCurCraneId);
+                    }else{
+                        onRefresh();
                     }
                 }
                 mHandler.sendEmptyMessageDelayed(TIMETASK, delayTime);
@@ -136,7 +140,8 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             return false;
         }
     });
-    private String mCurCraneId;//当前设备ID
+    public static String mCurCraneId;//当前设备ID
+    public static String mYardSiteId;//站场ID
 
 
     public static MainBoxFragment newInstance(int type) {
@@ -169,18 +174,22 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         workViewModel.getMachineList().observe(this, nMachineInfos -> {
             if (null != nMachineInfos && nMachineInfos.size() > 0) {
                 mCurCraneId = nMachineInfos.get(0).getCraneId();
+                mYardSiteId = nMachineInfos.get(0).getYardSiteId();
             }
-            mCurCraneId = "39faf629-ef1f-85b9-4c9a-c376ffc48804";
+//            mCurCraneId = "39faf629-ef1f-85b9-4c9a-c376ffc48804";
             loadStackInfoo();
-
             hideProgress();
         });
 
         //设备工作区域
         workViewModel.getChaneStackInfoList().observe(this, chaneStackInfos -> {
             selectStack(chaneStackInfos);
-            app.putStackMap(BayDialog.ALL_STATCK, chaneStackInfos);
+//            app.putStackMap(BayDialog.ALL_STATCK, chaneStackInfos);
             hideProgress();
+        });
+
+        workViewModel.ALlChaneStackInfoList.observe(this, chaneStackInfos -> {
+            app.putStackMap(BayDialog.ALL_STATCK, chaneStackInfos);
         });
 
         //作业任务
@@ -241,19 +250,20 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         showDialog(String.valueOf(yardTaskInfo.getCntr()));
                     break;
                 default:
-                    String str = PreferenceUtils.getString(getActivity(), yardTaskInfo.getYardBayId(), null);
-                    if (str == null) {
+//                    String str = PreferenceUtils.getString(getActivity(), yardTaskInfo.getYardBayId(), null);
+//                    if (str == null) {
 //                        workViewModel.GetWithCntrByBayId("39fb7959-6e6b-099a-415e-16f54a658bc2");
 //                        showProgress(1);
-                        MyGridViewActivity.start(getActivity(), yardTaskInfo, "39fb7959-6e6b-099a-415e-16f54a658bc2",mCurCraneId);
-                    } else {
-                        //20190118 参数控制卸船是否自动放箱，默认显示
-                        Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-                        it.putExtra("boxBean", yardTaskInfo);
-                        it.putExtra("bay", deserialize(str, Bay.class));
-                        startActivityForResult(it, FileKeyName.resultCode);
+                    LogUtils.sysout("cntrId:", yardTaskInfo.getCntr());
+                    MyGridViewActivity.start(getActivity(), yardTaskInfo.toYardCntrInfo(mYardSiteId), mCurCraneId);
+//                    } else {
+                    //20190118 参数控制卸船是否自动放箱，默认显示
+//                        Intent it = new Intent(getActivity(), MyGridViewActivity.class);
+//                        it.putExtra("boxBean", yardTaskInfo.toYardCntrInfo(mYardSiteId));
+//                        it.putExtra("bay", deserialize(str, Bay.class));
+//                        startActivityForResult(it, FileKeyName.resultCode);
 
-                    }
+//                    }
                     break;
             }
         });
@@ -337,16 +347,17 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     isStart = true;
                     mHandler.removeMessages(TIMETASK);
                     mHandler.sendEmptyMessageDelayed(STARTAC, 2000);
-                    String str = PreferenceUtils.getString(getActivity(), yardTaskInfo.getRown(), null);
-                    if (TextUtils.isEmpty(str))
-                        mBoxsPresenterImpl.CheckMaxCellTier(yardTaskInfo.getRown());
-                    else {
-                        Bay bay = JsonUtils.deserialize(str, Bay.class);
-                        Intent it = new Intent(getActivity(), MyGridViewActivity.class);
-                        it.putExtra("boxBean", yardTaskInfo);
-                        it.putExtra("bay", bay);
-                        startActivityForResult(it, FileKeyName.resultCode);
-                    }
+//                    String str = PreferenceUtils.getString(getActivity(), yardTaskInfo.getRown(), null);
+//                    if (TextUtils.isEmpty(str))
+//                        mBoxsPresenterImpl.CheckMaxCellTier(yardTaskInfo.getRown());
+//                    else {
+//                        Bay bay = JsonUtils.deserialize(str, Bay.class);
+//                        Intent it = new Intent(getActivity(), MyGridViewActivity.class);
+//                        it.putExtra("boxBean", yardTaskInfo.toYardCntrInfo(mYardSiteId));
+//                        it.putExtra("bay", bay);
+                    MyGridViewActivity.start(getActivity(), yardTaskInfo.toYardCntrInfo(mYardSiteId), mCurCraneId);
+//                        startActivityForResult(it, FileKeyName.resultCode);
+//                    }
                     dialog.dismiss();
                 }).show();
 
@@ -354,30 +365,34 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        showProgress(1);
+//        showProgress(1);
+        if (null == mStackBean) return;
         String taskType = "";
         switch (mType) {
             case MainActivity.TASKTYPE_ALL://装卸船/车
-                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
+//                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
+                workViewModel.GetTrkWorkByBlockId(mStackBean.getYardBlockId(), "");
                 break;
             case TASKTYPE_ZXBOAT://装卸船
                 taskType = "VSL";
-                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
+//                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
                 break;
             case TASKTYPE_LDBOAT://装船
                 taskType = "LD";
-                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
+//                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
                 break;
             case TASKTYPE_DCBOAT://卸船
                 taskType = "DC";
-                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
+//                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
                 break;
             case TASKTYPE_ZXC://装卸车
                 taskType = "CY";
-                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
+//                mBoxsPresenterImpl.loadBoxs(mTaskSql, isDefault, taskType);
                 break;
             case MainActivity.TASKTYPE_CANCLEBOX://取消提箱功能
-                mBoxsPresenterImpl.FindCancel_WorkList(mTaskSql, isDefault);
+//                mBoxsPresenterImpl.FindCancel_WorkList(mTaskSql, isDefault);
+
+                workViewModel.GetTrkWorkIsUPByBlockId(mStackBean.getYardBlockId());
                 break;
             case TASKTYPE_FALLBOX://倒箱功能
 //                LogUtils.e("tag", "TASKTYPE_FALLBOX mStackBean:" + mStackBean);
@@ -386,6 +401,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     return;
                 }
 //                mBoxsPresenterImpl.fallBoxData(mStackBean, isDefault);
+
                 workViewModel.GetTrkWorkIsCTCByBlockId(mStackBean.getYardBlockId());
                 break;
         }
@@ -412,12 +428,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void showProgress(int type) {
         switch (type) {
             case 0:
-                mSwipeRefreshWidget.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshWidget.setRefreshing(true);
-                    }
-                });
+                mSwipeRefreshWidget.post(() -> mSwipeRefreshWidget.setRefreshing(true));
                 break;
             case 1:
                 if (null != mProgressDialog && !mProgressDialog.isShowing())
@@ -545,6 +556,8 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     onFaile(getString(R.string.please_choose_the_venue));
                     return;
                 }
+                mCurCraneId = bean.getCraneId();
+                mYardSiteId = bean.getYardSiteId();
                 mType = MainActivity.TASKTYPE_ALL;
 //                bean.setMaj_Loc(MyApplication.MAJLOC);
 //                bean.setSub_Loc(MyApplication.SUBLOC);
@@ -552,11 +565,12 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 //                mCurrentStack = bean.getStack();
 //                mBoxsPresenterImpl.CheckStackIsLock("'" + bean.getStack() + "'");
 //                mBoxsPresenterImpl.UpdateCraneRow(bean);
+                showProgress(1);
                 workViewModel.GetTrkWorkByBlockId(bean.getYardBlockId(), "");
                 mStackDialog.dismiss();
                 mStackBean = bean;
-                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(), false, false);
-//                Session.getInstance().notifySelect(FileKeyName.CONFIRMBOX);
+//                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(), false, false);
+                Session.getInstance().notifySelect(FileKeyName.CONFIRMBOX);
             }
 
             @Override
@@ -578,11 +592,13 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 //                } else {
 //                    mTaskSql = null;
 //                }
+                mCurCraneId = bean.getCraneId();
+                mYardSiteId = bean.getYardSiteId();
                 mStackBean = bean;
+                showProgress(1);
                 workViewModel.GetTrkWorkIsUPByBlockId(bean.getYardBlockId());
-                LogUtils.sysout("====mTaskSql===", mTaskSql);
                 mStackDialog.dismiss();
-//                Session.getInstance().notifySelect(FileKeyName.CANCELBOX);
+                Session.getInstance().notifySelect(FileKeyName.CANCELBOX);
             }
 
             @Override
@@ -602,16 +618,20 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
 //                mStackDialog.dismiss();
                 mStackBean = bean;
                 mStackDialog.dismiss();
+                mCurCraneId = bean.getCraneId();
+                mYardSiteId = bean.getYardSiteId();
+                showProgress(1);
                 workViewModel.GetTrkWorkIsCTCByBlockId(bean.getYardBlockId());
 //                workViewModel.GetYardBlockListBySiteId(mStackBean.getYardSiteId(),false,false);
 //                workViewModel.GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
 //                workViewModel.GetListByBayId(mStackBean.getCurrentBayId());
 
-//                Session.getInstance().notifySelect(FileKeyName.FALLBOX);
+                Session.getInstance().notifySelect(FileKeyName.FALLBOX);
             }
 
             @Override
             public void onReflashData() {
+                showProgress(1);
                 loadStackInfoo();
             }
         });
@@ -621,6 +641,7 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void loadStackInfoo() {
         if (TextUtils.isEmpty(mCurCraneId)) return;
         workViewModel.getJobTicketTaskStack(mCurCraneId);
+        workViewModel.getJobTicketListStackByCraneId(mCurCraneId);
 
     }
 
@@ -717,33 +738,33 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         for (YardTaskInfo bean : mData) {
             if (sortType.equals(SortType.ALL) && spuType.equals(SortType.PutBox)) {
-                if (bean.getActivity().trim().equals(CTRL_PUTBOX) || bean.getActivity().trim().equals(CTRL_PUTBOXIG))
+                if (bean.getActivity().equals(CTRL_PUTBOX) || bean.getActivity().equals(CTRL_PUTBOXIG))
                     tList.add(bean);
             } else if (sortType.equals(SortType.ALL) && spuType.equals(SortType.UpBox)) {
-                if (bean.getActivity().trim().equals(CTRL_GETBOXIP) ||
-                        bean.getActivity().trim().equals(CTRL_GETBOX))
+                if (bean.getActivity().equals(CTRL_GETBOXIP) ||
+                        bean.getActivity().equals(CTRL_GETBOX))
                     tList.add(bean);
             } else if (sortType.equals(SortType.EBox) && spuType.equals(SortType.AllBox)) {
-                if (bean.getFe_Ind().trim().equals(BoxTool.E))
+                if (bean.getFeInd().equals(BoxTool.E))
                     tList.add(bean);
             } else if (sortType.equals(SortType.EBox) && spuType.equals(SortType.PutBox)) {
-                if (bean.getFe_Ind().trim().equals(BoxTool.E) && (bean.getActivity().trim().equals(CTRL_PUTBOX) ||
-                        bean.getActivity().trim().equals(CTRL_PUTBOXIG)))
+                if (bean.getFeInd().equals(BoxTool.E) && (bean.getActivity().equals(CTRL_PUTBOX) ||
+                        bean.getActivity().equals(CTRL_PUTBOXIG)))
                     tList.add(bean);
             } else if (sortType.equals(SortType.EBox) && spuType.equals(SortType.UpBox)) {
-                if (bean.getFe_Ind().trim().equals(BoxTool.E) && (bean.getActivity().trim().equals(CTRL_GETBOXIP) ||
-                        bean.getActivity().trim().equals(CTRL_GETBOX)))
+                if (bean.getFeInd().equals(BoxTool.E) && (bean.getActivity().equals(CTRL_GETBOXIP) ||
+                        bean.getActivity().equals(CTRL_GETBOX)))
                     tList.add(bean);
             } else if (sortType.equals(SortType.FBox) && spuType.equals(SortType.AllBox)) {
-                if (bean.getFe_Ind().trim().equals(BoxTool.F))
+                if (bean.getFeInd().equals(BoxTool.F))
                     tList.add(bean);
             } else if (sortType.equals(SortType.FBox) && spuType.equals(SortType.PutBox)) {
-                if (bean.getFe_Ind().trim().equals(BoxTool.F) && (bean.getActivity().trim().equals(CTRL_PUTBOX) ||
-                        bean.getActivity().trim().equals(CTRL_PUTBOXIG)))
+                if (bean.getFeInd().equals(BoxTool.F) && (bean.getActivity().equals(CTRL_PUTBOX) ||
+                        bean.getActivity().equals(CTRL_PUTBOXIG)))
                     tList.add(bean);
             } else if (sortType.equals(SortType.FBox) && spuType.equals(SortType.UpBox)) {
-                if (bean.getFe_Ind().trim().equals(BoxTool.F) && (bean.getActivity().trim().equals(CTRL_GETBOXIP) ||
-                        bean.getActivity().trim().equals(CTRL_GETBOX)))
+                if (bean.getFeInd().equals(BoxTool.F) && (bean.getActivity().equals(CTRL_GETBOXIP) ||
+                        bean.getActivity().equals(CTRL_GETBOX)))
                     tList.add(bean);
             }
 
@@ -763,9 +784,9 @@ public class MainBoxFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (bean.getCntr().contains(boxNo.toUpperCase()) ||
                     bean.getCntr().contains(boxNo) ||
                     bean.getCntr().endsWith(boxNo) ||
-                    bean.getTrk().contains(boxNo.toUpperCase()) ||
-                    bean.getTrk().contains(boxNo) ||
-                    bean.getTrk().endsWith(boxNo)) {
+                    bean.getTrkNo().contains(boxNo.toUpperCase()) ||
+                    bean.getTrkNo().contains(boxNo) ||
+                    bean.getTrkNo().endsWith(boxNo)) {
                 tempData.add(bean);
             }
         }

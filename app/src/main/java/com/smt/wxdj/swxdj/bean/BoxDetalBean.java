@@ -326,7 +326,7 @@ public class BoxDetalBean extends CntrEntity implements Serializable, Cloneable,
      * @return
      */
     public boolean isPJCntr() {
-        if (getActivity().equals(BoxTool.STATE_PJ)) {
+        if (getActivity().equals(BoxTool.STATE_PJ)|| getActivity().equals(BoxTool.STATE_CX)) {
             return true;
         }
         return false;

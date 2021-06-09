@@ -1,13 +1,15 @@
 package com.smt.wxdj.swxdj.viewmodel.nbean;
 
 import com.smt.wxdj.swxdj.bean.Bay;
+import com.smt.wxdj.swxdj.bean.CntrEntity;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * 呗位信息
  */
-public class YardBayInfo extends Bay {
+public class YardBayInfo extends Bay implements Comparator<YardBayInfo> {
 
     /**
      * id : 3fa85f64-5717-4562-b3fc-2c963f66afa6
@@ -355,6 +357,11 @@ public class YardBayInfo extends Bay {
 
     public void setContainers(List<ContainersBean> containers) {
         this.containers = containers;
+    }
+
+    @Override
+    public int compare(YardBayInfo o1, YardBayInfo o2) {
+        return o1.getBay().compareTo(o2.getBay());
     }
 
 

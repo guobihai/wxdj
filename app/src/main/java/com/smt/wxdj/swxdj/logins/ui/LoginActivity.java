@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smt.wxdj.swxdj.DebugActivity;
 import com.smt.wxdj.swxdj.MainActivity;
 import com.smt.wxdj.swxdj.MvpBaseActivity;
 import com.smt.wxdj.swxdj.MyApplication;
@@ -40,6 +41,7 @@ import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.dao.TokenInfo;
 import com.smt.wxdj.swxdj.logins.presenter.LoginPresenterImpl;
 import com.smt.wxdj.swxdj.logins.view.LoginView;
+import com.smt.wxdj.swxdj.network.RetrofitManager;
 import com.smt.wxdj.swxdj.network.account.AccountManager;
 import com.smt.wxdj.swxdj.setting.ui.SettingsActivity;
 import com.smt.wxdj.swxdj.switchlang.Constant;
@@ -156,15 +158,17 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
         dialog.show();
     }
 
-    WorkViewModel viewModel;
+//    WorkViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        viewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
+//        viewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
 
+        URLTool.authHost = PreferenceUtils.getString(this, "authUrl", "https://auth.wit-union.com/");
+        URLTool.host = PreferenceUtils.getString(this, "apiUrl", "https://lgsapi.wit-union.com/api/");
 
         WindowManager wm = this.getWindowManager();
 
@@ -245,7 +249,12 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
             }
         }
 
-        tvVersionCode.setText(getString(R.string.version_code) + AppTool.getAppVersionCode(this));
+        tvVersionCode.setText(getString(R.string.version_code) + AppTool.getAppVersionName(this));
+
+        findViewById(R.id.imageView2).setOnLongClickListener(v -> {
+            DebugActivity.start(LoginActivity.this);
+            return false;
+        });
     }
 
     @Override
@@ -394,6 +403,7 @@ public class LoginActivity extends MvpBaseActivity<LoginView, LoginPresenterImpl
 
     @Override
     public void loginCrnSuccess() {
+        RetrofitManager.getInstance().init(URLTool.getUrl());
         User user = new User();
         user.setSignonUSERID(getUserName());
         user.setCrn(machineNo);

@@ -23,7 +23,9 @@ import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.adapt.SearchResultAdapt;
 import com.smt.wxdj.swxdj.boxs.presenter.SearchPresenterImpl;
 import com.smt.wxdj.swxdj.boxs.view.SearchView;
+import com.smt.wxdj.swxdj.fragment.MainBoxFragment;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
+import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.dialog.SweetAlertDialog;
 
@@ -58,7 +60,12 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
     private boolean isGetBox;//是否提箱
     private Handler handler = new Handler();
     private int maxLength;
+    private WorkViewModel workViewModel;
 
+    public SearchResultBoxDialog setWorkViewModel(WorkViewModel workViewModel) {
+        this.workViewModel = workViewModel;
+        return this;
+    }
 
     public SearchResultBoxDialog(Context context) {
         super(context, R.style.AppTheme_Dialog_Fullscreen);
@@ -207,7 +214,10 @@ public class SearchResultBoxDialog extends Dialog implements View.OnClickListene
             cnter.append(num);
             cnteText.setText(cnter.toString());
             if (cnter.toString().length() == maxLength) {
-                searchPresenter.searchBox(isGetBox ? mOldYardCntrInfo.getCntr() : "", cnter.toString());
+//                searchPresenter.searchBox(isGetBox ? mOldYardCntrInfo.getCntr() : "", cnter.toString());
+                showProgress();
+                if (null != workViewModel)
+                    workViewModel.searchCntrInfoBytag(cnter.toString(), MainBoxFragment.mYardSiteId);
             }
         }
     }

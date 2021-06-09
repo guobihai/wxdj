@@ -27,10 +27,10 @@
     <string name="zlCellBox">箱区整理</string>
     <string name="menu_qhzh">切换账户</string>
     <string name="menu_setting">设置</string>
-    <string name="menu_qhcd">切换场地</string>
+    <string name="menu_qhcd">切换街区</string>
     <string name="menu_exit">退出终端</string>
-    <string name="cd">场地: %s</string>
-    <string name="tw">田位: %s</string>
+    <string name="cd">街区: %s</string>
+    <string name="tw">贝位: %s</string>
     <string name="rztc">入闸放箱: %s</string>
     <string name="cztc">出闸提箱: %s</string>
     <string name="currentTask">当前任务:%s</string>
@@ -40,7 +40,7 @@
     <string name="input_toast">请输入箱号后4位</string>
     <string name="input_err_toast">请输入长度不少于4位箱号</string>
     <string name="select_search_box">请选择箱子</string>
-    <string name="select_stack">请选择场地</string>
+    <string name="select_stack">请选择街区</string>
     <string name="select_bay">请选择贝位</string>
     <string name="fall_box">倒箱</string>
     <string name="cancel_box">取消提箱</string>
@@ -51,9 +51,9 @@
     <string name="details">详情</string>
     <string name="progress_msg">小君正在努力处理中...</string>
     <string name="netword_error">网络连接异常，请检测是否开启网络...</string>
-    <string name="cc_cd_error">请先选择场地与田位。</string>
+    <string name="cc_cd_error">请先选择街区与贝位。</string>
     <string name="cc_clear_error">该箱子是正常场的集装箱,是否继续?</string>
-    <string name="cc_clear_cd_error">是否执行抄场功能"\"清空该场地所有箱子"\"!!!</string>
+    <string name="cc_clear_cd_error">是否执行抄场功能"\"清空该街区所有箱子"\"!!!</string>
     <string name="cc_select_error">悬空非法位置,请重新选择。</string>
     <string name="cc_select_has_error">该位置已有箱子,请重新选择。</string>
     <string name="putBoxFormat">卸箱</string>
@@ -98,9 +98,10 @@
     <string name="subloc">分区:</string>
     <string name="url">服务地址:</string>
     <!-- MyGridViewActivity -->
-    <string name="field">场地</string>
+    <string name="field">街区</string>
     <string name="rown">田位</string>
     <string name="clear_field">抄场</string>
+    <string name="rmd_bay_field">倒箱贝位</string>
     <string name="checked_box">选中的箱</string>
     <string name="move_box_position">移箱目标位置</string>
     <string name="target_box">目标提箱</string>
@@ -127,7 +128,7 @@
     <string name="empty_box3">空箱（规则：不同持箱人）</string>
     <string name="empty_box4">空箱（规则：不同箱型）</string>
     <string name="not_fit_rule">不适合堆场策划的规则</string>
-    <string name="error_rm_msg">提箱不能换场地倒箱</string>
+    <string name="error_rm_msg">提箱不能换街区倒箱</string>
     <!--系统参数-->
     <!--是否推荐颜色-->
     <string name="rm_color_switch">*,RM_LOC_FREE,RFCWS</string>
@@ -135,7 +136,7 @@
     <string name="open_stack_list_switch">*,ShowStackList</string>
     <!--倒箱内部开关-->
     <string name="open_rm_switch">*,ShowRMCntr</string>
-    <!--倒箱场地开关-->
+    <!--倒箱街区开关-->
     <string name="open_rm_stack_switch">*,ShowStackRMCntr</string>
     <!--模糊搜索位数-->
     <string name="search_cntr_count">*,SEARCH_CNTR_COUNT</string>
@@ -170,7 +171,7 @@
     <string name="save">保存</string>
     <string name="number">数量</string>
     <string name="state">状态</string>
-    <string name="workplace">工作田位</string>
+    <string name="workplace">当前贝位</string>
     <string name="start_the_field">开始田位</string>
     <string name="end_the_field">结束田位</string>
     <string name="starting_time">起始时间</string>
@@ -204,8 +205,8 @@
     <string name="not_registered">您的设备未登记,请联系管理员处理.</string>
     <string name="boxes_are_irreplaceable">箱子不可换箱.</string>
     <string name="the_box_is_illega">箱子不合法.</string>
-    <string name="please_choose_the_venue">您还没选择场地,请选择.</string>
-    <string name="site_list">场地列表</string>
+    <string name="please_choose_the_venue">您还没选择街区,请选择.</string>
+    <string name="site_list">街区列表</string>
     <string name="please_enter_the_time">请输入时间</string>
     <string name="open">开</string>
     <string name="close">关</string>
@@ -227,7 +228,7 @@
     <string name="the_floor_is_full">层已满.</string>
     <string name="please_select_box_info">您还没有选择箱子信息.</string>
     <string name="failure_to_verify_suitcase">验证提箱失败.</string>
-    <string name="the_site_has_been_locked_up">该场地已被锁住.</string>
+    <string name="the_site_has_been_locked_up">该街区已被锁住.</string>
     <string name="heavy_boxes_press_empty_boxes">重箱压空箱，是否继续放箱？</string>
     <string name="go_on">继续</string>
     <string name="the_validation_failed">验证失败,验证码无效.</string>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tram">#00000000</color>
+    <string name="app_name">My Library</string>
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/abc_slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/abc_slide_out_bottom</item>
+    </style>
+    <style name="dialog_style" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/tram</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
+    <declare-styleable name="DatePicker">
+        <attr format="color" name="picker_text_color"/>
+        <attr format="color" name="picker_select_textColor"/>
+        <attr format="color" name="picker_split"/>
+        <attr format="dimension" name="picker_split_height"/>
+    </declare-styleable>
+    <declare-styleable name="TriangleViewStyle">
+        <attr format="reference|color" name="triangleColor"/>
+        <attr name="shapeArrow">
+
+            <!-- show event in current month. -->
+            <enum name="UP" value="0"/>
+            <!-- show event in current month and preious month. -->
+            <enum name="DOWN" value="1"/>
+            <!-- show event in current month and next month. -->
+            <enum name="RIGHT" value="2"/>
+            <!-- show event in all month. -->
+            <enum name="LEFT" value="3"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="WheelFullDatePickerStyle">
+
+        <!-- 顯示民國年 -->
+        <attr format="boolean" name="showTaiwanYear"/>
+        <!-- 小於0的數字前面加0 -->
+        <attr format="boolean" name="addZeroIfSmallThanTen"/>
+        <!-- 選單日期是否即時顯示 -->
+        <attr format="boolean" name="setCurrentTimeVisible"/>
+        <!-- 能不能設定今天以前的時間 -->
+        <attr format="boolean" name="canSetUpPastTime"/>
+        <!-- 能不能設定今天以後的時間 -->
+        <attr format="boolean" name="canSetUpFutureTime"/>
+        <!-- 是否顯示年月日字串 -->
+        <attr format="boolean" name="showDateLastString"/>
+    </declare-styleable>
+    <declare-styleable name="WheelSinglePickerStyle">
+
+        <!-- 如果滾輪樣式是純粹顯示文字，滾輪的顯示行數 預設為一行 -->
+        <attr format="integer" name="visibleLine"/>
+        <!-- 如果滾輪樣式是純粹顯示文字，兩邊滾輪的文字大小 格式為dip -->
+        <attr format="integer" name="singleTextSize"/>
+    </declare-styleable>
+    <declare-styleable name="WheelTimerStyle">
+        <!-- 是否總是顯示兩個滾輪 -->
+        <attr name="timeMode">
+            <!-- 選擇模式 -->
+            <enum name="select" value="0"/>
+            <!-- 倒數模式 -->
+            <enum name="countDown" value="1"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="WheelTwoDimensionPickerStyle">
+
+        <!-- 是否總是顯示兩個滾輪 -->
+        <attr format="boolean" name="alwaysShowTwoWheel"/>
+        <!-- 如果滾輪樣式是純粹顯示文字，左邊滾輪的顯示行數 預設為一行 -->
+        <attr format="integer" name="leftWheelVisibleLine"/>
+        <!-- 如果滾輪樣式是純粹顯示文字，右邊滾輪的顯示行數 預設為一行 -->
+        <attr format="integer" name="rightWheelVisibleLine"/>
+        <!-- 如果滾輪樣式是純粹顯示文字，兩邊滾輪的文字大小 格式為dip -->
+        <attr format="integer" name="wheelTwoDimensionTextSize"/>
+        <!-- 是否即時顯示所選資料 -->
+        <attr format="boolean" name="isCurrentSelectVisible"/>
+    </declare-styleable>
+</resources>

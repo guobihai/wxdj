@@ -3,13 +3,14 @@ package com.smt.wxdj.swxdj.compares;
 import android.text.TextUtils;
 
 import com.smt.wxdj.swxdj.bean.CntrEntity;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 
 import java.util.Comparator;
 
 /**
  * Created by gbh on 16/9/12.
  */
-public class SmtCompare implements Comparator<CntrEntity> {
+public class SmtCompare implements Comparator<YardTaskInfo> {
     String type;
 
     public static final String TIER = "TIER";
@@ -27,30 +28,28 @@ public class SmtCompare implements Comparator<CntrEntity> {
     }
 
     @Override
-    public int compare(CntrEntity t0, CntrEntity t1) {
+    public int compare(YardTaskInfo t0, YardTaskInfo t1) {
         switch (type) {
             case TIER:
-                return t0.getTier().compareTo(t1.getTier());
+                return t0.getIntTier() > t1.getIntTier() ? 0 : -1;
             case TRUCK:
-                return t0.getTrk().compareTo(t1.getTrk());
+                return t0.getTrkNo().compareTo(t1.getTrkNo());
             case CNTR:
                 return t0.getCntr().compareTo(t1.getCntr());
             case TOROW:
-                if (TextUtils.isEmpty(t0.getRown())) return 0;
-                return t0.getRown().compareTo(t1.getRown());
+//                if (TextUtils.isEmpty(t0.getRown())) return 0;
+                return t0.getLocation().compareTo(t1.getLocation());
             case OPR:
-                return t0.getOpr().compareTo(t1.getOpr());
+                return t0.getOptr().compareTo(t1.getOptr());
             case TYPE:
-                return t0.getEqp_Type().compareTo(t1.getEqp_Type());
+                return t0.getSizeClass().compareTo(t1.getSizeClass());
             case TIME:
-                if (TextUtils.isEmpty(t0.getWaitTime()) || TextUtils.isEmpty(t1.getWaitTime()))
-                    return 0;
-                return t0.getWaitTime().compareTo(t1.getWaitTime());
+                return t0.getWaitMinute() > (t1.getWaitMinute()) ? 0 : -1;
             case WEIGHT: {
                 if (TextUtils.isEmpty(t0.getGrs_Ton())) return 0;
-                if ((Double.parseDouble(t0.getGrs_Ton()) == Double.parseDouble(t1.getGrs_Ton())))
+                if ((Double.parseDouble(String.valueOf(t0.getGrsWgt())) == Double.parseDouble(String.valueOf(t1.getGrsWgt()))))
                     return 0;
-                else if ((Double.parseDouble(t0.getGrs_Ton()) > Double.parseDouble(t1.getGrs_Ton())))
+                else if ((Double.parseDouble(String.valueOf(t0.getGrsWgt())) > Double.parseDouble(String.valueOf(t1.getGrsWgt()))))
                     return 1;
                 else
                     return -1;

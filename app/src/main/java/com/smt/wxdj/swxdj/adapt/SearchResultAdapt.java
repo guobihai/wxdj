@@ -92,10 +92,10 @@ public class SearchResultAdapt extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof MyViewHolder) {
             YardCntrInfo bean = mData.get(position - 1);
             ((MyViewHolder) holder).cntr.setText(bean.getCntr());
-            ((MyViewHolder) holder).eqp_type.setText(bean.getEqp_Type());
-            ((MyViewHolder) holder).location.setText(bean.getRown() + "-" + bean.getCell() + "-" + bean.getTier());
-            ((MyViewHolder) holder).opr.setText(TextUtils.isEmpty(bean.getOpr()) ? "" : bean.getOpr());
-            ((MyViewHolder) holder).tvCT.setText(bean.getCell() + "-" + bean.getTier());
+            ((MyViewHolder) holder).eqp_type.setText(bean.getSizeClass()+""+bean.getTypeClass());
+            ((MyViewHolder) holder).location.setText(bean.getLocation());
+            ((MyViewHolder) holder).opr.setText(TextUtils.isEmpty(bean.getOptr()) ? "" : bean.getOptr());
+//            ((MyViewHolder) holder).tvCT.setText(bean.getCell() + "-" + bean.getTier());
             if (isGetBox) {
                 ((MyViewHolder) holder).exist.setText(bean.isSWAPFLAG() ? "N" : "Y");
 //                ((MyViewHolder) holder).setTextColor(bean.isSWAPFLAG());

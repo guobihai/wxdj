@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res"><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/vector_drawable_arrowdown.xml" preprocessing="true" qualifiers=""><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-xxxhdpi/vector_drawable_arrowdown.png" qualifiers="xxxhdpi-v4" type="drawable"/><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-mdpi/vector_drawable_arrowdown.png" qualifiers="mdpi-v4" type="drawable"/><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-ldpi/vector_drawable_arrowdown.png" qualifiers="ldpi-v4" type="drawable"/><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-xxhdpi/vector_drawable_arrowdown.png" qualifiers="xxhdpi-v4" type="drawable"/><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-hdpi/vector_drawable_arrowdown.png" qualifiers="hdpi-v4" type="drawable"/><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-xhdpi/vector_drawable_arrowdown.png" qualifiers="xhdpi-v4" type="drawable"/><generated-file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/pngs/release/drawable-anydpi-v21/vector_drawable_arrowdown.xml" qualifiers="anydpi-v21" type="drawable"/></file></source><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/rs/release"/><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/resValues/release"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res"><file name="success_mask_layout" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/success_mask_layout.xml" qualifiers="" type="anim"/><file name="drop_down_to_bottom" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/drop_down_to_bottom.xml" qualifiers="" type="anim"/><file name="success_bow_roate" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/success_bow_roate.xml" qualifiers="" type="anim"/><file name="tempview_show" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/tempview_show.xml" qualifiers="" type="anim"/><file name="error_x_in" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/error_x_in.xml" qualifiers="" type="anim"/><file name="slide_out_bottom" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/slide_out_bottom.xml" qualifiers="" type="anim"/><file name="modal_in" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/modal_in.xml" qualifiers="" type="anim"/><file name="popup_from_bottom" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/popup_from_bottom.xml" qualifiers="" type="anim"/><file name="slide_in_bottom" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/slide_in_bottom.xml" qualifiers="" type="anim"/><file name="shrink_fade_out_from_bottom" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/shrink_fade_out_from_bottom.xml" qualifiers="" type="anim"/><file name="error_frame_in" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/error_frame_in.xml" qualifiers="" type="anim"/><file name="grow_fade_in_from_bottom" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/grow_fade_in_from_bottom.xml" qualifiers="" type="anim"/><file name="focusview_show" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/focusview_show.xml" qualifiers="" type="anim"/><file name="modal_out" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/anim/modal_out.xml" qualifiers="" type="anim"/><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values-sw600dp-land/dimen.xml" qualifiers="sw600dp-land-v13"><dimen name="alert_width">490dp</dimen><dimen name="common_circle_width">3dp</dimen><dimen name="progress_circle_radius">34dp</dimen><dimen name="activity_horizontal_margin">16dp</dimen><dimen name="activity_vertical_margin">16dp</dimen><dimen name="dialog_vertical_margin">32dp</dimen><dimen name="margin_dialog_right">10dp</dimen><dimen name="dialog_padding">15dp</dimen><dimen name="btn_test_size">26dp</dimen><dimen name="content_test_size">28dp</dimen><dimen name="edit_height">55dp</dimen><dimen name="smt_item_horizontal_margin">85dp</dimen><dimen name="smt_margin_right">5dp</dimen></file><file name="dark_blue_button_background" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/dark_blue_button_background.xml" qualifiers="" type="drawable"/><file name="indicator_corner_bg" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/indicator_corner_bg.xml" qualifiers="" type="drawable"/><file name="success_bow" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/success_bow.xml" qualifiers="" type="drawable"/><file name="dialog_background" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/dialog_background.xml" qualifiers="" type="drawable"/><file name="btn_play_vedio" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/btn_play_vedio.xml" qualifiers="" type="drawable"/><file name="picture_setting_album_checkbox" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/picture_setting_album_checkbox.xml" qualifiers="" type="drawable"/><file name="btn_play_vedio_b" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/btn_play_vedio_b.xml" qualifiers="" type="drawable"/><file name="success_circle" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/success_circle.xml" qualifiers="" type="drawable"/><file name="error_circle" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/error_circle.xml" qualifiers="" type="drawable"/><file name="whitebox" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/whitebox.xml" qualifiers="" type="drawable"/><file name="touch_bg" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/touch_bg.xml" qualifiers="" type="drawable"/><file name="selector_pickerview_btn" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/selector_pickerview_btn.xml" qualifiers="" type="drawable"/><file name="progressbar_bg" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/progressbar_bg.xml" qualifiers="" type="drawable"/><file name="blue_button_background" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/blue_button_background.xml" qualifiers="" type="drawable"/><file name="warning_sigh" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/warning_sigh.xml" qualifiers="" type="drawable"/><file name="gray_button_background" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/gray_button_background.xml" qualifiers="" type="drawable"/><file name="graybox" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/graybox.xml" qualifiers="" type="drawable"/><file name="error_center_x" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/error_center_x.xml" qualifiers="" type="drawable"/><file name="edittext_input_bg" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/edittext_input_bg.xml" qualifiers="" type="drawable"/><file name="whitebox_with_readstroke" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/whitebox_with_readstroke.xml" qualifiers="" type="drawable"/><file name="warning_circle" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/warning_circle.xml" qualifiers="" type="drawable"/><file name="red_button_background" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable/red_button_background.xml" qualifiers="" type="drawable"/><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values-sw720dp-land/dimen.xml" qualifiers="sw720dp-land-v13"><dimen name="alert_width">490dp</dimen><dimen name="common_circle_width">3dp</dimen><dimen name="progress_circle_radius">34dp</dimen><dimen name="activity_horizontal_margin">16dp</dimen><dimen name="activity_vertical_margin">16dp</dimen><dimen name="dialog_vertical_margin">32dp</dimen><dimen name="margin_dialog_right">10dp</dimen><dimen name="dialog_padding">15dp</dimen><dimen name="btn_test_size">26dp</dimen><dimen name="content_test_size">28dp</dimen><dimen name="edit_height">55dp</dimen><dimen name="smt_item_horizontal_margin">85dp</dimen><dimen name="smt_margin_right">5dp</dimen></file><file name="layout_basepickerview" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/layout_basepickerview.xml" qualifiers="" type="layout"/><file name="indicator_layout" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/indicator_layout.xml" qualifiers="" type="layout"/><file name="item_listpopupwindow" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/item_listpopupwindow.xml" qualifiers="" type="layout"/><file name="include_pickerview_topbar" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/include_pickerview_topbar.xml" qualifiers="" type="layout"/><file name="alert_dialog" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/alert_dialog.xml" qualifiers="" type="layout"/><file name="smt_no_data_layout" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/smt_no_data_layout.xml" qualifiers="" type="layout"/><file name="smt_recyclerview" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/smt_recyclerview.xml" qualifiers="" type="layout"/><file name="pickerview_options" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/pickerview_options.xml" qualifiers="" type="layout"/><file name="render_type_text" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/render_type_text.xml" qualifiers="" type="layout"/><file name="smt_dialog_pw_view" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/smt_dialog_pw_view.xml" qualifiers="" type="layout"/><file name="pickerview_time" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/pickerview_time.xml" qualifiers="" type="layout"/><file name="recyclerview_layout" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/recyclerview_layout.xml" qualifiers="" type="layout"/><file name="render_type_default" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/render_type_default.xml" qualifiers="" type="layout"/><file name="slider_layout" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/slider_layout.xml" qualifiers="" type="layout"/><file name="smt_footer" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/layout/smt_footer.xml" qualifiers="" type="layout"/><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/colors.xml" qualifiers=""><color name="colorPrimary">#3F51B5</color><color name="colorPrimaryDark">#3F51B5</color><color name="colorAccent">#FF4081</color><color name="float_transparent">#00000000</color><color name="sweet_dialog_bg_color">#FFFFFF</color><color name="button_text_color">#FFFFFF</color><color name="gray_btn_bg_color">#D0D0D0</color><color name="gray_btn_bg_pressed_color">#B6B6B6</color><color name="blue_btn_bg_color">#AEDEF4</color><color name="blue_btn_bg_pressed_color">#96BFD2</color><color name="red_btn_bg_color">#DD6B55</color><color name="red_btn_bg_pressed_color">#CD5B55</color><color name="error_stroke_color">#F27474</color><color name="success_stroke_color">#A5DC86</color><color name="trans_success_stroke_color">#33A5DC86</color><color name="warning_stroke_color">#F8BB86</color><color name="text_color">#575757</color><color name="material_blue_grey_80">#ff37474f</color><color name="material_blue_grey_90">#ff263238</color><color name="material_blue_grey_95">#ff21272b</color><color name="material_deep_teal_20">#ff80cbc4</color><color name="material_deep_teal_50">#ff009688</color><color name="light_pink">#fb9090</color><color name="common_touch_bg">#E3E3E3</color><color name="common_bg">@color/sweet_dialog_bg_color</color><color name="common_divider_narrow">#E3E3E3</color><color name="smt_secondary_text">#727272</color><color name="main_menu_bg">#aa111213</color><color name="common_title_bg">#aa111213</color><color name="primary_title_text_color">#ff888888</color><color name="common_title_text">#ff565555</color><color name="common_text_yellow">#ffffe049</color><color name="album_item_bg">#fffcfcfd</color><color name="video_playter_bg">#333333</color><color name="rippelColor">#0099CC</color><color name="pickerview_timebtn_nor">#057dff</color><color name="pickerview_timebtn_pre">#c2daf5</color><color name="pickerview_bg_topbar">#f5f5f5</color><color name="pickerview_topbar_title">#000000</color><color name="pickerview_wheelview_textcolor_out">#a8a8a8</color><color name="pickerview_wheelview_textcolor_center">#2a2a2a</color><color name="pickerview_wheelview_textcolor_divider">#d5d5d5</color><color name="bgColor_overlay">#60000000</color></file><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/bools.xml" qualifiers=""><bool name="pickerview_customTextSize">false</bool></file><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/styles.xml" qualifiers=""><style name="alert_dialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@color/float_transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style><style name="dialog_blue_button" parent="android:Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">31dp</item>
+        <item name="android:background">@drawable/blue_button_background</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingLeft">21dp</item>
+        <item name="android:paddingRight">21dp</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style><style name="CheckBoxStyle">
+        <item name="android:layout_width">28.0dip</item>
+        <item name="android:layout_height">28.0dip</item>
+        <item name="android:layout_marginRight">20.0dip</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style><style name="video_detail_player_bottom_btn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style><style name="video_detail_player">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style><style name="Theme.ToolBar.Menu" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        
+        <item name="android:colorBackground">@android:color/white</item>
+        
+        <item name="android:textColor">@android:color/black</item>
+        
+        <item name="android:textSize">16sp</item>
+        
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow.Menu</item>
+        
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        
+        <item name="android:dropDownListViewStyle">@style/dropDownStyle</item>
+        <item name="dropDownListViewStyle">@style/dropDownStyle</item>
+    </style><style name="ActionButton.Overflow.Menu" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/abc_ic_menu_moreoverflow_mtrl_alpha</item>
+    </style><style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+    </style><style name="dropDownStyle" parent="android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/touch_bg</item>
+        <item name="android:divider">@color/common_divider_narrow</item>
+        <item name="android:dividerHeight">0.5dp</item>
+    </style><style name="AndroidImageSlider_Corner_Oval_Orange">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/indicator_corner_bg</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="shape">oval</item>
+        <item name="padding_left">3dp</item>
+        <item name="padding_right">3dp</item>
+        <item name="padding_top">4dp</item>
+        <item name="padding_bottom">4dp</item>
+
+        <item name="selected_color">#f60</item>
+        <item name="unselected_color">#ffffff</item>
+        <item name="selected_width">6dp</item>
+        <item name="selected_height">6dp</item>
+        <item name="unselected_width">6dp</item>
+        <item name="unselected_height">6dp</item>
+    </style><style name="AndroidImageSlider_Attractive_Rect_Blue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="shape">rect</item>
+        <item name="padding_left">3dp</item>
+        <item name="padding_right">3dp</item>
+        <item name="padding_top">4dp</item>
+        <item name="padding_bottom">4dp</item>
+
+        <item name="selected_color">#30CCE5</item>
+        <item name="unselected_color">#333333</item>
+        <item name="selected_width">13dp</item>
+        <item name="selected_height">4dp</item>
+        <item name="unselected_width">13dp</item>
+        <item name="unselected_height">4dp</item>
+    </style><style name="AndroidImageSlider_Magnifier_Oval_Black">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="shape">oval</item>
+        <item name="padding_left">3dp</item>
+        <item name="padding_right">3dp</item>
+        <item name="padding_top">4dp</item>
+        <item name="padding_bottom">4dp</item>
+
+        <item name="selected_color">#333333</item>
+        <item name="unselected_color">#33000000</item>
+        <item name="selected_width">8dp</item>
+        <item name="selected_height">8dp</item>
+        <item name="unselected_width">6dp</item>
+        <item name="unselected_height">6dp</item>
+    </style><style name="AnimationUpPopup">
+        <item name="android:windowEnterAnimation">@anim/grow_fade_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/shrink_fade_out_from_bottom</item>
+    </style><style name="AnimationFromButtom">
+        <item name="android:windowEnterAnimation">@anim/popup_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/drop_down_to_bottom</item>
+    </style></file><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/strings.xml" qualifiers=""><string name="app_name">SmtLibrary</string><string name="dialog_default_title">Here\'s a message!</string><string name="dialog_ok">OK</string><string name="dialog_cancel">Cancel</string><string name="LOADING">Loading...</string><string name="OK">确定</string><string name="Cancle">取消</string><string name="Files">Files</string><string name="Image">Image/</string><string name="Thumbnail">Thumbnail/</string><string name="Video">Video/</string><string name="album_enter_select">选择</string><string name="api_cancel">取消</string><string name="album_photo_select_tip">项</string><string name="album_phoot_select_all">全选</string><string name="album_phoot_unselect_all">取消全选</string><string name="album_title">我的相册</string><string name="pgcommon_share">分享</string><string name="common_cut">移动</string><string name="common_delete">删除</string><string name="common_edit">编辑</string><string name="album_message">图片&amp;视频</string><string name="pickerview_cancel">取消</string><string name="pickerview_submit">确定</string><string name="pickerview_year">年</string><string name="pickerview_month">月</string><string name="pickerview_day">日</string><string name="pickerview_hours">时</string><string name="pickerview_minutes">分</string><string name="pickerview_seconds">秒</string><string name="error_password">密码错误</string><string name="tips">温馨提示</string><string name="please_input_password">请输入密码</string></file><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/attrs.xml" qualifiers=""><declare-styleable name="Rotate3dAnimation">
+        <attr format="enum" name="rollType">
+            <enum name="x" value="0"/>
+            <enum name="y" value="1"/>
+            <enum name="z" value="2"/>
+        </attr>
+        <attr format="float" name="fromDeg"/>
+        <attr format="float" name="toDeg"/>
+        <attr format="fraction" name="pivotX"/>
+        <attr format="fraction" name="pivotY"/>
+    </declare-styleable><declare-styleable name="ProgressWheel">
+        <attr format="boolean" name="matProg_progressIndeterminate"/>
+        <attr format="color" name="matProg_barColor"/>
+        <attr format="color" name="matProg_rimColor"/>
+        <attr format="dimension" name="matProg_rimWidth"/>
+        <attr format="float" name="matProg_spinSpeed"/>
+        <attr format="integer" name="matProg_barSpinCycleTime"/>
+        <attr format="dimension" name="matProg_circleRadius"/>
+        <attr format="boolean" name="matProg_fillRadius"/>
+        <attr format="dimension" name="matProg_barWidth"/>
+        <attr format="boolean" name="matProg_linearProgress"/>
+    </declare-styleable><declare-styleable name="TempImageView">
+        <attr format="integer" name="animat_id"/>
+    </declare-styleable><declare-styleable name="FocusImageView">
+        <attr format="integer" name="focus_focusing_id"/>
+        <attr format="integer" name="focus_success_id"/>
+        <attr format="integer" name="focus_fail_id"/>
+    </declare-styleable><declare-styleable name="RVPIndicator">
+        <attr format="integer" name="item_count"/>
+        <attr format="color" name="text_color_normal"/>
+        <attr format="color" name="text_color_hightlight"/>
+        <attr format="dimension" name="text_size"/>
+        <attr format="color" name="indicator_color"/>
+        <attr format="reference" name="indicator_src"/>
+        <attr name="indicator_style">
+            <enum name="bitmap" value="0"/>
+            <enum name="line" value="1"/>
+            <enum name="square" value="2"/>
+            <enum name="triangle" value="3"/>
+        </attr>
+    </declare-styleable><declare-styleable name="IRecyclerView">
+        <attr name="recyview_manager">
+            <enum name="LinearLayoutManager" value="0"/>
+            <enum name="GridViewLayoutManager" value="1"/>
+            <enum name="StaggeredGridLayoutManager" value="2"/>
+        </attr>
+        <attr format="integer" name="gridview_count"/>
+        <attr name="swipe_size">
+            <enum name="LARGER" value="0"/>
+            <enum name="DEFAULT" value="1"/>
+        </attr>
+        <attr format="boolean" name="refresh_enable"/>
+        <attr format="boolean" name="loadMore_enabled"/>
+        <attr format="boolean" name="swipe_enabled"/>
+        <attr format="integer" name="divierHeight"/>
+        <attr name="orientation">
+            <enum name="HORIZONTAL" value="0"/>
+            <enum name="VERTICAL" value="1"/>
+        </attr>
+
+    </declare-styleable><declare-styleable name="SliderLayout">
+        
+        <attr format="enum" name="indicator_visibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+
+        <attr format="boolean" name="auto_cycle"/>
+
+        
+        <attr format="enum" name="pager_animation">
+            <enum name="Default" value="0">Default</enum>
+            <enum name="Accordion" value="1">Accordion</enum>
+            <enum name="Background2Foreground" value="2">Background2Foreground</enum>
+            <enum name="CubeIn" value="3">CubeIn</enum>
+            <enum name="DepthPage" value="4">DepthPage</enum>
+            <enum name="Fade" value="5">Fade</enum>
+            <enum name="FlipHorizontal" value="6">FlipHorizontal</enum>
+            <enum name="FlipPage" value="7">FlipPage</enum>
+            <enum name="Foreground2Background" value="8">Foreground2Background</enum>
+            <enum name="RotateDown" value="9">RotateDown</enum>
+            <enum name="RotateUp" value="10">RotateUp</enum>
+            <enum name="Stack" value="11">Stack</enum>
+            <enum name="Tablet" value="12">Tablet</enum>
+            <enum name="ZoomIn" value="13">ZoomIn</enum>
+            <enum name="ZoomOutSlide" value="14">ZoomOutSlide</enum>
+            <enum name="ZoomOut" value="15">ZoomOut</enum>
+        </attr>
+
+        
+        <attr format="integer" name="pager_animation_span"/>
+
+    </declare-styleable><declare-styleable name="PagerIndicator">
+        
+        <attr format="enum" name="visibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+
+        <attr format="enum" name="shape">
+            <enum name="oval" value="0"/>
+            <enum name="rect" value="1"/>
+        </attr>
+
+        <attr format="color" name="selected_color"/>
+        <attr format="color" name="unselected_color"/>
+
+        
+        <attr format="reference" name="selected_drawable"/>
+        <attr format="reference" name="unselected_drawable"/>
+
+        <attr format="dimension" name="selected_width"/>
+        <attr format="dimension" name="selected_height"/>
+
+        <attr format="dimension" name="unselected_width"/>
+        <attr format="dimension" name="unselected_height"/>
+
+        <attr format="dimension" name="padding_left"/>
+        <attr format="dimension" name="padding_right"/>
+        <attr format="dimension" name="padding_top"/>
+        <attr format="dimension" name="padding_bottom"/>
+
+        <attr format="dimension" name="selected_padding_left"/>
+        <attr format="dimension" name="selected_padding_right"/>
+        <attr format="dimension" name="selected_padding_top"/>
+        <attr format="dimension" name="selected_padding_bottom"/>
+
+        <attr format="dimension" name="unselected_padding_left"/>
+        <attr format="dimension" name="unselected_padding_right"/>
+        <attr format="dimension" name="unselected_padding_top"/>
+        <attr format="dimension" name="unselected_padding_bottom"/>
+
+    </declare-styleable><declare-styleable name="Themes">
+        <attr format="reference" name="SliderStyle"/>
+        <attr format="reference" name="PagerIndicatorStyle"/>
+    </declare-styleable><declare-styleable name="RippleBackground">
+        <attr format="color" name="rb_color"/>
+        <attr format="dimension" name="rb_strokeWidth"/>
+        <attr format="dimension" name="rb_radius"/>
+        <attr format="integer" name="rb_duration"/>
+        <attr format="integer" name="rb_rippleAmount"/>
+        <attr format="float" name="rb_scale"/>
+        <attr format="enum" name="rb_type">
+            <enum name="fillRipple" value="0"/>
+            <enum name="strokeRipple" value="1"/>
+        </attr>
+    </declare-styleable><declare-styleable name="pickerview">
+        <attr name="pickerview_gravity">
+            <enum name="center" value="17"/>
+            <enum name="left" value="3"/>
+            <enum name="right" value="5"/>
+        </attr>
+        <attr format="dimension" name="pickerview_textSize"/>
+        <attr format="color" name="pickerview_textColorOut"/>
+        <attr format="color" name="pickerview_textColorCenter"/>
+        <attr format="color" name="pickerview_dividerColor"/>
+    </declare-styleable><declare-styleable name="JPTabBar">
+        <attr format="reference|dimension" name="TabHeight"/>
+        <attr format="reference|color" name="TabNormalColor"/>
+        <attr format="reference|color" name="TabSelectColor"/>
+        <attr format="reference|color" name="TabSelectBg"/>
+        <attr format="dimension|reference" name="TabTextSize"/>
+        <attr format="dimension|reference" name="TabIconSize"/>
+        <attr format="boolean" name="TabIconFilter"/>
+        <attr format="dimension|reference" name="TabMargin"/>
+        <attr format="integer" name="TabDuration"/>
+        <attr format="enum" name="TabAnimate">
+            <enum name="Alpha" value="0"/>
+            <enum name="Flip" value="1"/>
+            <enum name="Rotate" value="2"/>
+            <enum name="Scale" value="3"/>
+            <enum name="Jump" value="4"/>
+            <enum name="None" value="5"/>
+        </attr>
+
+        <attr format="reference" name="TabMiddleIcon"/>
+
+        <attr format="reference|color" name="BadgeColor"/>
+        <attr format="boolean" name="BadgeDraggable"/>
+        <attr format="dimension|reference" name="BadgePadding"/>
+        <attr format="reference|dimension" name="BadgeTextSize"/>
+        <attr format="reference|dimension" name="BadgeMargin"/>
+    </declare-styleable></file><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/dimen.xml" qualifiers=""><dimen name="alert_width">290dp</dimen><dimen name="common_circle_width">3dp</dimen><dimen name="progress_circle_radius">34dp</dimen><dimen name="activity_horizontal_margin">16dp</dimen><dimen name="activity_vertical_margin">16dp</dimen><dimen name="dialog_vertical_margin">16dp</dimen><dimen name="margin_dialog_right">5dp</dimen><dimen name="dialog_padding">10dp</dimen><dimen name="btn_test_size">16dp</dimen><dimen name="content_test_size">18dp</dimen><dimen name="edit_height">40dp</dimen><dimen name="smt_item_horizontal_margin">85dp</dimen><dimen name="smt_margin_right">5dp</dimen><dimen name="thumbnail_imageview_size">41.0dip</dimen><dimen name="bottom_bar_height">75.0dip</dimen><dimen name="top_menu_bar_height">45.0dip</dimen><dimen name="shutter_bottom_size">62.0dip</dimen><dimen name="album_header_bar_height">50.0dip</dimen><dimen name="title_view_left_back_padding_left">12.0dip</dimen><dimen name="title_view_left_back_padding_right">12.0dip</dimen><dimen name="album_header_btn_width">48.0dip</dimen><dimen name="album_rooter_bar_height">48.0dip</dimen><dimen name="album_rooter_bar_text_size">16.0sp</dimen><dimen name="videodetails_textsize_time">13.0dip</dimen><dimen name="video_bottom_bar_height">40.0dip</dimen><dimen name="record_bottom_size">92.0dip</dimen><dimen name="rippleStrokeWidth">2dp</dimen><dimen name="rippleRadius">64dp</dimen><dimen name="pickerview_topbar_height">44dp</dimen><dimen name="pickerview_topbar_paddingleft">10dp</dimen><dimen name="pickerview_topbar_paddingright">30dp</dimen><dimen name="pickerview_topbar_btn_textsize">20sp</dimen><dimen name="pickerview_topbar_title_textsize">21sp</dimen><dimen name="pickerview_textsize">20sp</dimen></file><file path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/values/integers.xml" qualifiers=""><integer name="animation_default_duration">300</integer></file><file name="ic_image_loading" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/ic_image_loading.png" qualifiers="hdpi-v4" type="drawable"/><file name="focus_focused" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/focus_focused.9.png" qualifiers="hdpi-v4" type="drawable"/><file name="video_detail_player_start" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/video_detail_player_start.png" qualifiers="hdpi-v4" type="drawable"/><file name="toux2" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/toux2.png" qualifiers="hdpi-v4" type="drawable"/><file name="icon_rec" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/icon_rec.png" qualifiers="hdpi-v4" type="drawable"/><file name="video_player_bg" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/video_player_bg.png" qualifiers="hdpi-v4" type="drawable"/><file name="albumset_preselected" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/albumset_preselected.png" qualifiers="hdpi-v4" type="drawable"/><file name="gg_ic_video_play_on" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/gg_ic_video_play_on.png" qualifiers="hdpi-v4" type="drawable"/><file name="focus_focus_failed" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/focus_focus_failed.9.png" qualifiers="hdpi-v4" type="drawable"/><file name="ic_image_loadfail" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/ic_image_loadfail.png" qualifiers="hdpi-v4" type="drawable"/><file name="ic_error" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/ic_error.png" qualifiers="hdpi-v4" type="drawable"/><file name="video_detail_player_pause" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/video_detail_player_pause.png" qualifiers="hdpi-v4" type="drawable"/><file name="albumset_selected" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/albumset_selected.png" qualifiers="hdpi-v4" type="drawable"/><file name="focus_focusing" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/focus_focusing.9.png" qualifiers="hdpi-v4" type="drawable"/><file name="ic_stub" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/ic_stub.png" qualifiers="hdpi-v4" type="drawable"/><file name="heart_love" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/heart_love.9.png" qualifiers="hdpi-v4" type="drawable"/><file name="ic_empty_picture" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/ic_empty_picture.png" qualifiers="hdpi-v4" type="drawable"/><file name="video_pause_bg" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/video_pause_bg.png" qualifiers="hdpi-v4" type="drawable"/><file name="abc_ic_menu_moreoverflow_mtrl_alpha" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/abc_ic_menu_moreoverflow_mtrl_alpha.png" qualifiers="hdpi-v4" type="drawable"/><file name="delete" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/delete.png" qualifiers="hdpi-v4" type="drawable"/><file name="thumb_guide_tips_new" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/thumb_guide_tips_new.png" qualifiers="hdpi-v4" type="drawable"/><file name="gg_ic_video_play" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/gg_ic_video_play.png" qualifiers="hdpi-v4" type="drawable"/><file name="progressbar_thumb_record_mix" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/progressbar_thumb_record_mix.png" qualifiers="hdpi-v4" type="drawable"/><file name="arrow_down" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/arrow_down.png" qualifiers="hdpi-v4" type="drawable"/><file name="smt_delete" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-hdpi/smt_delete.png" qualifiers="hdpi-v4" type="drawable"/><file name="weixiao" path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/main/res/drawable-mdpi/weixiao.png" qualifiers="mdpi-v4" type="drawable"/></source><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/rs/release"/><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/build/generated/res/resValues/release"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/release/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release" generated-set="release$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/smtlibrary/src/release/res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="SliderLayout">
+        
+        <attr format="enum" name="indicator_visibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+
+        <attr format="boolean" name="auto_cycle"/>
+
+        
+        <attr format="enum" name="pager_animation">
+            <enum name="Default" value="0">Default</enum>
+            <enum name="Accordion" value="1">Accordion</enum>
+            <enum name="Background2Foreground" value="2">Background2Foreground</enum>
+            <enum name="CubeIn" value="3">CubeIn</enum>
+            <enum name="DepthPage" value="4">DepthPage</enum>
+            <enum name="Fade" value="5">Fade</enum>
+            <enum name="FlipHorizontal" value="6">FlipHorizontal</enum>
+            <enum name="FlipPage" value="7">FlipPage</enum>
+            <enum name="Foreground2Background" value="8">Foreground2Background</enum>
+            <enum name="RotateDown" value="9">RotateDown</enum>
+            <enum name="RotateUp" value="10">RotateUp</enum>
+            <enum name="Stack" value="11">Stack</enum>
+            <enum name="Tablet" value="12">Tablet</enum>
+            <enum name="ZoomIn" value="13">ZoomIn</enum>
+            <enum name="ZoomOutSlide" value="14">ZoomOutSlide</enum>
+            <enum name="ZoomOut" value="15">ZoomOut</enum>
+        </attr>
+
+        
+        <attr format="integer" name="pager_animation_span"/>
+
+    </declare-styleable><declare-styleable name="JPTabBar">
+        <attr format="reference|dimension" name="TabHeight"/>
+        <attr format="reference|color" name="TabNormalColor"/>
+        <attr format="reference|color" name="TabSelectColor"/>
+        <attr format="reference|color" name="TabSelectBg"/>
+        <attr format="dimension|reference" name="TabTextSize"/>
+        <attr format="dimension|reference" name="TabIconSize"/>
+        <attr format="boolean" name="TabIconFilter"/>
+        <attr format="dimension|reference" name="TabMargin"/>
+        <attr format="integer" name="TabDuration"/>
+        <attr format="enum" name="TabAnimate">
+            <enum name="Alpha" value="0"/>
+            <enum name="Flip" value="1"/>
+            <enum name="Rotate" value="2"/>
+            <enum name="Scale" value="3"/>
+            <enum name="Jump" value="4"/>
+            <enum name="None" value="5"/>
+        </attr>
+
+        <attr format="reference" name="TabMiddleIcon"/>
+
+        <attr format="reference|color" name="BadgeColor"/>
+        <attr format="boolean" name="BadgeDraggable"/>
+        <attr format="dimension|reference" name="BadgePadding"/>
+        <attr format="reference|dimension" name="BadgeTextSize"/>
+        <attr format="reference|dimension" name="BadgeMargin"/>
+    </declare-styleable><declare-styleable name="PagerIndicator">
+        
+        <attr format="enum" name="visibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+
+        <attr format="enum" name="shape">
+            <enum name="oval" value="0"/>
+            <enum name="rect" value="1"/>
+        </attr>
+
+        <attr format="color" name="selected_color"/>
+        <attr format="color" name="unselected_color"/>
+
+        
+        <attr format="reference" name="selected_drawable"/>
+        <attr format="reference" name="unselected_drawable"/>
+
+        <attr format="dimension" name="selected_width"/>
+        <attr format="dimension" name="selected_height"/>
+
+        <attr format="dimension" name="unselected_width"/>
+        <attr format="dimension" name="unselected_height"/>
+
+        <attr format="dimension" name="padding_left"/>
+        <attr format="dimension" name="padding_right"/>
+        <attr format="dimension" name="padding_top"/>
+        <attr format="dimension" name="padding_bottom"/>
+
+        <attr format="dimension" name="selected_padding_left"/>
+        <attr format="dimension" name="selected_padding_right"/>
+        <attr format="dimension" name="selected_padding_top"/>
+        <attr format="dimension" name="selected_padding_bottom"/>
+
+        <attr format="dimension" name="unselected_padding_left"/>
+        <attr format="dimension" name="unselected_padding_right"/>
+        <attr format="dimension" name="unselected_padding_top"/>
+        <attr format="dimension" name="unselected_padding_bottom"/>
+
+    </declare-styleable><declare-styleable name="RVPIndicator">
+        <attr format="integer" name="item_count"/>
+        <attr format="color" name="text_color_normal"/>
+        <attr format="color" name="text_color_hightlight"/>
+        <attr format="dimension" name="text_size"/>
+        <attr format="color" name="indicator_color"/>
+        <attr format="reference" name="indicator_src"/>
+        <attr name="indicator_style">
+            <enum name="bitmap" value="0"/>
+            <enum name="line" value="1"/>
+            <enum name="square" value="2"/>
+            <enum name="triangle" value="3"/>
+        </attr>
+    </declare-styleable><declare-styleable name="ProgressWheel">
+        <attr format="boolean" name="matProg_progressIndeterminate"/>
+        <attr format="color" name="matProg_barColor"/>
+        <attr format="color" name="matProg_rimColor"/>
+        <attr format="dimension" name="matProg_rimWidth"/>
+        <attr format="float" name="matProg_spinSpeed"/>
+        <attr format="integer" name="matProg_barSpinCycleTime"/>
+        <attr format="dimension" name="matProg_circleRadius"/>
+        <attr format="boolean" name="matProg_fillRadius"/>
+        <attr format="dimension" name="matProg_barWidth"/>
+        <attr format="boolean" name="matProg_linearProgress"/>
+    </declare-styleable><declare-styleable name="IRecyclerView">
+        <attr name="recyview_manager">
+            <enum name="LinearLayoutManager" value="0"/>
+            <enum name="GridViewLayoutManager" value="1"/>
+            <enum name="StaggeredGridLayoutManager" value="2"/>
+        </attr>
+        <attr format="integer" name="gridview_count"/>
+        <attr name="swipe_size">
+            <enum name="LARGER" value="0"/>
+            <enum name="DEFAULT" value="1"/>
+        </attr>
+        <attr format="boolean" name="refresh_enable"/>
+        <attr format="boolean" name="loadMore_enabled"/>
+        <attr format="boolean" name="swipe_enabled"/>
+        <attr format="integer" name="divierHeight"/>
+        <attr name="orientation">
+            <enum name="HORIZONTAL" value="0"/>
+            <enum name="VERTICAL" value="1"/>
+        </attr>
+
+    </declare-styleable><declare-styleable name="RippleBackground">
+        <attr format="color" name="rb_color"/>
+        <attr format="dimension" name="rb_strokeWidth"/>
+        <attr format="dimension" name="rb_radius"/>
+        <attr format="integer" name="rb_duration"/>
+        <attr format="integer" name="rb_rippleAmount"/>
+        <attr format="float" name="rb_scale"/>
+        <attr format="enum" name="rb_type">
+            <enum name="fillRipple" value="0"/>
+            <enum name="strokeRipple" value="1"/>
+        </attr>
+    </declare-styleable><declare-styleable name="Rotate3dAnimation">
+        <attr format="enum" name="rollType">
+            <enum name="x" value="0"/>
+            <enum name="y" value="1"/>
+            <enum name="z" value="2"/>
+        </attr>
+        <attr format="float" name="fromDeg"/>
+        <attr format="float" name="toDeg"/>
+        <attr format="fraction" name="pivotX"/>
+        <attr format="fraction" name="pivotY"/>
+    </declare-styleable><declare-styleable name="Themes">
+        <attr format="reference" name="SliderStyle"/>
+        <attr format="reference" name="PagerIndicatorStyle"/>
+    </declare-styleable><declare-styleable name="pickerview">
+        <attr name="pickerview_gravity">
+            <enum name="center" value="17"/>
+            <enum name="left" value="3"/>
+            <enum name="right" value="5"/>
+        </attr>
+        <attr format="dimension" name="pickerview_textSize"/>
+        <attr format="color" name="pickerview_textColorOut"/>
+        <attr format="color" name="pickerview_textColorCenter"/>
+        <attr format="color" name="pickerview_dividerColor"/>
+    </declare-styleable><declare-styleable name="TempImageView">
+        <attr format="integer" name="animat_id"/>
+    </declare-styleable><declare-styleable name="FocusImageView">
+        <attr format="integer" name="focus_focusing_id"/>
+        <attr format="integer" name="focus_success_id"/>
+        <attr format="integer" name="focus_fail_id"/>
+    </declare-styleable></configuration></mergedItems></merger>

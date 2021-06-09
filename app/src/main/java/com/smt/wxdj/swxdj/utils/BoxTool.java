@@ -80,6 +80,7 @@ public class BoxTool {
      * 倒箱
      */
     public static final String STATE_PJ = "PJ";
+    public static final String STATE_CX = "CX";
     /**
      *
      */

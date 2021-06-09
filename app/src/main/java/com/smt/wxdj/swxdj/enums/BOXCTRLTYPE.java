@@ -9,5 +9,6 @@ public enum BOXCTRLTYPE {
     GETBOX,//提箱子
     PLGETBOX,
     MOVEBOX,//移动箱子
+    MDXEBOX,//倒箱
     CANCLEBOX//取消提箱
 }

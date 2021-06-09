@@ -1,6 +1,8 @@
 package com.smt.wxdj.swxdj;
 
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelStore;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -48,6 +50,7 @@ import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.ActivityTool;
 import com.smt.wxdj.swxdj.utils.SortType;
+import com.smt.wxdj.swxdj.viewmodel.WorkViewModel;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.PreferenceUtils;
 
@@ -55,7 +58,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import static com.smtlibrary.utils.JsonUtils.deserialize;
 
 
 public class MainActivity extends AppCompatActivity
@@ -90,12 +92,14 @@ public class MainActivity extends AppCompatActivity
     private TaskAlarmReceiver taskAlarmReceiver; // 检测任务的定时器
     private LogoutPresenter mLogoutPresenter;
     public static boolean isGoLogin;
+    private WorkViewModel workViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActivityTool.addActivity(this);
+        workViewModel = new ViewModelProvider(ViewModelStore::new, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(WorkViewModel.class);
 
         Session session = Session.getInstance();
         session.deleteObserver(this);
@@ -185,6 +189,12 @@ public class MainActivity extends AppCompatActivity
 
         mLogoutPresenter = new LogoutPresenterImpl();
         doRegisterReceiver();
+
+        //搜索结果
+        workViewModel.mSearchCntrInfo.observe(this,yardCntrInfos -> {
+            boxDialog.hideProgress();
+            boxDialog.setSearchResult(yardCntrInfos);
+        });
     }
 
     /**
@@ -244,7 +254,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.menu_zlBox://箱区整理
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, MyGridViewActivity.class).putExtra("isArrange", true));
+                startActivity(
+                        new Intent(MainActivity.this, MyGridViewActivity.class)
+                        .putExtra("curCraneId", MainBoxFragment.mCurCraneId)
+                        .putExtra("isArrange", true)
+                );
                 radioGroup.check(radioId);
                 break;
             case R.id.menu_history://历史记录
@@ -256,6 +270,7 @@ public class MainActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
                 radioGroup.check(radioId);
                 boxDialog = new SearchResultBoxDialog(this);
+                boxDialog.setWorkViewModel(workViewModel);
                 boxDialog.setConfirmClickListener(new SearchResultBoxDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(Dialog dialog, YardCntrInfo bean) {
@@ -265,19 +280,20 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onItemClick(Dialog dialog, YardCntrInfo bean) {
                         if (null == bean) return;
-//                        dialog.dismiss();
+                        dialog.dismiss();
                         boxDetalBean = bean;
-                        bean.setMaj_Loc(PreferenceUtils.getString(MainActivity.this, "majloc", ""));
-                        bean.setSub_Loc(PreferenceUtils.getString(MainActivity.this, "subloc", ""));
-                        String str = PreferenceUtils.getString(MainActivity.this, bean.getRown(), null);
-                        if (null == str) {
-                            mBoxsPresenterImpl.CheckMaxCellTier(bean.getRown());
-                        } else {
-                            Intent it = new Intent(MainActivity.this, MyGridViewActivity.class);
-                            it.putExtra("boxBean", bean);
-                            it.putExtra("bay", deserialize(str, Bay.class));
-                            startActivityForResult(it, 1001);
-                        }
+//                        bean.setMaj_Loc(PreferenceUtils.getString(MainActivity.this, "majloc", ""));
+//                        bean.setSub_Loc(PreferenceUtils.getString(MainActivity.this, "subloc", ""));
+//                        String str = PreferenceUtils.getString(MainActivity.this, bean.getRown(), null);
+//                        if (null == str) {
+//                            mBoxsPresenterImpl.CheckMaxCellTier(bean.getRown());
+//                        } else {
+//                            Intent it = new Intent(MainActivity.this, MyGridViewActivity.class);
+//                            it.putExtra("boxBean", bean);
+//                            it.putExtra("bay", deserialize(str, Bay.class));
+//                            startActivityForResult(it, 1001);
+//                        }
+                        MyGridViewActivity.start(MainActivity.this, bean, MainBoxFragment.mCurCraneId);
                     }
                 });
                 boxDialog.show();
@@ -487,22 +503,24 @@ public class MainActivity extends AppCompatActivity
                     case 0://装卸船/车
                         Session.getInstance().notifySelect(FileKeyName.TASKTYPE_ALL);
                         break;
-                    case 1://装卸船
-                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_ZXBOAT);
-                        break;
-                    case 2://装船
-                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_LDBOAT);
-                        break;
-                    case 3://卸船
-                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_DCBOAT);
-                        break;
-                    case 4://装卸车
-                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_ZXC);
-                        break;
-                    case 5://取消提箱
+//                    case 1://装卸船
+//                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_ZXBOAT);
+//                        break;
+//                    case 2://装船
+////                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_LDBOAT);
+//                        //倒箱
+//                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_FALLBOX);
+//                        break;
+//                    case 3://卸船
+//                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_DCBOAT);
+//                        break;
+//                    case 4://装卸车
+//                        Session.getInstance().notifySelect(FileKeyName.TASKTYPE_ZXC);
+//                        break;
+                    case 1://取消提箱
                         Session.getInstance().notifySelect(FileKeyName.TASKTYPE_CANCLEBOX);
                         break;
-                    case 6://倒箱
+                    case 2://倒箱
                         Session.getInstance().notifySelect(FileKeyName.TASKTYPE_FALLBOX);
                         break;
                 }
@@ -535,8 +553,8 @@ public class MainActivity extends AppCompatActivity
         if (arg instanceof String) {
             String msg = (String) arg;
             if (FileKeyName.CANCELBOX.equals(msg)) {
-                mTaskSpinner.setSelection(3);
-                if (mTaskSpinner.getSelectedItemPosition() == 3) {
+                mTaskSpinner.setSelection(1);
+                if (mTaskSpinner.getSelectedItemPosition() == 1) {
                     Session.getInstance().notifySelect(FileKeyName.TASKTYPE_CANCLEBOX);
                 }
             } else if (FileKeyName.CONFIRMBOX.equals(msg)) {
@@ -545,7 +563,7 @@ public class MainActivity extends AppCompatActivity
                     Session.getInstance().notifySelect(FileKeyName.TASKTYPE_ALL);
                 }
             } else if (FileKeyName.FALLBOX.equals(msg)) {
-                mTaskSpinner.setSelection(4);
+                mTaskSpinner.setSelection(2);
             }
         }
     }

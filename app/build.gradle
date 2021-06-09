@@ -60,10 +60,10 @@ android {
     buildTypes {
         release {
             //// 是否进行混淆
-            minifyEnabled true
+            minifyEnabled false
             // 移除无用的resource文件
-            shrinkResources true
-            zipAlignEnabled true
+            shrinkResources false
+            zipAlignEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "APP_DEBUG", "true"
             buildConfigField "boolean", "LOG_ENABLE", "true"

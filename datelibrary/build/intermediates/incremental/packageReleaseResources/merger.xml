@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res"/><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/build/generated/res/rs/release"/><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/build/generated/res/resValues/release"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res"><file name="cbk_dialog_pick_time" path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res/layout/cbk_dialog_pick_time.xml" qualifiers="" type="layout"/><file name="cbk_wheel_default_inner_text" path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res/layout/cbk_wheel_default_inner_text.xml" qualifiers="" type="layout"/><file name="cbk_wheel_picker" path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res/layout/cbk_wheel_picker.xml" qualifiers="" type="layout"/><file path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res/values/strings.xml" qualifiers=""><string name="app_name">My Library</string></file><file path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res/values/attrs.xml" qualifiers=""><declare-styleable name="WheelFullDatePickerStyle">
+
+        
+        <attr format="boolean" name="showTaiwanYear"/>
+        
+        <attr format="boolean" name="addZeroIfSmallThanTen"/>
+        
+        <attr format="boolean" name="setCurrentTimeVisible"/>
+        
+        <attr format="boolean" name="canSetUpPastTime"/>
+        
+        <attr format="boolean" name="canSetUpFutureTime"/>
+        
+        <attr format="boolean" name="showDateLastString"/>
+    </declare-styleable><declare-styleable name="WheelTwoDimensionPickerStyle">
+
+        
+        <attr format="boolean" name="alwaysShowTwoWheel"/>
+        
+        <attr format="integer" name="leftWheelVisibleLine"/>
+        
+        <attr format="integer" name="rightWheelVisibleLine"/>
+        
+        <attr format="integer" name="wheelTwoDimensionTextSize"/>
+        
+        <attr format="boolean" name="isCurrentSelectVisible"/>
+    </declare-styleable><declare-styleable name="WheelSinglePickerStyle">
+
+        
+        <attr format="integer" name="visibleLine"/>
+        
+        <attr format="integer" name="singleTextSize"/>
+    </declare-styleable><declare-styleable name="TriangleViewStyle">
+        <attr format="reference|color" name="triangleColor"/>
+        <attr name="shapeArrow">
+
+            
+            <enum name="UP" value="0"/>
+            
+            <enum name="DOWN" value="1"/>
+            
+            <enum name="RIGHT" value="2"/>
+            
+            <enum name="LEFT" value="3"/>
+        </attr>
+    </declare-styleable><declare-styleable name="WheelTimerStyle">
+        
+        <attr name="timeMode">
+            
+            <enum name="select" value="0"/>
+            
+            <enum name="countDown" value="1"/>
+        </attr>
+    </declare-styleable><declare-styleable name="DatePicker">
+        <attr format="color" name="picker_text_color"/>
+        <attr format="color" name="picker_select_textColor"/>
+        <attr format="color" name="picker_split"/>
+        <attr format="dimension" name="picker_split_height"/>
+    </declare-styleable></file><file path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/main/res/values/style.xml" qualifiers=""><color name="tram">#00000000</color><style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/abc_slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/abc_slide_out_bottom</item>
+    </style><style name="dialog_style" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/tram</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style></file></source><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/build/generated/res/rs/release"/><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/build/generated/res/resValues/release"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/release/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release" generated-set="release$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/gbh/Documents/fluters/YmsApp/datelibrary/src/release/res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="WheelTwoDimensionPickerStyle">
+
+        
+        <attr format="boolean" name="alwaysShowTwoWheel"/>
+        
+        <attr format="integer" name="leftWheelVisibleLine"/>
+        
+        <attr format="integer" name="rightWheelVisibleLine"/>
+        
+        <attr format="integer" name="wheelTwoDimensionTextSize"/>
+        
+        <attr format="boolean" name="isCurrentSelectVisible"/>
+    </declare-styleable><declare-styleable name="WheelFullDatePickerStyle">
+
+        
+        <attr format="boolean" name="showTaiwanYear"/>
+        
+        <attr format="boolean" name="addZeroIfSmallThanTen"/>
+        
+        <attr format="boolean" name="setCurrentTimeVisible"/>
+        
+        <attr format="boolean" name="canSetUpPastTime"/>
+        
+        <attr format="boolean" name="canSetUpFutureTime"/>
+        
+        <attr format="boolean" name="showDateLastString"/>
+    </declare-styleable><declare-styleable name="WheelTimerStyle">
+        
+        <attr name="timeMode">
+            
+            <enum name="select" value="0"/>
+            
+            <enum name="countDown" value="1"/>
+        </attr>
+    </declare-styleable><declare-styleable name="DatePicker">
+        <attr format="color" name="picker_text_color"/>
+        <attr format="color" name="picker_select_textColor"/>
+        <attr format="color" name="picker_split"/>
+        <attr format="dimension" name="picker_split_height"/>
+    </declare-styleable><declare-styleable name="WheelSinglePickerStyle">
+
+        
+        <attr format="integer" name="visibleLine"/>
+        
+        <attr format="integer" name="singleTextSize"/>
+    </declare-styleable><declare-styleable name="TriangleViewStyle">
+        <attr format="reference|color" name="triangleColor"/>
+        <attr name="shapeArrow">
+
+            
+            <enum name="UP" value="0"/>
+            
+            <enum name="DOWN" value="1"/>
+            
+            <enum name="RIGHT" value="2"/>
+            
+            <enum name="LEFT" value="3"/>
+        </attr>
+    </declare-styleable></configuration></mergedItems></merger>

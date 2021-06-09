@@ -142,17 +142,21 @@ public class BayDialog extends Dialog implements View.OnClickListener {
                 for (StackBean bean : mListStack) {
                     bean.setSelect(false);
                 }
-                adapter.notifyDataSetChanged();
+
                 mStackBean = (ChaneStackInfo) o;
                 mStackBean.setSelect(true);
-                adapter.notifyItemChanged(i);
+                adapter.notifyDataSetChanged();
 
                 if (app.getMapBay(mStackBean.getYardBlock()) == null) {
 //                    bayPresenter.getSelectedBay(mStackBean.getYardBlock());
                     showProgress();
                     workViewModel.GetYardBayListByBlockId(mStackBean.getYardBlockId());
+                    bayAdapter.clear();
                 } else {
                     bayAdapter.clear();
+                    for (YardBayInfo bayInfo : app.getMapBay(mStackBean.getYardBlock())) {
+                        bayInfo.setSelect(false);
+                    }
                     bayAdapter.addAll(app.getMapBay(mStackBean.getYardBlock()));
                 }
             }
@@ -168,11 +172,7 @@ public class BayDialog extends Dialog implements View.OnClickListener {
             public void convert(ViewHolderHelper holder, YardBayInfo bay, int i) {
                 TextView title = holder.getView(R.id.stack_title);
                 title.setText(bay.getBay());
-                if (bay.isSelect()) {
-                    title.setBackgroundColor(Color.YELLOW);
-                } else {
-                    title.setBackgroundColor(Color.TRANSPARENT);
-                }
+                title.setBackgroundColor(bay.isSelect() ? Color.YELLOW : Color.TRANSPARENT);
             }
         };
         bayAdapter.openLoadAnimation(new ScaleInAnimation());
@@ -183,10 +183,9 @@ public class BayDialog extends Dialog implements View.OnClickListener {
                 for (Bay bay : bayAdapter.getAll()) {
                     bay.setSelect(false);
                 }
-                bayAdapter.notifyDataSetChanged();
                 mBay = (YardBayInfo) o;
                 mBay.setSelect(true);
-                bayAdapter.notifyItemChanged(i);
+                bayAdapter.notifyDataSetChanged();
                 btnOk.setEnabled(true);
             }
 
@@ -217,8 +216,18 @@ public class BayDialog extends Dialog implements View.OnClickListener {
         if (null != workViewModel) {
             workViewModel.getYardBayInfoList().observe((LifecycleOwner) mContext, yardBayInfos -> {
                 bayAdapter.clear();
-                bayAdapter.addAll(yardBayInfos);
                 hideProgress();
+                if (null == yardBayInfos) return;
+                for (int i = 0; i < yardBayInfos.size(); i++) {
+                    YardBayInfo b = yardBayInfos.get(i);
+                    if (b.getBay().equals(mCurBayName)) {
+                        b.setSelect(true);
+                        mBay = b;
+                    } else {
+                        b.setSelect(false);
+                    }
+                }
+                bayAdapter.addAll(yardBayInfos);
             });
         }
     }
@@ -249,7 +258,7 @@ public class BayDialog extends Dialog implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnOk:
-                if (null != mConfirmClickListener && null != mBay)
+                if (null != mConfirmClickListener && null != mBay && null != mStackBean)
                     mConfirmClickListener.onClick(this, mStackBean, mBay);
                 else
                     dismiss();
@@ -267,12 +276,14 @@ public class BayDialog extends Dialog implements View.OnClickListener {
             bean.setSelect(false);
         }
         adapter.notifyDataSetChanged();
+        workViewModel.getYardBayInfoList().setValue(new ArrayList<>());
     }
 
     public void showProgress() {
         if (!sweetAlertDialog.isShowing())
             sweetAlertDialog.show();
     }
+
     public void hideProgress() {
         if (sweetAlertDialog.isShowing())
             sweetAlertDialog.dismiss();

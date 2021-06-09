@@ -21,7 +21,7 @@
     <TextView
         android:id="@+id/boxLocation"
         style="@style/contentTextViewStyle"
-        android:layout_weight="1.1"
+        android:layout_weight="1.06"
         android:text="@string/boxLocation" />
 
     <TextView
@@ -51,6 +51,7 @@
         android:id="@+id/tvPOD"
         style="@style/contentTextViewStyle"
         android:layout_weight="1.08"
+        android:visibility="gone"
         android:text="@string/pod" />
     <TextView
         android:id="@+id/tvEqpCond"
@@ -74,7 +75,7 @@
         android:id="@+id/boxDt"
         style="@style/contentTextViewStyle"
         android:layout_height="match_parent"
-        android:layout_weight="1.1"
+        android:layout_weight="1"
         android:text="@string/boxDt" />
 
     <TextView

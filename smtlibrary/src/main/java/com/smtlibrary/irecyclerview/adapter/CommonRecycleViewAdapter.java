@@ -79,6 +79,7 @@ public abstract class CommonRecycleViewAdapter<T> extends RecyclerView.Adapter<V
             public void onClick(View v) {
                 if (mOnItemClickListener != null) {
                     int position = getPosition(viewHolder);
+                    if(position == -1)return;
                     mOnItemClickListener.onItemClick(parent, v, mDatas.get(position), position);
                 }
             }

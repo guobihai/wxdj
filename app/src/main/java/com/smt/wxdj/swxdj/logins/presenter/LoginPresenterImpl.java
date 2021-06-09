@@ -11,6 +11,7 @@ import com.smt.wxdj.swxdj.bean.Dock;
 import com.smt.wxdj.swxdj.bean.DriverList;
 import com.smt.wxdj.swxdj.bean.MachineNo;
 import com.smt.wxdj.swxdj.bean.User;
+import com.smt.wxdj.swxdj.dao.HostSettingInfo;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.dao.TokenInfo;
 import com.smt.wxdj.swxdj.enums.DataType;
@@ -64,6 +65,23 @@ public class LoginPresenterImpl extends BasePresenter<LoginView> implements Logi
 
             }
         });
+    }
+
+    @Override
+    public void getSettingInfo() {
+        mLoginModel.getSettingInfo(new IPublicResultInterface<List<HostSettingInfo>>() {
+            @Override
+            public void onSucess(List<HostSettingInfo> object) {
+                System.out.println("===loclhost:"+JsonUtils.serialize(object));
+                getView().onSuccess(object);
+            }
+
+            @Override
+            public void onFailure(String msg, Exception e) {
+
+            }
+        });
+
     }
 
     @Override

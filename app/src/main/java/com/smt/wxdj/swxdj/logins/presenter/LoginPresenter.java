@@ -12,6 +12,8 @@ public interface LoginPresenter extends BaseInterface {
     //机构列表
     void getTenants();
 
+    void getSettingInfo();
+
     void loadToken();
 
     void login();
@@ -40,12 +42,14 @@ public interface LoginPresenter extends BaseInterface {
 
     /**
      * 获取数据列表
+     *
      * @param dataType
      */
     void getDataList(DataType dataType);
 
     /**
      * 检测用户是否已登录当前桥
+     *
      * @param user
      */
     void CheckSignOnQC(User user);

@@ -3,7 +3,6 @@ package com.smt.wxdj.swxdj.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -124,10 +123,10 @@ public class StackDialog extends Dialog implements View.OnClickListener {
                 for (ChaneStackInfo bean : mList) {
                     bean.setSelect(false);
                 }
-                adapt.notifyDataSetChanged();
+
                 mStackBean = (ChaneStackInfo) o;
                 mStackBean.setSelect(true);
-                adapt.notifyItemChanged(i);
+                adapt.notifyDataSetChanged();
 //                if (!mStackBean.getStatus().equals("A"))
 //                    btnOk.setEnabled(false);
             }
@@ -265,10 +264,9 @@ public class StackDialog extends Dialog implements View.OnClickListener {
                 for (StackBean bean : mList) {
                     bean.setSelect(false);
                 }
-                adapt.notifyDataSetChanged();
                 mStackBean = (ChaneStackInfo) o;
                 mStackBean.setSelect(true);
-                adapt.notifyItemChanged(i);
+                adapt.notifyDataSetChanged();
                 if (!mStackBean.getSTATUS().equals("A"))
                     btnOk.setEnabled(false);
             }

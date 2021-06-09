@@ -62,7 +62,7 @@ public class MyApplication extends MultiDexApplication {
         context = getApplicationContext();
         user = new User();
         AccountManager.init(this);
-        RetrofitManager.getInstance().init(URLTool.getUrl());
+//        RetrofitManager.getInstance().init(URLTool.getUrl());
 
 //        PropertyConfigurator.getConfigurator(this).configure();
 //        AppCrashHandler.getInstance().init(this);

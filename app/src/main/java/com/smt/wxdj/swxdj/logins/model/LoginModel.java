@@ -1,5 +1,6 @@
 package com.smt.wxdj.swxdj.logins.model;
 
+import com.smt.wxdj.swxdj.dao.HostSettingInfo;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.enums.DataType;
 import com.smt.wxdj.swxdj.interfaces.IPublicResultInterface;
@@ -15,6 +16,8 @@ public interface LoginModel {
 
     //获取机构
     void getTenants(IPublicResultInterface<Tenants> onLoginListener);
+    //设置信息
+    void getSettingInfo(IPublicResultInterface<List<HostSettingInfo>> onLoginListener);
 
     void loadToken(List<OkHttpUtils.Param> data, IPublicResultInterface onLoginListener);
     /**

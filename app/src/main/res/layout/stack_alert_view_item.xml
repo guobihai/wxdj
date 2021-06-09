@@ -25,6 +25,7 @@
         style="@style/contentTextViewStyle"
         android:layout_weight="1.1"
         android:text="@string/state"
+        android:visibility="gone"
         android:textSize="@dimen/textsize18" />
 
     <TextView
@@ -39,6 +40,7 @@
         style="@style/contentTextViewStyle"
         android:layout_weight="1.05"
         android:text="@string/start_the_field"
+        android:visibility="gone"
         android:textSize="@dimen/textsize18" />
 
 
@@ -46,6 +48,7 @@
         android:id="@+id/endBay"
         style="@style/contentTextViewStyle"
         android:layout_weight="1.05"
+        android:visibility="gone"
         android:text="@string/end_the_field"
         android:textSize="@dimen/textsize18" />
 

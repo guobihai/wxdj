@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/login_bg"
+    android:background="@drawable/login_bg"
     android:keepScreenOn="true"
     tools:context="com.smt.wxdj.swxdj.logins.ui.LoginActivity">
 
@@ -169,6 +169,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:visibility="gone"
         app:srcCompat="@mipmap/setting" />
 
     <TextView

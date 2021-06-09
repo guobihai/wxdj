@@ -3,8 +3,10 @@ package com.smt.wxdj.swxdj.viewmodel.api;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.NMachineInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.RmdLocationInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 
 import java.util.List;
@@ -29,6 +31,10 @@ public interface WorkInterface {
     //根据设备ID获取有作业任务的作业街区
     @GET("CntrManagement/CraneWorkScope/GetWorkScope")
     Observable<List<ChaneStackInfo>> getJobTicketTaskStack(@Query("CraneId") String CraneId);
+
+    //获取作业区
+    @POST("CntrManagement/CraneWorkScope/search")
+    Observable<List<ChaneStackInfo>> getJobTicketListStackByCraneId(@Body Map map);
 
 
     //根据街区ID获取贝位
@@ -80,12 +86,12 @@ public interface WorkInterface {
 
     //7、放箱确认
     @POST("CntrManagement/CraneWork/GroundConfirm")
-    Observable<Object> GroundConfirm(@Body Map map);
+    Flowable<Response<Void>> GroundConfirm(@Body Map map);
 
 
     //8、提箱确认
     @POST("CntrManagement/CraneWork/PickupConfirm")
-    Observable<Object> PickupConfirm(@Body Map map);
+    Flowable<Response<Void>> PickupConfirm(@Body Map map);
 
     //10、倒箱确认
     @POST("CntrManagement/CraneWork/PutOtherConfirm")
@@ -93,9 +99,26 @@ public interface WorkInterface {
 
     // 9、判断能否交换箱(获取提箱交换箱的信息)
     @GET("SystemSetting/TrkWork/ExchangeCntr")
-    Observable<List<Object>> ExchangeCntr(@Query("trkWorkId") String trkWorkId);
+    Observable<List<YardCntrInfo>> ExchangeCntr(@Query("trkWorkId") String trkWorkId);
 
     //10、获取作业线拖车列表
     @GET("TruckManagement/WorkLineTrk/GetSameWorkLineTrk")
     Observable<List<Object>> GetSameWorkLineTrk(@Query("truckId") String truckId);
+
+
+    //选择最优位置
+    @GET("CntrManagement/CraneWork/GetYardLocation")
+    Observable<RmdLocationInfo>GetYardLocation(@Query("cntrId") String cntrId);
+
+    //最优的推荐位
+    @POST("CntrManagement/YardLocation/GetBestCell")
+    Observable<List<String>>GetBestCell(@Body Map map);
+
+
+
+    //搜索箱子
+    @POST("SystemSetting/Container/search")
+    Observable<List<YardCntrInfo>>searchCntrInfo(@Body Map map);
+
+
 }

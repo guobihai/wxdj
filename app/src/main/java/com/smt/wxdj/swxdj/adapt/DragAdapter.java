@@ -12,13 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.smt.wxdj.swxdj.R;
-import com.smt.wxdj.swxdj.bean.Bay;
 import com.smt.wxdj.swxdj.enums.ColorType;
 import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.CellTool;
 import com.smt.wxdj.swxdj.utils.FileKeyName;
 import com.smt.wxdj.swxdj.utils.LruchUtils;
 import com.smt.wxdj.swxdj.utils.ScreenUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class DragAdapter extends BaseAdapter {
 
-    protected Bay mBay;//当前贝位
+    protected YardBayInfo mBay;//当前贝位
     protected YardCntrInfo mPutBox;//要放的箱子
     protected YardCntrInfo mGetBox;//提的箱子
 
@@ -229,11 +229,11 @@ public class DragAdapter extends BaseAdapter {
 //                }
 //            }
             //推荐颜色
-//            backgroundResource = null == bean.getRecommendColorType() ? R.drawable.shapee_item : bean.getRecommendColorType().getColor();
-//            holdView.layout.setBackgroundResource(null == bean.getRecommendColorType() ? R.drawable.shapee_item : bean.getRecommendColorType().getColor());
+            backgroundResource = null == bean.getRecommendColorType() ? R.drawable.shapee_item : bean.getRecommendColorType().getColor();
+            holdView.layout.setBackgroundResource(null == bean.getRecommendColorType() ? R.drawable.shapee_item : bean.getRecommendColorType().getColor());
         }
         //是否要倒箱
-        if (null != mGetBox && !mGetBox.getCntr().equals(bean.getCntr())) {
+        if (null != mGetBox && !TextUtils.equals(mGetBox.getCntr(), (bean.getCntr()))) {
             holdView.tvActionRm.setVisibility(bean.isRmCntr() ? View.VISIBLE : View.GONE);
         } else {
             holdView.tvActionRm.setVisibility(View.GONE);
@@ -387,6 +387,9 @@ public class DragAdapter extends BaseAdapter {
         return channelList.get(position).HashBox();
     }
 
+    public List<YardCntrInfo> getChannelList() {
+        return channelList;
+    }
 
     /**
      * 判断是否悬空选择位置
@@ -722,14 +725,14 @@ public class DragAdapter extends BaseAdapter {
     /**
      * 格式化所有能放想的位置颜色
      *
-     * @param col  列数
-     * @param row  层数
-     * @param bay  呗位
-     * @param maps 箱子
+     * @param col       列数
+     * @param row       层数
+     * @param yardBayId 呗位
+     * @param maps      箱子
      */
-    public boolean enadblAllLocation(int col, int row, Bay bay, List<String> reComBay, YardCntrInfo putBox, Map<String, YardCntrInfo> maps) {
-        if (null == maps || null == putBox || null == bay || null == reComBay) return false;
-        this.mBay = bay;
+    public boolean enadblAllLocation(int col, int row, String yardBayId, List<String> reComBay, YardCntrInfo putBox, Map<String, YardCntrInfo> maps) {
+        if (null == maps || null == putBox || null == reComBay) return false;
+//        this.mBay = bay;
         this.mPutBox = putBox;
         //没有推荐位，默认位策划的拍
         if (reComBay.size() == 1) {
@@ -741,7 +744,9 @@ public class DragAdapter extends BaseAdapter {
                     if (null == bean) {
                         if (reComBay.get(0).equals(String.valueOf(cell))) {
                             setRecommentLocation(key, ColorType.GREEN);
-                            break;
+//                            break;
+                        } else {
+                            setRecommentLocation(key, ColorType.GRAY);
                         }
                     }
                 }
@@ -760,7 +765,7 @@ public class DragAdapter extends BaseAdapter {
                             String bayKey = String.format("(%s,%s)", cell, tier - 1);
                             YardCntrInfo detalBean = maps.get(bayKey);
                             if (null != detalBean) {
-                                if (!detalBean.getRown().equals(mBay.getBay())) {
+                                if (!detalBean.getYardBayId().equals(yardBayId)) {
                                     continue;
                                 }
                             } else continue;
@@ -768,16 +773,22 @@ public class DragAdapter extends BaseAdapter {
 
                         //默认设置不能放箱
                         if (cell >= reComBay.size()) continue;
+                        String value = reComBay.get(cell).trim();
 //                        LogUtils.e("tag", reComBay.toString());
-                        if (reComBay.get(cell).trim().equals("GRAY")) {
+                        if (value.contains("GRAY")) {
 //                            setRecommentLocation(key, ColorType.GRAY);//20190117，周浩说去掉
-                        } else if (reComBay.get(cell).trim().equals("GREEN")) {
+                            setRecommentLocation(key, null);
+                        }
+                        if (value.contains("GREEN")) {
                             setRecommentLocation(key, ColorType.GREEN);
-                        } else if (reComBay.get(cell).trim().equals("YELLOW")) {
+                        }
+                        if (value.contains("YELLOW")) {
                             setRecommentLocation(key, ColorType.YELLOW);
-                        } else if (reComBay.get(cell).trim().equals("PINK")) {
+                        }
+                        if (value.contains("PINK")) {
                             setRecommentLocation(key, ColorType.PINK);
-                        } else if (reComBay.get(cell).trim().equals("RED")) {
+                        }
+                        if (value.contains("RED")) {
 //                            setRecommentLocation(key, ColorType.RED);//20180207,滔哥说去掉
                         }
                         break;
@@ -895,7 +906,7 @@ public class DragAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void setBay(Bay mBay) {
+    public void setBay(YardBayInfo mBay) {
         this.mBay = mBay;
     }
 }

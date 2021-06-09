@@ -52,10 +52,19 @@ public class DateUtils {
      */
     public String getTime(long time) {
         Date myDate = new Date(time);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return df.format(myDate);
     }
 
+    /**
+     * 获取日期
+     * @return
+     */
+    public  static String getTime() {
+        Date myDate = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.format(myDate);
+    }
     /**
      * 使指定日期向前走一天，变成“明天”的日期
      *

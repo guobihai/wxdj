@@ -3,7 +3,12 @@ package com.smt.wxdj.swxdj.viewmodel;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.text.TextUtils;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.smt.wxdj.swxdj.MyApplication;
+import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.viewmodel.api.WorkInterface;
 import com.smt.wxdj.swxdj.viewmodel.nbean.ChaneStackInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.NMachineInfo;
@@ -13,6 +18,7 @@ import com.smt.wxdj.swxdj.network.observer.ResponseObserver;
 import com.smt.wxdj.swxdj.network.utils.RxUtils;
 import com.smt.wxdj.swxdj.param.ParamUtils;
 import com.smt.wxdj.swxdj.utils.JsonUtils;
+import com.smt.wxdj.swxdj.viewmodel.nbean.RmdLocationInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayCntrInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
@@ -20,6 +26,7 @@ import com.smt.wxdj.swxdj.viewmodel.nbean.YardTaskInfo;
 import com.smtlibrary.utils.LogUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +34,13 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 
 public class WorkViewModel extends ViewModel {
+
+    private boolean isLog = true;
 
     public static final int UP_BOX = 1;//提箱子
     public static final int PUT_BOX = 2;//放箱子
@@ -46,6 +56,7 @@ public class WorkViewModel extends ViewModel {
 
     //设备场地区域
     private MutableLiveData<List<ChaneStackInfo>> ChaneStackInfoList;
+    public MutableLiveData<List<ChaneStackInfo>> ALlChaneStackInfoList;
     //呗位信息
     private MutableLiveData<List<YardBayInfo>> YardBayInfoList;
     //作业任务列表
@@ -59,6 +70,11 @@ public class WorkViewModel extends ViewModel {
     private MutableLiveData<List<YardCntrInfo>> mCurBayCntrInfo;//贝位中的箱子
     private MutableLiveData<List<YardCntrInfo>> mDwListCntrInfo;//倒箱的信息
 
+    public MutableLiveData<List<YardCntrInfo>> mSearchCntrInfo;//搜索的箱子信息
+
+    public MutableLiveData<RmdLocationInfo> mRmdLocationInfo;//最优推荐位
+    public MutableLiveData<List<String>> mRmdCellList;//最优推荐位
+
 
     public WorkViewModel() {
         machineList = new MutableLiveData<>();
@@ -67,6 +83,10 @@ public class WorkViewModel extends ViewModel {
         cntrInfoMutableLiveData = new MutableLiveData<>();
         mCntrYardCntrInfo = new MutableLiveData<>();
         mCurBayCntrInfo = new MutableLiveData<>();
+        mRmdLocationInfo = new MutableLiveData<>();
+        mRmdCellList = new MutableLiveData<>();
+        mSearchCntrInfo = new MutableLiveData<>();
+        ALlChaneStackInfoList = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<YardBayInfo>> getYardBayInfoList() {
@@ -141,6 +161,7 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<ChaneStackInfo>>() {
                     @Override
                     public void onSuccess(List<ChaneStackInfo> data) {
+                        Collections.sort(data, new ChaneStackInfo());
                         ChaneStackInfoList.setValue(data);
                         LogUtils.sysout("===getCurTaskListInfo===", JsonUtils.serialize(data));
 //                        GetYardBayListByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
@@ -150,6 +171,39 @@ public class WorkViewModel extends ViewModel {
 //                        GetTrkWorkByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00","");
 //                        GetTrkWorkIsUPByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
 //                        GetTrkWorkIsCTCByBlockId("39fb7959-6e5f-8549-fa18-ec69cc317f00");
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue("网络异常"+code);
+                    }
+                });
+
+    }
+
+
+    /**
+     * 根据设备ID获取有作业任务的作业街区
+     *
+     * @param chanId
+     */
+    public void getJobTicketListStackByCraneId(String chanId) {
+        RetrofitManager.createToken(WorkInterface.class)
+                .getJobTicketListStackByCraneId(ParamUtils.getCurListStack(chanId))
+                .compose(RxUtils.getWrapper())
+                .subscribe(new ResponseObserver<List<ChaneStackInfo>>() {
+                    @Override
+                    public void onSuccess(List<ChaneStackInfo> data) {
+                        Collections.sort(data, new ChaneStackInfo());
+                        ALlChaneStackInfoList.setValue(data);
+                        LogUtils.sysout("===getJobTicketListStackByCraneId===", JsonUtils.serialize(data));
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue("网络异常"+code);
                     }
                 });
 
@@ -168,9 +222,16 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<YardBayInfo>>() {
                     @Override
                     public void onSuccess(List<YardBayInfo> data) {
+                        Collections.sort(data, new YardBayInfo());
                         getYardBayInfoList().setValue(data);
                         String strData = JsonUtils.serialize(data);
                         LogUtils.sysout("===根据场站ID获取贝位===", strData);
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue("网络异常"+code);
                     }
                 });
     }
@@ -226,6 +287,12 @@ public class WorkViewModel extends ViewModel {
                             getDwListCntrInfo().setValue(dxList);
                         }
                         cntrInfoMutableLiveData.setValue(data);
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue("网络异常"+code);
                     }
                 });
     }
@@ -320,7 +387,8 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<YardTaskInfo>>() {
                     @Override
                     public void onSuccess(List<YardTaskInfo> data) {
-                        LogUtils.sysout("===获取指定街区的作业任务列表===", JsonUtils.serialize(data));
+                        String str = JsonUtils.serialize(data);
+                        LogUtils.sysout("===获取指定街区的作业任务列表===", str);
                         YardCntrInfoList.setValue(data);
                     }
                 });
@@ -356,8 +424,15 @@ public class WorkViewModel extends ViewModel {
                 .subscribe(new ResponseObserver<List<YardTaskInfo>>() {
                     @Override
                     public void onSuccess(List<YardTaskInfo> data) {
+                        String st = JsonUtils.serialize(data);
                         LogUtils.sysout("===获取指定街区的倒箱任务列表===", JsonUtils.serialize(data));
                         YardCntrInfoList.setValue(data);
+                    }
+
+                    @Override
+                    public void onError(String code, String msg) {
+                        super.onError(code, msg);
+                        ErrorMsg.setValue("网络异常"+code);
                     }
                 });
     }
@@ -372,30 +447,38 @@ public class WorkViewModel extends ViewModel {
      * @param cell        目标层
      * @param tier        目标高
      */
-    public void GroundConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, int cell, int tier) {
+    @SuppressLint("CheckResult")
+    public void GroundConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId, String craneId, int cell, int tier) {
         Map<String, Object> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
         map.put("containerId", containerId);
         map.put("yardBayId", yardBayId);
         map.put("trkWorkId", trkWorkId);
+        map.put("craneId", craneId);
         map.put("cell", cell);
         map.put("tier", tier);
+        if (isLog) {
+            System.out.println(JsonUtils.serialize(map));
+        }
+//        DoTaskStatus.setValue(PUT_BOX);
         RetrofitManager.createToken(WorkInterface.class)
                 .GroundConfirm(map)
-                .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<Object>() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        LogUtils.sysout("===GroundConfirm===", JsonUtils.serialize(data));
-                        DoTaskStatus.setValue(PUT_BOX);
-                    }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe((Consumer<Response>) response -> {
+                            int code = response.code();
+                            if (code == 200 || code == 204) {
+                                DoTaskStatus.setValue(PUT_BOX);
+                            } else {
+                                praseErrorMsg(response);
+                            }
+                        },
+                        throwable -> {
+                            throwable.printStackTrace();
+                            ErrorMsg.setValue(throwable.toString());
+                        }
 
-                    @Override
-                    public void onError(String code, String msg) {
-                        super.onError(code, msg);
-                        ErrorMsg.setValue(msg);
-                    }
-                });
+                );
     }
 
 
@@ -407,30 +490,83 @@ public class WorkViewModel extends ViewModel {
      * @param yardBayId   贝位Id
      * @param trkWorkId   拖车作业Id
      */
-    public void PickupConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId) {
+    @SuppressLint("CheckResult")
+    public void PickupConfirm(String yardSiteId, String containerId, String yardBayId, String trkWorkId,
+                              String craneId) {
         Map<String, String> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
         map.put("containerId", containerId);
         map.put("yardBayId", yardBayId);
         map.put("trkWorkId", trkWorkId);
+        map.put("craneId", craneId);
+        if (isLog) {
+            System.out.println(JsonUtils.serialize(map));
+        }
         RetrofitManager.createToken(WorkInterface.class)
                 .PickupConfirm(map)
-                .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<Object>() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        LogUtils.sysout("===PickupConfirm===", JsonUtils.serialize(data));
-                        DoTaskStatus.setValue(UP_BOX);
-                    }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe((Consumer<Response>) response -> {
+                            int code = response.code();
+                            if (code == 200 || code == 204) {
+                                DoTaskStatus.setValue(UP_BOX);
+                            } else {
+                                praseErrorMsg(response);
+                            }
+                        },
+                        throwable -> {
+                            throwable.printStackTrace();
+                            ErrorMsg.setValue(throwable.toString());
+                        }
 
-                    @Override
-                    public void onError(String code, String msg) {
-                        super.onError(code, msg);
-                        ErrorMsg.setValue(msg);
-                    }
-                });
+                );
     }
 
+    /**
+     * 倒箱任务提箱
+     *
+     * @param yardSiteId    yardSiteId	 场站Id
+     * @param containerId   集装箱Id
+     * @param fromYardBayId 提箱子的贝位
+     * @param toYardBayId   放箱子的贝位
+     * @param trkWorkId     拖车作业Id
+     */
+    @SuppressLint("CheckResult")
+    public void PickupConfirmByDx(String yardSiteId,
+                                  String containerId,
+                                  String fromYardBayId,
+                                  String toYardBayId,
+                                  String trkWorkId,
+                                  String craneId, int cell, int tier) {
+        Map<String, String> map = new HashMap<>();
+        map.put("yardSiteId", yardSiteId);
+        map.put("containerId", containerId);
+        map.put("yardBayId", fromYardBayId);
+        map.put("trkWorkId", trkWorkId);
+        map.put("craneId", craneId);
+        if (isLog) {
+            System.out.println(JsonUtils.serialize(map));
+        }
+        RetrofitManager.createToken(WorkInterface.class)
+                .PickupConfirm(map)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe((Consumer<Response>) response -> {
+                            int code = response.code();
+                            if (code == 200 || code == 204) {
+//                                DoTaskStatus.setValue(UP_BOX);
+                                GroundConfirm(yardSiteId, containerId, toYardBayId, trkWorkId, craneId, cell, tier);
+                            } else {
+                                praseErrorMsg(response);
+                            }
+                        },
+                        throwable -> {
+                            throwable.printStackTrace();
+                            ErrorMsg.setValue(throwable.toString());
+                        }
+
+                );
+    }
 
     /**
      * 倒箱确认
@@ -443,22 +579,39 @@ public class WorkViewModel extends ViewModel {
      * @param tier        目标高
      */
     @SuppressLint("CheckResult")
-    public void PutOtherConfirm(String yardSiteId, String containerId, String yardBayId, String craneId, int cell, int tier) {
+    public void PutOtherConfirm(String yardSiteId,
+                                String containerId,
+                                String yardBayId,
+                                String trkWorkId,
+                                String craneId,
+                                int cell, int tier) {
         Map<String, Object> map = new HashMap<>();
         map.put("yardSiteId", yardSiteId);
         map.put("containerId", containerId);
         map.put("yardBayId", yardBayId);
+        map.put("trkWorkId", trkWorkId);
         map.put("craneId", craneId);
         map.put("cell", cell);
         map.put("tier", tier);
+
+        if (isLog) {
+            System.out.println(JsonUtils.serialize(map));
+        }
+//        DoTaskStatus.setValue(MOVE_BOX);
         RetrofitManager.createToken(WorkInterface.class)
-                .PutOtherConfirm(map)
+                .GroundConfirm(map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Response>() {
                                @Override
                                public void accept(Response response) throws Exception {
-                                   DoTaskStatus.setValue(MOVE_BOX);
+                                   int code = response.code();
+                                   if (code == 200 || code == 204) {
+                                       DoTaskStatus.setValue(-1);
+                                       DoTaskStatus.setValue(MOVE_BOX);
+                                   } else {
+                                       praseErrorMsg(response);
+                                   }
                                }
                            },
                         new Consumer<Throwable>() {
@@ -472,19 +625,50 @@ public class WorkViewModel extends ViewModel {
                 );
     }
 
+    private void praseErrorMsg(Response response) {
+        try {
+            ResponseBody responseBody = response.errorBody();
+            if (null == responseBody) return;
+            String res = responseBody.string();
+            JsonObject object = new JsonObject();
+            JsonParser parser = new JsonParser();
+            object = parser.parse(res).getAsJsonObject();
+            object = object.getAsJsonObject("error");
+            String message = object.get("message").getAsString();
+            ErrorMsg.setValue(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 判断能否交换箱(获取提箱交换箱的信息)
      *
-     * @param trkWorkId 拖车作业Id
+     * @param cntr       要交换的箱子
+     * @param curCraneId 设备
+     * @param trkWorkId  拖车作业Id
      */
-    public void ExchangeCntr(String trkWorkId) {
+    public void ExchangeCntr(String cntr, String curCraneId, String trkWorkId) {
         RetrofitManager.createToken(WorkInterface.class)
                 .ExchangeCntr(trkWorkId)
                 .compose(RxUtils.getWrapper())
-                .subscribe(new ResponseObserver<Object>() {
+                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
                     @Override
-                    public void onSuccess(Object data) {
-                        LogUtils.sysout("===PickupConfirm===", JsonUtils.serialize(data));
+                    public void onSuccess(List<YardCntrInfo> data) {
+                        LogUtils.sysout("===ExchangeCntr===", JsonUtils.serialize(data));
+                        boolean isChange = false;
+                        YardCntrInfo bean = null;
+                        for (YardCntrInfo cntrInfo : data) {
+                            if (TextUtils.equals(cntr, cntrInfo.getCntr())) {
+                                bean = cntrInfo;
+                                isChange = true;
+                            }
+                            if (!isChange) {
+                                ErrorMsg.setValue(MyApplication.getContext().getString(R.string.failure_to_meet_exchange_box_conditions));
+                            } else {
+                                PickupConfirm(bean.getYardSiteId(), bean.getId(), bean.getYardBayId(),trkWorkId, curCraneId);
+                            }
+                        }
                     }
                 });
     }
@@ -503,6 +687,67 @@ public class WorkViewModel extends ViewModel {
                     @Override
                     public void onSuccess(List<Object> data) {
                         LogUtils.sysout("===GetSameWorkLineTrk===", JsonUtils.serialize(data));
+                    }
+                });
+    }
+
+    /**
+     * 最优推荐位
+     */
+    public void GetYardLocation(String cntrId) {
+        RetrofitManager.createToken(WorkInterface.class)
+                .GetYardLocation(cntrId)
+                .compose(RxUtils.getWrapper())
+                .subscribe(new ResponseObserver<RmdLocationInfo>() {
+                               @Override
+                               public void onSuccess(RmdLocationInfo data) {
+                                   LogUtils.sysout("===GetYardLocation===", JsonUtils.serialize(data));
+                                   mRmdLocationInfo.setValue(data);
+                               }
+
+                               @Override
+                               public void onError(String code, String msg) {
+                                   super.onError(code, msg);
+                                   ErrorMsg.setValue(msg);
+                               }
+                           }
+                );
+    }
+
+    //获取推荐位---获取放箱推荐位
+    public void GetBestCell(String cntrId, String yardBayId, String activity) {
+        Map<String, String> param = new HashMap<>();
+        param.put("cntrId", cntrId);
+        param.put("yardBayId", yardBayId);
+        param.put("activity", activity);
+        RetrofitManager.createToken(WorkInterface.class)
+                .GetBestCell(param)
+                .compose(RxUtils.getWrapper())
+                .subscribe(new ResponseObserver<List<String>>() {
+                    @Override
+                    public void onSuccess(List<String> data) {
+                        LogUtils.sysout("===GetBestCell===", JsonUtils.serialize(data));
+                        mRmdCellList.setValue(data);
+                    }
+                });
+    }
+
+
+    /**
+     * 模糊搜索箱子
+     *
+     * @param cntr
+     */
+    public void searchCntrInfoBytag(String cntr, String yardSiteId) {
+        RetrofitManager.createToken(WorkInterface.class)
+                .searchCntrInfo(ParamUtils.getCurSearchCntrParam(cntr, yardSiteId))
+                .compose(RxUtils.getWrapper())
+                .subscribe(new ResponseObserver<List<YardCntrInfo>>() {
+                    @Override
+                    public void onSuccess(List<YardCntrInfo> data) {
+                        String str = JsonUtils.serialize(data);
+                        LogUtils.sysout("===searchCntrInfoBytag===", str);
+                        mSearchCntrInfo.setValue(data);
                     }
                 });
     }

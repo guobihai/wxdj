@@ -2,8 +2,12 @@ package com.smt.wxdj.swxdj.logins.model;
 
 import android.text.TextUtils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.smt.wxdj.swxdj.MyApplication;
 import com.smt.wxdj.swxdj.R;
+import com.smt.wxdj.swxdj.dao.HostSettingInfo;
 import com.smt.wxdj.swxdj.dao.Tenants;
 import com.smt.wxdj.swxdj.dao.TokenInfo;
 import com.smt.wxdj.swxdj.interfaces.IPublicResultInterface;
@@ -21,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +57,33 @@ public class LoginModelImpl implements LoginModel {
     }
 
     @Override
+    public void getSettingInfo(IPublicResultInterface<List<HostSettingInfo>> onLoginListener) {
+        OkHttpUtils.get("https://lgsapi.wit-union.com/api/PlatformOperations/ApiUrlSetting/GetAll", new OkHttpUtils.ResultCallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                LogUtils.sysout("getSettingInfo=====", response);
+                JsonParser prase = new JsonParser();
+                List<HostSettingInfo> list = new ArrayList<>();
+                JsonArray array = prase.parse(response).getAsJsonArray();
+                for (int i = 0; i < array.size(); i++) {
+                    JsonObject object = array.get(i).getAsJsonObject();
+                    HostSettingInfo hostSettingInfo = JsonUtils.deserialize(object, HostSettingInfo.class);
+                    list.add(hostSettingInfo);
+                }
+                onLoginListener.onSucess(list);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+                onLoginListener.onFailure(SOCKET_TIMEOUT, e);
+            }
+        });
+    }
+
+    @Override
     public void loadToken(List<OkHttpUtils.Param> params, final IPublicResultInterface onLoginListener) {
-        OkHttpUtils.post(URLTool.authHost, params, new OkHttpUtils.ResultCallBack<String>() {
+        OkHttpUtils.post(URLTool.authHost + "connect/token", params, new OkHttpUtils.ResultCallBack<String>() {
             @Override
             public void onSuccess(String response) {
                 LogUtils.sysout("login=====", response);
@@ -71,18 +101,18 @@ public class LoginModelImpl implements LoginModel {
 
     @Override
     public void login(List<OkHttpUtils.Param> params, final IPublicResultInterface onLoginListener) {
-        OkHttpUtils.post(URLTool.authHost, params, new OkHttpUtils.ResultCallBack<String>() {
+        OkHttpUtils.post(URLTool.authHost + "connect/token", params, new OkHttpUtils.ResultCallBack<String>() {
             @Override
             public void onSuccess(String response) {
-//                LogUtils.sysout("login=====", response);
+                LogUtils.sysout("login=====", response);
                 try {
                     TokenInfo tokenInfo = JsonUtils.deserialize(response, TokenInfo.class);
-                    if(!TextUtils.isEmpty(tokenInfo.getAccess_token())){
+                    if (!TextUtils.isEmpty(tokenInfo.getAccess_token())) {
                         AccountManager.setTokenInfo(tokenInfo.getAccess_token());
                         OkHttpUtils.setToken(tokenInfo.getAccess_token());
                         getUserInfo(onLoginListener);
-                    }else{
-                        Map<String,String> map = JsonUtils.deserialize(response, Map.class);
+                    } else {
+                        Map<String, String> map = JsonUtils.deserialize(response, Map.class);
                         onLoginListener.onFailure(map.get("error_description"), null);
                     }
                 } catch (Exception e) {
@@ -125,7 +155,6 @@ public class LoginModelImpl implements LoginModel {
             }
         });
     }
-
 
 
     /**

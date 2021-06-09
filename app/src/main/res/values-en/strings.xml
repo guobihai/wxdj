@@ -101,6 +101,7 @@
     <string name="field">Stack</string>
     <string name="rown">Block</string>
     <string name="clear_field">Yard Take</string>
+    <string name="rmd_bay_field">Yard Bay</string>
     <string name="checked_box">Selected Cntr</string>
     <string name="move_box_position">Restack Target Location</string>
     <string name="target_box">Target Pick Cntr</string>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="dock"
+            type="com.smt.wxdj.swxdj.dao.HostSettingInfo" />
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="2dp"
+        app:contentPadding="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{dock.index %2==0?@color/tableview_color:@android:color/white}"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/toplayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dockName"
+                    style="@style/setting_textview"
+                    android:layout_weight="0.8"
+                    android:gravity="left"
+                    android:text="@{dock.name}" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/webUrl"
+                style="@style/setting_textview"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toplayout"
+                android:layout_toLeftOf="@+id/checkBox2"
+                android:textSize="@dimen/textsize24"
+                android:gravity="left"
+                android:maxLines="2"
+                android:text="@{dock.authUrl}"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/webUrl1"
+                style="@style/setting_textview"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/webUrl"
+                android:layout_toLeftOf="@+id/checkBox2"
+                android:textSize="@dimen/textsize24"
+                android:gravity="left"
+                android:maxLines="2"
+                android:text="@{dock.apiUrl}"
+                android:textColor="@android:color/darker_gray" />
+
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:checked="@{dock.select}"
+                android:visibility="@{dock.select ? View.VISIBLE : View.GONE}"
+
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</layout>

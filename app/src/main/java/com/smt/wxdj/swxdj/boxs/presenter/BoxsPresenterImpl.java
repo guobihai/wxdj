@@ -295,8 +295,8 @@ public class BoxsPresenterImpl extends BasePresenter<BoxsView> implements BoxsPr
                     cntrinfo.getActivity().equals("LD")) {
                 act = "RM";
             }
-            if (!(act.equals("RM") && !bol))
-                GetCntrCellForRFCWS();
+//            if (!(act.equals("RM") && !bol))
+//                GetCntrCellForRFCWS();
         }
     }
 
@@ -866,7 +866,7 @@ public class BoxsPresenterImpl extends BasePresenter<BoxsView> implements BoxsPr
         if (bean.getActivity().equals("IG"))
             sCell = "0";
 
-        if (!bean.getRown().equals(getView().getBay())) {
+        if (bean.getRown() ==null || !bean.getRown().equals(getView().getBay())) {
             sCell = "0";
         } else {
             cntrInfo.setCell(sCell);

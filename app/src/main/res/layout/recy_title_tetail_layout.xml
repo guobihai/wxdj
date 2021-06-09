@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/boxLocation"
         style="@style/tableTextViewStyle"
-        android:layout_weight="1.1"
+        android:layout_weight="1.06"
         android:drawableRight="@mipmap/up_sort"
         android:text="@string/boxLocation"/>
 
@@ -46,15 +46,14 @@
         android:text="@string/boxType"/>
 
     <TextView
-        android:id="@+id/workLine"
         style="@style/tableTextViewStyle"
         android:layout_weight="1.08"
         android:text="@string/workLine"/>
 
     <TextView
-        android:id="@+id/workLine"
         style="@style/tableTextViewStyle"
         android:layout_weight="1.08"
+        android:visibility="gone"
         android:text="@string/pod"/>
 
     <TextView
@@ -79,7 +78,7 @@
     <TextView
         android:id="@+id/boxDt"
         style="@style/tableTextViewStyle"
-        android:layout_weight="1.1"
+        android:layout_weight="1"
         android:text="@string/boxDt"/>
 
     <TextView

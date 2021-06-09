@@ -8,10 +8,10 @@
     </string-array>
 
     <string-array name="menuArray">
-        <item>@string/loading_unloading_vessel_vehicle</item>
-        <item>@string/loading_and_unloading_vessel</item>
-        <item>@string/shipment</item>
-        <item>@string/ship_unload</item>
+<!--        <item>@string/loading_unloading_vessel_vehicle</item>-->
+<!--        <item>@string/loading_and_unloading_vessel</item>-->
+<!--        <item>@string/shipment</item>-->
+<!--        <item>@string/ship_unload</item>-->
         <item>@string/loading_and_unloading_truck</item>
         <item>@string/cancellation_of_suitcases</item>
         <item>@string/inverted_box</item>

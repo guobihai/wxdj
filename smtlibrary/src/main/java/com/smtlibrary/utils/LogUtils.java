@@ -7,7 +7,7 @@ import android.util.Log;
  * Created by gbh on 16/6/25.
  */
 public class LogUtils {
-    public static boolean LOG_DEBUG = false;
+    public static boolean LOG_DEBUG = true;
 
     public static void v(String tag, String message) {
         if (LOG_DEBUG) {

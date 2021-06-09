@@ -195,6 +195,24 @@ public class YardCntrInfo extends BoxDetalBean {
     private String srvCfs;
     private String tenantId;
     private String id;
+    private  String trkWorkId;
+    private String sizeClass;//箱型
+    private String typeClass;//箱型单位
+    private String location;//位置
+
+    private String toYardBayId;
+    private String fromYardBayId;
+
+    private String fromYardBlockId;
+    private String toYardBlockId;
+
+
+    public YardCntrInfo() {
+    }
+
+    public YardCntrInfo(String cell) {
+        this.defaultCell = cell;
+    }
 
     public YardCntrInfo(String cell, int cellX, int CellY, boolean isPutBox) {
         this.defaultCell = cell;
@@ -891,6 +909,14 @@ public class YardCntrInfo extends BoxDetalBean {
         this.id = id;
     }
 
+    public String getTrkWorkId() {
+        return trkWorkId;
+    }
+
+    public void setTrkWorkId(String trkWorkId) {
+        this.trkWorkId = trkWorkId;
+    }
+
     /**
      * 获取显示内容
      *
@@ -908,7 +934,7 @@ public class YardCntrInfo extends BoxDetalBean {
         return String.format("%s%s%s\n%s%s%s\n%s%s",
                 TextUtils.isEmpty(getCntrType()) ? "" : getCntrType() + "/", fe_ind + "/", TextUtils.isEmpty(getOpr()) ? "" : getOptr(),
                 TextUtils.isEmpty(getTradeType()) ? "" : getTradeType() + "/", TextUtils.isEmpty(getHazInd()) ? "" : getHazInd() + "/"
-                ,getOszIndDesc(),getReefInd()+"/",
+                ,getSizeClass(),getTypeClass()+"/",
                 new DecimalFormat("#.0").format( getGrsWgt()));
     }
 
@@ -1031,4 +1057,57 @@ public class YardCntrInfo extends BoxDetalBean {
         return false;
     }
 
+    public String getSizeClass() {
+        return sizeClass==null?"":sizeClass;
+    }
+
+    public void setSizeClass(String sizeClass) {
+        this.sizeClass = sizeClass;
+    }
+
+    @Override
+    public String getTypeClass() {
+        return typeClass==null?"":typeClass;
+    }
+
+    @Override
+    public void setTypeClass(String typeClass) {
+        this.typeClass = typeClass;
+    }
+
+    public String getLocation() {
+        return location==null?"":location;
+    }
+
+    public String getToYardBayId() {
+        return toYardBayId;
+    }
+
+    public void setToYardBayId(String toYardBayId) {
+        this.toYardBayId = toYardBayId;
+    }
+
+    public String getFromYardBayId() {
+        return fromYardBayId;
+    }
+
+    public void setFromYardBayId(String fromYardBayId) {
+        this.fromYardBayId = fromYardBayId;
+    }
+
+    public String getFromYardBlockId() {
+        return fromYardBlockId;
+    }
+
+    public void setFromYardBlockId(String fromYardBlockId) {
+        this.fromYardBlockId = fromYardBlockId;
+    }
+
+    public String getToYardBlockId() {
+        return toYardBlockId;
+    }
+
+    public void setToYardBlockId(String toYardBlockId) {
+        this.toYardBlockId = toYardBlockId;
+    }
 }

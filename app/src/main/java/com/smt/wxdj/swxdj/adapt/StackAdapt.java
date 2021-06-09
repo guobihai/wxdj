@@ -71,12 +71,12 @@ public class StackAdapt extends MultiItemRecycleViewAdapter<ChaneStackInfo> {
                 }
             }
             //设置数据
-            holder.setText(R.id.stack_item, bean.getCraneNo());
-            holder.setText(R.id.item_count, TextUtils.isEmpty(bean.getWorks()) ? "0" : bean.getWorks());
-            holder.setText(R.id.state, bean.getStatus());
-            holder.setText(R.id.fpBay, bean.getYardBlock());
-            holder.setText(R.id.startBay, bean.getOPR_START_ROWN());
-            holder.setText(R.id.endBay, bean.getOPR_END_ROWN());
+            holder.setText(R.id.stack_item, bean.getYardBlock());
+            holder.setText(R.id.item_count, String.valueOf(bean.getWorkCount()));
+//            holder.setText(R.id.state, bean.getStatus());
+            holder.setText(R.id.fpBay, bean.getCurrentBay());
+//            holder.setText(R.id.startBay, bean.getOPR_START_ROWN());
+//            holder.setText(R.id.endBay, bean.getOPR_END_ROWN());
             holder.setText(R.id.startTime, bean.getBeginDate().replace("T", " "));
             holder.setText(R.id.endTime, bean.getEndDate().replace("T", " "));
 

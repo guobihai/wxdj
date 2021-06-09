@@ -6,8 +6,14 @@ package com.smt.wxdj.swxdj.utils;
 public class URLTool {
     private static String url;
 
+    //    private static String  host = "http://192.168.3.29:65225/api/";
+//    public static  String authHost = "http://192.168.3.29:64999/";
+//
+    public static String host = "https://lgsapi.wit-union.com/api/";
+    public static String authHost = "https://auth.wit-union.com/";
+
     //授权的URL
-    public static String authHost = "https://auth.wit-union.com/connect/token";
+//    public static String authHost = "https://auth.wit-union.com/connect/token";
 //    public static String authHost = "http://124.70.27.37:64999/connect/token";
 
     public static String getUrl() {
@@ -21,7 +27,7 @@ public class URLTool {
 //        return "http://192.9.200.239:2311/WebService.asmx/WebServiceBizExecute";
 //        return "http://192.9.200.77:2311/WebService.asmx/WebServiceBizExecute";
 //        return URLTool.url.trim() + "/WebServiceBizExecute";
-        return "https://lgsapi.wit-union.com/api/";
+        return host;
     }
 
     public static void setUrl(String url) {

@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.smt.wxdj.swxdj.R;
 import com.smt.wxdj.swxdj.bean.Bay;
 import com.smt.wxdj.swxdj.compares.SmtCompare;
+import com.smt.wxdj.swxdj.compares.SmtExCompare;
 import com.smt.wxdj.swxdj.enums.ColorType;
 import com.smt.wxdj.swxdj.utils.BoxTool;
 import com.smt.wxdj.swxdj.utils.CellTool;
+import com.smt.wxdj.swxdj.viewmodel.nbean.YardBayInfo;
 import com.smt.wxdj.swxdj.viewmodel.nbean.YardCntrInfo;
 import com.smtlibrary.utils.JsonUtils;
 import com.smtlibrary.utils.LogUtils;
@@ -56,7 +58,7 @@ public class DxwAdapt extends DragAdapter {
             if (bean.HashBox())
                 tList.add(bean);
         }
-        Collections.sort(tList, new SmtCompare(SmtCompare.TIER));
+        Collections.sort(tList, new SmtExCompare(SmtCompare.TIER));
         //判断如果没有到想位的时候
         if (tList.size() == 0) {
             for (int i = 0; i < channelList.size(); i++) {
@@ -203,7 +205,7 @@ public class DxwAdapt extends DragAdapter {
         return cellY;
     }
 
-    public void setBay(Bay bay) {
+    public void setBay(YardBayInfo bay) {
         this.mBay = bay;
     }
 

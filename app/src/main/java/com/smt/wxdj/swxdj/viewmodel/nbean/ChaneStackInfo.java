@@ -1,11 +1,15 @@
 package com.smt.wxdj.swxdj.viewmodel.nbean;
 
+import android.text.TextUtils;
+
 import com.smt.wxdj.swxdj.bean.StackBean;
+
+import java.util.Comparator;
 
 /**
  * 作业区域
  */
-public class ChaneStackInfo extends StackBean {
+public class ChaneStackInfo extends StackBean implements Comparator<ChaneStackInfo> {
 
     /**
      * craneNo : RTG01
@@ -46,6 +50,8 @@ public class ChaneStackInfo extends StackBean {
     private String creationTime;
     private String creatorId;
     private String id;
+    private String currentBay;
+    private int workCount;
 
     public String getCraneNo() {
         return craneNo;
@@ -64,7 +70,7 @@ public class ChaneStackInfo extends StackBean {
     }
 
     public String getYardBlock() {
-        return yardBlock;
+        return TextUtils.isEmpty(yardBlock)?"":yardBlock;
     }
 
     public void setYardBlock(String yardBlock) {
@@ -189,5 +195,26 @@ public class ChaneStackInfo extends StackBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCurrentBay() {
+        return currentBay;
+    }
+
+    public void setCurrentBay(String currentBay) {
+        this.currentBay = currentBay;
+    }
+
+    public int getWorkCount() {
+        return workCount;
+    }
+
+    public void setWorkCount(int workCount) {
+        this.workCount = workCount;
+    }
+
+    @Override
+    public int compare(ChaneStackInfo o1, ChaneStackInfo o2) {
+        return o1.getYardBlock().compareTo(o2.getYardBlock());
     }
 }
